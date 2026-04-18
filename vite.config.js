@@ -7,12 +7,14 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'Luna Fashion',
-        short_name: 'Luna',
-        description: 'Luxury Women\'s Clothing Store in Addis Ababa',
-        theme_color: '#d4af37',
+        name: 'LUNA',
+        short_name: 'LUNA',
+        description: 'Luna Fashion - High-End Luxury Clothing',
+        theme_color: '#0a0a0a',
+        background_color: '#0a0a0a',
+        display: "standalone",
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -22,10 +24,11 @@ export default defineConfig({
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           }
         ]
       }
     })
-  ],
+  ]
 })

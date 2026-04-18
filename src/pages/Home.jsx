@@ -1,106 +1,90 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import ProductGrid from '../components/product/ProductGrid';
-import { useAppContext } from '../context/AppContext';
+import { ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const { products, loading } = useProducts();
-  const newArrivals = products.slice(0, 4);
-  const { t } = useAppContext();
+  const [activeFilter, setActiveFilter] = useState('For You');
+
+  const circleCategories = [
+    { name: 'Women', img: 'https://images.unsplash.com/photo-1550614000-4b95d4edec75?q=80&w=200&fit=crop' },
+    { name: 'Curve', img: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=200&fit=crop' },
+    { name: 'Kids', img: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?q=80&w=200&fit=crop' },
+    { name: 'Men', img: 'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?q=80&w=200&fit=crop' },
+    { name: 'Shoes', img: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=200&fit=crop' },
+    { name: 'Tops', img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=200&fit=crop' },
+  ];
+
+  const filterTabs = ['For You', '✨ New In', '🏷️ Deals', '🏆 Bestsellers'];
 
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative h-[80vh] bg-luna-black dark:bg-black flex items-center overflow-hidden transition-colors duration-300">
-        <div className="absolute inset-0 opacity-40">
-          <img 
-            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop" 
-            alt="Luxury Fashion" 
-            className="w-full h-full object-cover object-top"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-luna-black dark:from-black via-luna-black/50 dark:via-black/50 to-transparent"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 text-center">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-display font-medium text-luna-white mb-6 uppercase tracking-widest leading-tight"
-          >
-            {t('redefine')} <br/>
-            <span className="text-gradient-gold italic normal-case">{t('elegance')}</span>
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-lg text-gray-300 max-w-2xl mx-auto mb-10 font-light"
-          >
-            {t('heroDesc')}
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-          >
-            <Link 
-              to="/shop" 
-              className="inline-block bg-transparent border border-gold text-gold hover:bg-gold hover:text-black py-4 px-10 uppercase tracking-widest text-sm font-semibold transition-all duration-300"
-            >
-              {t('shop')}
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* New Arrivals Section */}
-      <section className="py-24 bg-luna-white dark:bg-luna-black transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-display uppercase tracking-widest mb-4 text-luna-black dark:text-luna-white">{t('newArrivals')}</h2>
-            <div className="w-16 h-0.5 bg-gold mx-auto"></div>
-          </div>
-          <ProductGrid products={newArrivals} />
-          <div className="mt-16 text-center">
-            <Link 
-              to="/shop" 
-              className="inline-block border-b border-luna-black dark:border-gold pb-1 hover:text-gold text-luna-black dark:text-gold transition-colors font-medium uppercase tracking-wider text-sm"
-            >
-              {t('viewAll')}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* TikTok Highlight Section */}
-      <section className="py-24 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-display uppercase tracking-widest mb-4 text-luna-black dark:text-luna-white">{t('lunaInMotion')}</h2>
-            <p className="text-gray-500 dark:text-gray-400 font-light max-w-lg mx-auto">{t('lunaInMotionDesc')}</p>
-          </div>
-          
-          <div className="flex justify-center">
-             {/* Note: This is an aesthetic placeholder for actual TikTok embed script */}
-            <div className="w-full max-w-[325px] h-[550px] bg-black rounded-lg relative overflow-hidden shadow-2xl flex items-center justify-center border border-gray-800">
-               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10 flex flex-col justify-end p-6">
-                 <p className="text-white font-semibold mb-1">@lunafashion.et</p>
-                 <p className="text-gray-300 text-sm mb-4">Our stunning new arrival. Perfectly tailored. ✨ #LunaFashion #AddisAbaba</p>
-                 <div className="flex space-x-4">
-                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs">🤍</div>
-                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs">💬</div>
-                 </div>
+    <div className="flex flex-col bg-white dark:bg-[#0a0a0a] min-h-[90vh]">
+      
+      {/* Circle Categories Horizontal Scroller */}
+      <div className="overflow-x-auto whitespace-nowrap px-2 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+         <div className="flex space-x-4 px-2 items-center">
+            {circleCategories.map((cat, idx) => (
+               <div key={idx} className="flex flex-col items-center cursor-pointer">
+                  <div className="w-[58px] h-[58px] rounded-full overflow-hidden border border-gray-200 dark:border-gray-800 mb-1.5 shadow-sm">
+                     <img src={cat.img} alt={cat.name} className="w-full h-full object-cover" />
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">{cat.name}</span>
                </div>
-               <div className="text-gray-500 text-sm z-0 flex flex-col items-center">
-                  <span className="text-4xl mb-2">▶</span>
-                  TikTok Video Placeholder
-               </div>
+            ))}
+         </div>
+      </div>
+
+      {/* Hero Banner Slider Replacement (Small) */}
+      <div className="px-3 md:px-4 py-3">
+         <div className="w-full h-[160px] rounded-lg overflow-hidden relative shadow-sm border border-gray-100 dark:border-gray-800">
+            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover object-top" alt="Banner" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent flex flex-col justify-center px-6">
+               <span className="bg-gold text-black text-[9px] font-bold px-2 py-0.5 rounded-sm w-max mb-1.5 uppercase tracking-wider shadow-sm">Free Shipping</span>
+               <h2 className="text-white font-display text-xl font-bold leading-tight mb-2 tracking-wide">Buy 200 ETB<br/>more to get</h2>
+               <button className="flex items-center text-[10px] font-bold text-white uppercase tracking-widest opacity-90 border-b border-white w-max pb-0.5">
+                 View More <ChevronRight className="w-3 h-3 ml-1" />
+               </button>
             </div>
-          </div>
-        </div>
-      </section>
+         </div>
+      </div>
+
+      {/* Dynamic Filter Tabs - Sticky Header Offset */}
+      <div className="sticky top-[108px] z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md flex justify-between items-center px-3 py-3 border-b border-gray-100 dark:border-gray-900 overflow-x-auto scrollbar-hide space-x-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+         {filterTabs.map((tab, idx) => (
+            <button 
+              key={idx}
+              onClick={() => setActiveFilter(tab)}
+              className={`flex-shrink-0 px-4 py-1.5 text-[11px] font-bold rounded-full transition-colors tracking-wide ${activeFilter === tab ? 'bg-black text-white dark:bg-gold dark:text-black' : 'bg-[#f5f5f5] text-gray-600 dark:bg-[#1a1a1a] dark:text-gray-400'}`}
+            >
+              {tab}
+            </button>
+         ))}
+      </div>
+
+      {/* Flash Sale Header */}
+      <div className="px-4 py-3 pb-2 flex justify-between items-center">
+         <div className="flex items-center space-x-2">
+            <h3 className="text-[13px] font-bold text-black dark:text-gold uppercase tracking-wider">Flash Sale</h3>
+            <div className="flex space-x-1">
+               <span className="bg-black text-white dark:bg-gray-800 text-[9px] px-1.5 py-0.5 rounded-sm font-mono font-bold">12</span>:
+               <span className="bg-black text-white dark:bg-gray-800 text-[9px] px-1.5 py-0.5 rounded-sm font-mono font-bold">45</span>:
+               <span className="bg-black text-white dark:bg-gray-800 text-[9px] px-1.5 py-0.5 rounded-sm font-mono font-bold">09</span>
+            </div>
+         </div>
+      </div>
+
+      {/* Masonry Product Grid */}
+      <div className="pb-6 pt-1 h-full flex-1 bg-[#f9f9f9] dark:bg-[#0a0a0a]">
+        {loading ? (
+           <div className="flex justify-center items-center py-20">
+             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
+           </div>
+        ) : (
+           <ProductGrid products={products} />
+        )}
+      </div>
+
     </div>
   );
 }

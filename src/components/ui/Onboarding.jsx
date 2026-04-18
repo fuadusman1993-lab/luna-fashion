@@ -1,0 +1,79 @@
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { ChevronRight } from 'lucide-react';
+import { useAppContext } from '../../context/AppContext';
+
+export default function Onboarding({ onComplete }) {
+  const { language, toggleLanguage } = useAppContext();
+
+  // Faint dotted map placeholder using CSS background pattern for luxury feel
+  const mapStyle = {
+    backgroundImage: `radial-gradient(#d4af37 1px, transparent 1px)`,
+    backgroundSize: '15px 15px',
+    backgroundPosition: 'center',
+    maskImage: 'radial-gradient(ellipse at center, black, transparent 70%)',
+    WebkitMaskImage: 'radial-gradient(ellipse at center, black, transparent 70%)'
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] bg-luna-white dark:bg-luna-black text-luna-black dark:text-luna-white transition-colors flex flex-col justify-between overflow-hidden sm:max-w-md sm:mx-auto sm:border sm:border-gray-800">
+      
+      {/* Top Map Section */}
+      <div className="relative h-[30vh] flex items-center justify-center p-6 mt-10">
+         <div className="absolute inset-0 opacity-40 dark:opacity-20" style={mapStyle}></div>
+         <motion.h1 
+           initial={{ opacity: 0, scale: 0.9 }}
+           animate={{ opacity: 1, scale: 1 }}
+           transition={{ duration: 0.8 }}
+           className="relative z-10 font-display text-4xl md:text-5xl font-bold text-gradient-gold text-center leading-tight tracking-wider"
+         >
+           Welcome to <br/> LUNA
+         </motion.h1>
+      </div>
+
+      {/* Middle Settings Panel */}
+      <div className="flex-1 py-4 px-8 space-y-0 mt-8">
+         {/* Location */}
+         <div className="flex justify-between items-center py-6 border-b border-gray-200 dark:border-gray-800">
+            <div>
+               <p className="text-gray-500 dark:text-gray-400 text-sm mb-1 font-display tracking-wider">Location</p>
+               <p className="font-semibold text-lg">Ethiopia</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+         </div>
+
+         {/* Language (Functional Toggle) */}
+         <button onClick={toggleLanguage} className="w-full text-left flex justify-between items-center py-6 border-b border-gray-200 dark:border-gray-800 focus:outline-none">
+            <div>
+               <p className="text-gray-500 dark:text-gray-400 text-sm mb-1 font-display tracking-wider">Language</p>
+               <p className="font-semibold text-lg">{language === 'en' ? 'English' : 'አማርኛ'}</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+         </button>
+
+         {/* Currency */}
+         <div className="flex justify-between items-center py-6 border-b border-gray-200 dark:border-gray-800">
+            <div>
+               <p className="text-gray-500 dark:text-gray-400 text-sm mb-1 font-display tracking-wider">Currency</p>
+               <p className="font-semibold text-lg">ETB</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+         </div>
+      </div>
+
+      {/* Bottom Action */}
+      <div className="p-8 pb-16">
+        <button 
+          onClick={onComplete}
+          className="w-full bg-luna-black dark:bg-gold text-luna-white dark:text-black py-4 font-bold text-lg uppercase tracking-widest hover:opacity-90 transition-opacity rounded-sm shadow-xl shadow-gold/10"
+        >
+          Shop Now
+        </button>
+        <p className="text-center text-gray-500 dark:text-gray-400 text-xs mt-6 font-light">
+          You can go to the "Settings" page to modify later
+        </p>
+      </div>
+
+    </div>
+  );
+}

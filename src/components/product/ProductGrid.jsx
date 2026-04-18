@@ -2,9 +2,11 @@ import ProductCard from './ProductCard';
 
 export default function ProductGrid({ products }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="columns-2 gap-3 px-3 mx-auto w-full">
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <div key={product.id} className="break-inside-avoid mb-3">
+          <ProductCard product={product} />
+        </div>
       ))}
     </div>
   );
