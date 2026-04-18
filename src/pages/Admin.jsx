@@ -17,6 +17,7 @@ export default function Admin() {
   // Product Form State
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+  const [category, setCategory] = useState('Women');
   const [description, setDescription] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [inStock, setInStock] = useState(true);
@@ -53,8 +54,8 @@ export default function Admin() {
     if (!isFirebaseConfigured) {
       setTimeout(() => {
         setUploading(false);
-        setSuccessMsg('Product added magically! (Mock data only, connect Firebase to save it forever.)');
-        setName(''); setPrice(''); setDescription(''); setImageFile(null);
+        setSuccessMsg(`Product added magically mapped to ${category}! (Mock preview)`);
+        setName(''); setPrice(''); setDescription(''); setCategory('Women'); setImageFile(null);
       }, 1500);
       return;
     }
@@ -80,6 +81,7 @@ export default function Admin() {
 
           await addDoc(collection(db, "products"), {
             name,
+            category,
             price: Number(price),
             currency: "ETB",
             description,
@@ -90,7 +92,7 @@ export default function Admin() {
 
           setUploading(false);
           setSuccessMsg('Product added successfully!');
-          setName(''); setPrice(''); setDescription(''); setImageFile(null);
+          setName(''); setPrice(''); setDescription(''); setCategory('Women'); setImageFile(null);
         }
       );
     } catch (err) {
@@ -214,6 +216,21 @@ export default function Admin() {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('price')}</label>
                     <input type="number" value={price} onChange={e => setPrice(e.target.value)} required className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none" />
                   </div>
+                </div>
+
+                <div>
+                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
+                   <select 
+                     value={category} 
+                     onChange={e => setCategory(e.target.value)}
+                     className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none appearance-none cursor-pointer"
+                   >
+                      <option className="text-black" value="Women">Women</option>
+                      <option className="text-black" value="Men">Men</option>
+                      <option className="text-black" value="Kids">Kids</option>
+                      <option className="text-black" value="Shoes">Shoes</option>
+                      <option className="text-black" value="Curve">Curve</option>
+                   </select>
                 </div>
                 
                 <div>

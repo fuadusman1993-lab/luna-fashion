@@ -1,15 +1,22 @@
 import { useAppContext } from '../../context/AppContext';
 import { ShoppingBag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProductCard({ product }) {
   const { t } = useAppContext();
+  const navigate = useNavigate();
   const WHATSAPP_NUMBER = "+251977799797"; 
 
-  const handleWhatsAppOrder = () => {
+  const handleWhatsAppOrder = (e) => {
+    e.stopPropagation();
     const text = `Hello Luna Fashion! I would like to order the *${product.name}*.\nPrice: ${product.price} ETB\nIs it still available?`;
     const encodedText = encodeURIComponent(text);
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedText}`;
     window.open(whatsappUrl, '_blank');
+  };
+
+  const navigateToProduct = () => {
+    navigate(`/product/${product.id}`, { state: { product } });
   };
 
   // Determine mock tags based on price/stock
@@ -17,7 +24,7 @@ export default function ProductCard({ product }) {
   const isNew = product.price <= 2000 && product.inStock;
 
   return (
-    <div className="relative flex flex-col bg-white dark:bg-[#1a1a1a] overflow-hidden rounded-md border border-gray-100 dark:border-gray-800 shadow-sm cursor-pointer transition-colors duration-300">
+    <div onClick={navigateToProduct} className="relative flex flex-col bg-white dark:bg-[#1a1a1a] overflow-hidden rounded-md border border-gray-100 dark:border-gray-800 shadow-sm cursor-pointer transition-colors duration-300">
       <div className="relative w-full aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-[#0f0f0f]">
         <img 
           src={product.imageUrl} 

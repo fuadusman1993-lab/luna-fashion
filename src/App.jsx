@@ -9,6 +9,7 @@ import Contact from './pages/Contact';
 import Me from './pages/Me';
 import Cart from './pages/Cart';
 import Trends from './pages/Trends';
+import ProductDetail from './pages/ProductDetail';
 import Onboarding from './components/ui/Onboarding';
 
 function AppContent() {
@@ -44,6 +45,7 @@ function AppContent() {
           <Route path="cart" element={<Cart />} />
           <Route path="trends" element={<Trends />} />
         </Route>
+        <Route path="/product/:id" element={<ProductDetail />} />
       </Routes>
     </BrowserRouter>
   );

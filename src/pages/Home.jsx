@@ -2,10 +2,15 @@ import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import ProductGrid from '../components/product/ProductGrid';
 import { ChevronRight } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const { products, loading } = useProducts();
   const [activeFilter, setActiveFilter] = useState('For You');
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  
+  const activeCategory = searchParams.get('category');
 
   const circleCategories = [
     { name: 'Women', img: 'https://images.unsplash.com/photo-1550614000-4b95d4edec75?q=80&w=200&fit=crop' },
@@ -25,11 +30,15 @@ export default function Home() {
       <div className="overflow-x-auto whitespace-nowrap px-2 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
          <div className="flex space-x-4 px-2 items-center">
             {circleCategories.map((cat, idx) => (
-               <div key={idx} className="flex flex-col items-center cursor-pointer">
-                  <div className="w-[58px] h-[58px] rounded-full overflow-hidden border border-gray-200 dark:border-gray-800 mb-1.5 shadow-sm">
+               <div 
+                 key={idx} 
+                 onClick={() => navigate(`/?category=${encodeURIComponent(cat.name)}`)}
+                 className="flex flex-col items-center cursor-pointer"
+               >
+                  <div className={`w-[58px] h-[58px] rounded-full overflow-hidden border-2 mb-1.5 shadow-sm transition-colors ${activeCategory === cat.name ? 'border-luna-black dark:border-gold' : 'border-gray-200 dark:border-gray-800'}`}>
                      <img src={cat.img} alt={cat.name} className="w-full h-full object-cover" />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">{cat.name}</span>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${activeCategory === cat.name ? 'text-black dark:text-gold' : 'text-gray-700 dark:text-gray-300'}`}>{cat.name}</span>
                </div>
             ))}
          </div>
@@ -81,7 +90,7 @@ export default function Home() {
              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
            </div>
         ) : (
-           <ProductGrid products={products} />
+           <ProductGrid products={activeCategory ? products.filter(p => p.category === activeCategory) : products} />
         )}
       </div>
 

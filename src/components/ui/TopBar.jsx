@@ -1,10 +1,22 @@
 import { Search, Camera, Heart, Sun, Moon } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function TopBar() {
   const { toggleTheme, theme } = useAppContext();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const activeCategory = searchParams.get('category') || 'All';
   
   const topCategories = ['All', 'Women', 'Shoes', 'Curve', 'Men', 'Kids', 'Jewelry'];
+
+  const handleCategoryClick = (cat) => {
+     if (cat === 'All') {
+        navigate('/');
+     } else {
+        navigate(`/?category=${encodeURIComponent(cat)}`);
+     }
+  };
 
   return (
     <header className="fixed top-0 w-full z-50 bg-luna-white dark:bg-luna-black transition-colors duration-300 shadow-sm">
@@ -37,14 +49,17 @@ export default function TopBar() {
       {/* Scroller Row */}
       <div className="overflow-x-auto whitespace-nowrap px-3 pb-1 scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
          <div className="flex space-x-6 items-center">
-            {topCategories.map((cat, idx) => (
+            {topCategories.map((cat, idx) => {
+              const isActive = cat === activeCategory;
+              return (
               <button 
                 key={idx}
-                className={`text-[15px] pb-2 border-b-2 transition-colors ${idx === 0 ? 'text-luna-black dark:text-gold font-bold border-luna-black dark:border-gold' : 'text-gray-600 dark:text-gray-400 font-medium border-transparent hover:text-gold dark:hover:text-gold'}`}
+                onClick={() => handleCategoryClick(cat)}
+                className={`text-[15px] pb-2 border-b-2 transition-colors ${isActive ? 'text-luna-black dark:text-gold font-bold border-luna-black dark:border-gold' : 'text-gray-600 dark:text-gray-400 font-medium border-transparent hover:text-gold dark:hover:text-gold'}`}
               >
                 {cat}
               </button>
-            ))}
+            )})}
          </div>
       </div>
     </header>

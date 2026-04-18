@@ -2,10 +2,13 @@ import { useProducts } from '../hooks/useProducts';
 import ProductGrid from '../components/product/ProductGrid';
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
+import { useSearchParams } from 'react-router-dom';
 
 export default function Shop() {
   const { products, loading } = useProducts();
   const { t } = useAppContext();
+  const [searchParams] = useSearchParams();
+  const activeCategory = searchParams.get('category');
 
   return (
     <div className="bg-luna-white dark:bg-luna-black transition-colors duration-300 min-h-screen py-16">
@@ -27,7 +30,7 @@ export default function Shop() {
              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold"></div>
            </div>
         ) : (
-           <ProductGrid products={products} />
+           <ProductGrid products={activeCategory ? products.filter(p => p.category === activeCategory) : products} />
         )}
       </div>
     </div>

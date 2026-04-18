@@ -2,6 +2,7 @@ export const mockProducts = [
   {
     id: "p1",
     name: "Golden Elegance Abaya",
+    category: "Women",
     price: 4500,
     currency: "ETB",
     description: "Luxurious silk abaya with intricate gold embroidery along the sleeves and hemline. Perfect for special occasions.",
@@ -11,6 +12,7 @@ export const mockProducts = [
   {
     id: "p2",
     name: "Midnight Pearl Evening Gown",
+    category: "Curve",
     price: 6800,
     currency: "ETB",
     description: "A stunning black evening gown featuring pearl detailing and a sweeping train. Crafted from premium satin.",
@@ -20,6 +22,7 @@ export const mockProducts = [
   {
     id: "p3",
     name: "Ivory Modest Maxi Dress",
+    category: "Women",
     price: 3200,
     currency: "ETB",
     description: "Flowing ivory maxi dress with delicate lace trims and a belted waist for a flattering, modest silhouette.",
@@ -29,6 +32,7 @@ export const mockProducts = [
   {
     id: "p4",
     name: "Onyx Tailored Blazer",
+    category: "Women",
     price: 5000,
     currency: "ETB",
     description: "Sharp and sophisticated black blazer with gold-plated buttons. A must-have for the modern professional.",
