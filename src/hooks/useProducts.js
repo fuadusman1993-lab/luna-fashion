@@ -3,16 +3,43 @@ import { db, isFirebaseConfigured } from '../services/firebase';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { mockProducts } from '../data/products';
 
+let localProductsState = [...mockProducts];
+let subscribers = [];
+
+const notifySubscribers = () => {
+  subscribers.forEach(fn => fn([...localProductsState]));
+};
+
+export const updateLocalProduct = (id, payload) => {
+  localProductsState = localProductsState.map(p => p.id === id ? { ...p, ...payload } : p);
+  notifySubscribers();
+};
+
+export const addLocalProduct = (payload) => {
+  const newProduct = { ...payload, id: `luna_${Date.now()}` };
+  localProductsState = [newProduct, ...localProductsState];
+  notifySubscribers();
+};
+
+export const deleteLocalProduct = (id) => {
+  localProductsState = localProductsState.filter(p => p.id !== id);
+  notifySubscribers();
+};
+
 export function useProducts() {
-  const [products, setProducts] = useState(mockProducts);
+  const [products, setProducts] = useState(isFirebaseConfigured ? [] : localProductsState);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isFirebaseConfigured) {
       // Fallback to mock data if Firebase isn't set up yet
-      setProducts(mockProducts);
+      setProducts(localProductsState);
+      const handler = (newProds) => setProducts(newProds);
+      subscribers.push(handler);
       setLoading(false);
-      return;
+      return () => {
+        subscribers = subscribers.filter(fn => fn !== handler);
+      };
     }
 
     // Set up real-time listener for Firestore collection "products"

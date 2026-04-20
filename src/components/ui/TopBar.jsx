@@ -27,23 +27,23 @@ export default function TopBar() {
             {theme === 'dark' ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
          </button>
 
-         {/* Center Search Input */}
-         <div className="flex-1 flex items-center bg-[#f5f5f5] dark:bg-[#1a1a1a] rounded-full mx-2 px-4 py-2 transition-colors border border-transparent dark:border-gray-800 focus-within:border-gold dark:focus-within:border-gold">
-            <Search className="w-4 h-4 text-gray-400 mr-2" />
-            <input 
-               type="text" 
-               placeholder="Luxury dresses..." 
-               className="bg-transparent border-none outline-none flex-1 text-sm text-black dark:text-white"
-            />
-            <button className="text-gray-400 hover:text-gold transition-colors">
-               <Camera className="w-5 h-5" />
-            </button>
+         {/* Center Brand Logo */}
+         <div className="flex-1 flex justify-center items-center px-2">
+             <h1 onClick={() => navigate('/')} className="font-display text-xl font-bold tracking-[0.2em] uppercase text-luna-black dark:text-white cursor-pointer select-none">
+                LUNA
+                <span className="text-gold.DEFAULT ml-1">FASHION</span>
+             </h1>
          </div>
 
-         {/* Favorites Right */}
-         <button className="text-luna-black dark:text-luna-white p-2">
-            <Heart className="w-6 h-6" />
-         </button>
+         {/* Right Icons */}
+         <div className="flex items-center space-x-1">
+            <button className="text-luna-black dark:text-luna-white p-2">
+               <Search className="w-5 h-5" />
+            </button>
+            <button className="text-luna-black dark:text-luna-white p-2">
+               <Heart className="w-5 h-5" />
+            </button>
+         </div>
       </div>
 
       {/* Scroller Row */}

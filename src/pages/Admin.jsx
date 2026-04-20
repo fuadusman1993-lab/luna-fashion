@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { auth, db, storage, isFirebaseConfigured } from '../services/firebase';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useAppContext } from '../context/AppContext';
-import { User, Settings, PackagePlus } from 'lucide-react';
+import { User, Settings, PackagePlus, ListTree, Pencil, Trash2 } from 'lucide-react';
+import { useProducts, addLocalProduct, updateLocalProduct, deleteLocalProduct } from '../hooks/useProducts';
 
 export default function Admin() {
   const { t } = useAppContext();
+  const { products } = useProducts();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,11 +17,12 @@ export default function Admin() {
   const [activeTab, setActiveTab] = useState('products');
 
   // Product Form State
+  const [editId, setEditId] = useState(null);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('Women');
   const [description, setDescription] = useState('');
-  const [imageFile, setImageFile] = useState(null);
+  const [imageFiles, setImageFiles] = useState([]);
   const [inStock, setInStock] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -45,7 +48,7 @@ export default function Admin() {
     }
   };
 
-  const handleCreateProduct = async (e) => {
+  const handleCreateOrUpdateProduct = async (e) => {
     e.preventDefault();
     setUploading(true);
     setSuccessMsg('');
@@ -53,97 +56,150 @@ export default function Admin() {
 
     if (!isFirebaseConfigured) {
       setTimeout(() => {
+        const localUrls = imageFiles.map(file => URL.createObjectURL(file));
+        const payload = {
+           name,
+           category,
+           price: Number(price),
+           currency: "ETB",
+           description,
+           inStock
+        };
+        if (localUrls.length > 0) {
+           payload.imageUrl = localUrls[0];
+           payload.images = localUrls;
+        }
+
+        if (editId) {
+           updateLocalProduct(editId, payload);
+           setSuccessMsg(`Product updated! (Preview mode)`);
+        } else {
+           addLocalProduct(payload);
+           setSuccessMsg(`Product added to ${category}! (Preview mode)`);
+        }
+        
         setUploading(false);
-        setSuccessMsg(`Product added magically mapped to ${category}! (Mock preview)`);
-        setName(''); setPrice(''); setDescription(''); setCategory('Women'); setImageFile(null);
-      }, 1500);
+        resetForm();
+      }, 500);
       return;
     }
 
-    if (!imageFile) {
+    if (imageFiles.length === 0 && !editId) {
       setError('Please select an image file first.');
       setUploading(false);
       return;
     }
 
     try {
-      const storageRef = ref(storage, `products/${Date.now()}_${imageFile.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, imageFile);
+      let downloadURLs = [];
+      let defaultImageUrl = null;
+      
+      if (imageFiles.length > 0) {
+         await Promise.all(imageFiles.map(async (file) => {
+            const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+            await new Promise((resolve, reject) => {
+               uploadTask.on('state_changed', null, reject, async () => {
+                  const url = await getDownloadURL(uploadTask.snapshot.ref);
+                  downloadURLs.push(url);
+                  resolve();
+               });
+            });
+         }));
+         defaultImageUrl = downloadURLs[0];
+      }
 
-      uploadTask.on('state_changed', 
-        (snapshot) => {}, 
-        (error) => {
-          setError(error.message);
-          setUploading(false);
-        }, 
-        async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+      const payload = {
+        name,
+        category,
+        price: Number(price),
+        currency: "ETB",
+        description,
+        inStock
+      };
 
-          await addDoc(collection(db, "products"), {
-            name,
-            category,
-            price: Number(price),
-            currency: "ETB",
-            description,
-            imageUrl: downloadURL,
-            inStock,
-            createdAt: serverTimestamp()
-          });
+      if (downloadURLs.length > 0) {
+        payload.imageUrl = defaultImageUrl;
+        payload.images = downloadURLs;
+      }
 
-          setUploading(false);
-          setSuccessMsg('Product added successfully!');
-          setName(''); setPrice(''); setDescription(''); setCategory('Women'); setImageFile(null);
-        }
-      );
+      if (editId) {
+         await updateDoc(doc(db, "products", editId), payload);
+         setSuccessMsg('Product updated successfully!');
+      } else {
+         payload.createdAt = serverTimestamp();
+         await addDoc(collection(db, "products"), payload);
+         setSuccessMsg('Product added successfully!');
+      }
+
+      setUploading(false);
+      resetForm();
     } catch (err) {
       setError(err.message);
       setUploading(false);
     }
   };
 
+  const handleEditPrep = (product) => {
+     setEditId(product.id);
+     setName(product.name);
+     setPrice(product.price);
+     setCategory(product.category || 'Women');
+     setDescription(product.description || '');
+     setInStock(product.inStock);
+     setActiveTab('products');
+  };
+
+  const handleDeleteProduct = async (id) => {
+     if (window.confirm("Delete this product permanently?")) {
+        if (!isFirebaseConfigured) {
+           deleteLocalProduct(id);
+           return;
+        }
+        await deleteDoc(doc(db, "products", id));
+     }
+  };
+
+  const resetForm = () => {
+     setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Women'); setImageFiles([]);
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center bg-gray-50 dark:bg-luna-black transition-colors duration-300 px-4 pt-10">
-        <div className="max-w-md w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xl p-8">
+        <div className="max-w-md w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xl p-8 rounded-sm">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-display text-luna-black dark:text-luna-white uppercase tracking-widest">{t('adminAccess')}</h2>
             <div className="w-10 h-0.5 bg-gold mx-auto mt-4"></div>
           </div>
           
           {!isFirebaseConfigured && (
-            <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 text-yellow-800 dark:text-yellow-400 text-sm leading-relaxed">
-              <strong>Firebase not configured!</strong> <br/>
-              Use <strong>admin@lunafashion.com</strong> and <strong>password</strong> to preview.
+            <div className="mb-6 p-4 bg-[#111] border border-gold/30 text-gold text-xs leading-relaxed text-center">
+              <strong>Preview DB Active</strong> <br/>
+              Use <strong>admin@lunafashion.com</strong> | <strong>password</strong>
             </div>
           )}
 
           {error && <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-500 dark:text-red-400 text-sm text-center font-medium border border-red-200 dark:border-red-800">{error}</div>}
           
           <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('emailDetails')}</label>
-              <input 
+             <input 
                 type="email" 
+                placeholder="Email Address"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
                 className="w-full border-gray-300 dark:border-gray-700 bg-transparent dark:text-white border p-3 focus:ring-gold focus:border-gold outline-none transition-colors" 
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('password')}</label>
               <input 
                 type="password" 
+                placeholder="Password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
                 className="w-full border-gray-300 dark:border-gray-700 bg-transparent dark:text-white border p-3 focus:ring-gold focus:border-gold outline-none transition-colors" 
               />
-            </div>
-            <button 
-              type="submit" 
-              className="w-full bg-luna-black dark:bg-gold text-white dark:text-black p-4 uppercase tracking-wider font-semibold hover:bg-gold transition-colors"
-            >
+            <button type="submit" className="w-full bg-luna-black dark:bg-gold text-white dark:text-black p-4 uppercase tracking-wider font-bold hover:opacity-90 transition-opacity">
               {t('login')}
             </button>
           </form>
@@ -154,7 +210,7 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-luna-black transition-colors duration-300 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8">
         
         {/* Sidebar Tabs */}
         <div className="w-full md:w-64 flex flex-col space-y-2">
@@ -168,7 +224,15 @@ export default function Admin() {
              className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'products' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
           >
              <PackagePlus className="w-5 h-5 mr-3" />
-             {t('productsTab')}
+             {editId ? 'Edit Product' : t('addNewProduct')}
+          </button>
+
+          <button 
+             onClick={() => { setActiveTab('manage'); resetForm(); }}
+             className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'manage' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
+          >
+             <ListTree className="w-5 h-5 mr-3" />
+             Manage Catalog
           </button>
           
           <button 
@@ -192,21 +256,22 @@ export default function Admin() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm p-8 transition-colors duration-300 relative">
-          {!isFirebaseConfigured && (
-            <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 text-yellow-800 dark:text-yellow-400 text-sm">
-               {t('previewModeInfo')}
-            </div>
-          )}
-
+        <div className="flex-1 bg-white dark:bg-[#111111] border border-gray-200 dark:border-gray-800 shadow-sm p-8 transition-colors duration-300 relative">
+          
+          {/* Upload / Edit Tab */}
           {activeTab === 'products' && (
             <div>
-              <h2 className="text-2xl font-display text-luna-black dark:text-luna-white mb-6 uppercase tracking-wider">{t('addNewProduct')}</h2>
+              <div className="flex justify-between items-center mb-6">
+                 <h2 className="text-2xl font-display text-luna-black dark:text-luna-white uppercase tracking-wider">
+                    {editId ? 'Edit Product Mode' : t('addNewProduct')}
+                 </h2>
+                 {editId && <button onClick={resetForm} className="text-xs font-bold uppercase text-red-500 border border-red-500 px-3 py-1">Cancel Edit</button>}
+              </div>
               
               {successMsg && <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800">{successMsg}</div>}
               {error && <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800">{error}</div>}
 
-              <form onSubmit={handleCreateProduct} className="space-y-6">
+              <form onSubmit={handleCreateOrUpdateProduct} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('productName')}</label>
@@ -239,22 +304,20 @@ export default function Admin() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('image')}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{editId ? 'Add New Images (Optional)' : t('image')}</label>
                   <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed hover:border-gold transition-colors cursor-pointer bg-gray-50 dark:bg-black/20 relative">
                     <input 
                       type="file" 
                       accept="image/*" 
-                      onChange={e => setImageFile(e.target.files[0])}
+                      multiple
+                      onChange={e => setImageFiles(Array.from(e.target.files))}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
-                      required={!isFirebaseConfigured ? false : true}
+                      required={!isFirebaseConfigured && !editId ? false : (!editId)}
                     />
                     <div className="space-y-1 text-center relative z-0">
-                      <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
                       <div className="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
-                        <span className="relative font-medium text-gold">
-                          {imageFile ? imageFile.name : t('uploadImage')}
+                        <span className="relative font-bold text-gold">
+                          {imageFiles.length > 0 ? `${imageFiles.length} file(s) selected` : (editId ? 'Click to browse new image(s)' : t('uploadImage'))}
                         </span>
                       </div>
                     </div>
@@ -266,39 +329,63 @@ export default function Admin() {
                    <label htmlFor="inStock" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">{t('inStock')}</label>
                 </div>
 
-                <button type="submit" disabled={uploading} className="w-full bg-luna-black dark:bg-gold text-white dark:text-black p-3 uppercase tracking-wider font-semibold hover:bg-gold transition-colors disabled:opacity-50">
-                  {uploading ? t('publishing') : t('publish')}
+                <button type="submit" disabled={uploading} className="w-full bg-luna-black dark:bg-gold text-white dark:text-black p-3 uppercase tracking-wider font-bold hover:opacity-90 transition-opacity disabled:opacity-50">
+                  {uploading ? t('publishing') : (editId ? 'SAVE CHANGES' : t('publish'))}
                 </button>
               </form>
             </div>
           )}
 
-          {activeTab === 'settings' && (
+          {/* Manage Products Tab */}
+          {activeTab === 'manage' && (
             <div>
-              <h2 className="text-2xl font-display text-luna-black dark:text-luna-white mb-6 uppercase tracking-wider">{t('settingsTitle')}</h2>
-              
-              <div className="space-y-8">
-                 <div className="border-b border-gray-200 dark:border-gray-800 pb-8">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-gold mb-4">{t('changePassword')}</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                       <input type="password" placeholder="New Password" className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold outline-none" />
-                       <input type="password" placeholder="Confirm Password" className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold outline-none" />
-                    </div>
-                    <button className="mt-4 px-6 py-2 border border-luna-black dark:border-gold hover:bg-luna-black hover:text-white dark:hover:bg-gold dark:hover:text-black transition-colors font-medium text-sm uppercase dark:text-gold text-black tracking-widest">{t('changePassword')}</button>
-                 </div>
-
-                 <div>
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-gold mb-4">{t('shopInfo')}</h3>
-                    <div className="space-y-4">
-                       <div>
-                         <label className="block text-sm text-gray-500 mb-1">Contact Phone</label>
-                         <input type="text" defaultValue="+251 97 779 9797" className="w-full md:w-1/2 dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold outline-none" />
-                       </div>
-                       <button className="px-6 py-2 border border-luna-black dark:border-gold hover:bg-luna-black hover:text-white dark:hover:bg-gold dark:hover:text-black transition-colors font-medium text-sm uppercase dark:text-gold text-black tracking-widest">{t('saveSettings')}</button>
-                    </div>
-                 </div>
-              </div>
+               <h2 className="text-2xl font-display text-luna-black dark:text-luna-white mb-6 uppercase tracking-wider">Manage Catalog</h2>
+               <div className="overflow-x-auto">
+                 <table className="w-full text-left text-sm text-gray-700 dark:text-gray-300">
+                    <thead className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white uppercase font-bold text-xs">
+                       <tr>
+                         <th className="px-4 py-3">Product</th>
+                         <th className="px-4 py-3">Price</th>
+                         <th className="px-4 py-3">Category</th>
+                         <th className="px-4 py-3">Status</th>
+                         <th className="px-4 py-3 text-right">Actions</th>
+                       </tr>
+                    </thead>
+                    <tbody>
+                       {products.map(p => (
+                          <tr key={p.id} className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                             <td className="px-4 py-3 flex items-center font-medium">
+                                <img src={p.imageUrl} alt="" className="w-8 h-8 rounded-full object-cover mr-3 border border-gray-300 dark:border-gray-700" />
+                                {p.name}
+                             </td>
+                             <td className="px-4 py-3 font-bold">{p.price} ETB</td>
+                             <td className="px-4 py-3">{p.category || 'Women'}</td>
+                             <td className="px-4 py-3">
+                                {p.inStock ? <span className="text-green-500 font-bold text-[10px] bg-green-500/10 px-2 py-1 rounded">IN STOCK</span> : <span className="text-red-500 font-bold text-[10px] bg-red-500/10 px-2 py-1 rounded">SOLD OUT</span>}
+                             </td>
+                             <td className="px-4 py-3 text-right">
+                                <button onClick={() => handleEditPrep(p)} className="text-gold p-1 hover:bg-gold/20 mr-2 rounded">
+                                   <Pencil className="w-4 h-4" />
+                                </button>
+                                <button onClick={() => handleDeleteProduct(p.id)} className="text-red-500 p-1 hover:bg-red-500/20 rounded">
+                                   <Trash2 className="w-4 h-4" />
+                                </button>
+                             </td>
+                          </tr>
+                       ))}
+                    </tbody>
+                 </table>
+                 {products.length === 0 && <p className="text-center py-10 text-gray-500">No products found.</p>}
+               </div>
             </div>
+          )}
+
+          {activeTab === 'settings' && (
+             <div>
+               <h2 className="text-2xl font-display text-luna-black dark:text-luna-white mb-6 uppercase tracking-wider">{t('settingsTitle')}</h2>
+               {/* Setting blocks... */}
+               <p className="text-gray-500">Security preferences are managed via Firebase.</p>
+             </div>
           )}
 
         </div>
