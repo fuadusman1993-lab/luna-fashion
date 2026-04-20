@@ -14,12 +14,12 @@ export default function Home() {
 
   // Minimalist SVGs mapped conceptually to the exact inventory categories
   const circleCategories = [
-    { name: 'Makhawar (ቶብ)', icon: Scissors },
+    { name: 'Makhawar', icon: Scissors },
     { name: 'Abaya', icon: Shirt },
     { name: 'Dria', icon: Component },
-    { name: 'Dresses (ቀሚስ)', icon: Combine },
-    { name: 'Makeup', icon: Sparkles },
+    { name: 'Dresses', icon: Combine },
     { name: 'Shoes', icon: Footprints },
+    { name: 'Makeup', icon: Sparkles },
   ];
 
   const filterTabs = [
@@ -33,20 +33,20 @@ export default function Home() {
     <div className="flex flex-col bg-white dark:bg-[#0a0a0a] min-h-[90vh]">
       
       {/* Circle Categories Horizontal Scroller (Line Icons Edition) */}
-      <div className="overflow-x-auto whitespace-nowrap px-2 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-         <div className="flex space-x-5 px-3 items-center">
+      <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+         <div className="flex space-x-4 px-2 items-center">
             {circleCategories.map((cat, idx) => {
                const Icon = cat.icon;
                return (
                <div 
                  key={idx} 
                  onClick={() => navigate(`/?category=${encodeURIComponent(cat.name)}`)}
-                 className="flex flex-col items-center cursor-pointer group"
+                 className="flex flex-col items-center cursor-pointer group flex-shrink-0"
                >
-                  <div className={`w-[50px] h-[50px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-2 shadow-sm ${activeCategory === cat.name ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105 shadow-md' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] text-gray-800 dark:text-gray-300 shadow-sm hover:shadow-md'}`}>
+                  <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm ${activeCategory === cat.name ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105 shadow-md' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] text-gray-800 dark:text-gray-300 hover:shadow-md'}`}>
                      <Icon className="w-[20px] h-[20px]" strokeWidth={1.25} />
                   </div>
-                  <span className={`text-[10px] font-bold uppercase tracking-widest ${activeCategory === cat.name ? 'text-black dark:text-gold' : 'text-gray-500 dark:text-gray-400'}`}>{cat.name}</span>
+                  <span className={`text-[11px] font-bold tracking-wide ${activeCategory === cat.name ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>{cat.name}</span>
                </div>
             )})}
          </div>
