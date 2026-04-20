@@ -1,4 +1,4 @@
-import { Search, Heart, Sun, Moon } from 'lucide-react';
+import { Search, Heart, Mail, Calendar, Camera } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -30,47 +30,45 @@ export default function TopBar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-luna-white dark:bg-luna-black transition-colors duration-300 shadow-sm sm:max-w-[480px] mx-auto">
-      {/* TikTok Banner */}
+    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-white/85 dark:bg-black/85 backdrop-blur-md transition-colors duration-300 shadow-sm sm:max-w-[480px] mx-auto pb-1">
+      {/* Sleek TikTok Banner */}
       <a 
         href="https://www.tiktok.com/@lunamarket2?_r=1&_t=ZS-95fxiBRtXYz" 
         target="_blank" 
         rel="noopener noreferrer"
-        className="block w-full bg-[#0a0a0a] text-gold dark:bg-gold dark:text-black py-1.5 text-center text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+        className="flex justify-center items-center w-full bg-[#d4af37] text-white dark:text-gray-900 py-[5px] text-center text-[10px] font-bold uppercase tracking-[0.15em] hover:opacity-90 transition-opacity"
       >
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" className="w-[14px] h-[14px] mr-2">
+          <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/>
+        </svg>
         Watch LUNA FASHION on TikTok
       </a>
 
-      {/* Search Row */}
-      <div className="flex items-center justify-between px-3 pt-3 pb-2">
-         {/* Theme toggler */}
-         <button onClick={toggleTheme} className="text-luna-black dark:text-luna-white p-2">
-            {theme === 'dark' ? <Sun strokeWidth={1} className="w-6 h-6" /> : <Moon strokeWidth={1} className="w-6 h-6" />}
-         </button>
-
-         {/* Center Brand Logo */}
-         <div className="flex-1 flex justify-center items-center px-2">
-             <h1 onClick={() => navigate('/')} className="font-display text-xl font-bold tracking-[0.2em] uppercase text-luna-black dark:text-white cursor-pointer select-none">
-                LUNA
-                <span className="text-gold.DEFAULT ml-1">FASHION</span>
-             </h1>
+      {/* Main Action/Search Row */}
+      <div className="flex items-center justify-between px-3 pt-3 pb-3 gap-3">
+         
+         {/* Left Icons: Message & Calendar */}
+         <div className="flex items-center gap-3 shrink-0 text-luna-black dark:text-luna-white">
+            <button className="hover:opacity-70 transition-opacity"><Mail strokeWidth={1} className="w-[20px] h-[20px]" /></button>
+            <button className="hover:opacity-70 transition-opacity"><Calendar strokeWidth={1} className="w-[20px] h-[20px]" /></button>
          </div>
 
-         {/* Right Icons */}
-         <button className="text-luna-black dark:text-luna-white p-2">
-             <Heart strokeWidth={1} className="w-6 h-6" />
-         </button>
-      </div>
-
-      {/* Dynamic Search Bar Row */}
-      <div className="px-3 pb-2">
-         <div className="flex w-full items-center bg-[#f5f5f5] dark:bg-[#1a1a1a] rounded-full px-4 py-2 transition-colors border border-transparent dark:border-gray-800 focus-within:border-gold dark:focus-within:border-gold">
-            <Search strokeWidth={1.5} className="w-4 h-4 text-gray-400 mr-2 shrink-0" />
+         {/* Fully rounded, soft-gray background search bar */}
+         <div className="flex-1 flex items-center bg-[#f0f0f0] dark:bg-[#1f1f1f] rounded-full px-3 py-2 transition-colors border border-transparent dark:border-gray-800 focus-within:border-gold dark:focus-within:border-gold">
+            <Search strokeWidth={1.5} className="w-4 h-4 text-gray-500 shrink-0" />
             <input 
                type="text" 
                placeholder={placeholders[placeholderIdx]} 
-               className="bg-transparent border-none outline-none flex-1 text-sm text-black dark:text-white w-full placeholder-opacity-100 placeholder:transition-opacity duration-500"
+               className="bg-transparent border-none outline-none flex-1 text-[11px] font-light tracking-wide text-black dark:text-white px-2 w-full placeholder-opacity-100 placeholder:transition-opacity duration-500"
             />
+            <button className="text-gray-500 hover:text-gold transition-colors shrink-0">
+               <Camera strokeWidth={1.5} className="w-[18px] h-[18px]" />
+            </button>
+         </div>
+
+         {/* Right Icons: Heart */}
+         <div className="flex items-center shrink-0 text-luna-black dark:text-luna-white">
+             <button className="hover:opacity-70 transition-opacity"><Heart strokeWidth={1} className="w-[20px] h-[20px]" /></button>
          </div>
       </div>
 

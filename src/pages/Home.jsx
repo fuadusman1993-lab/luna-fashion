@@ -47,19 +47,19 @@ export default function Home() {
          </div>
       </div>
 
-      {/* Hero Banner Slider Replacement - Luxury LUNA Execution */}
-      <div className="px-3 md:px-4 py-3">
-         <div className="w-full h-[160px] rounded-lg overflow-hidden relative shadow-lg bg-[#0a0a0a] border border-gold/20 flex flex-col items-center justify-center border-b-4 border-b-gold">
-            {/* Faint subtle background texture trick */}
-            <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[size:10px_10px]"></div>
-            
-            <h2 className="relative z-10 text-white font-display text-4xl uppercase tracking-[0.2em] font-black text-center mb-1">
-               LUNA <span className="text-gold">FASHION</span>
-            </h2>
-            <span className="relative z-10 bg-white/10 text-gold text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-[0.25em] backdrop-blur-sm mt-2 border border-gold/30">
-               Official Showcase
-            </span>
-         </div>
+      {/* Premium Full-Width Showcase Banner */}
+      <div className="w-full h-[220px] relative flex flex-col items-center justify-center border-b-[3px] border-b-gold mb-1">
+         {/* Background Image */}
+         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center"></div>
+         {/* Deep Layering Overlay for Contrast */}
+         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
+         
+         <h2 className="relative z-10 text-white font-display text-[2.5rem] leading-none uppercase tracking-[0.3em] font-black text-center mb-2 drop-shadow-md">
+            LUNA <span className="text-gold">FASHION</span>
+         </h2>
+         <span className="relative z-10 bg-white/10 text-white text-[9px] font-bold px-4 py-1.5 rounded-sm uppercase tracking-[0.3em] backdrop-blur-md mt-1 border border-white/20 shadow-lg select-none">
+            Official Showcase
+         </span>
       </div>
 
       {/* Dynamic Filter Tabs - Sticky Header Offset */}
