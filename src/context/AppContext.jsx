@@ -8,27 +8,45 @@ export function useAppContext() {
 }
 
 export function AppProvider({ children }) {
-  // Theme State
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  // Theme State - Locked to Dark Mode
+  const [theme] = useState('dark');
   
   // Language State
   const [language, setLanguage] = useState(localStorage.getItem('lang') || 'en');
 
-  // Apply Theme class to document root
+  // Wishlist State
+  const [wishlist, setWishlist] = useState(() => {
+    const saved = localStorage.getItem('luna_wishlist');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Apply Theme class to document root strictly
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    root.classList.remove('light');
+    root.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+  }, []);
+
+  // Sync wishlist to local storage
+  useEffect(() => {
+    localStorage.setItem('luna_wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
 
   // Sync language to local storage
   useEffect(() => {
     localStorage.setItem('lang', language);
   }, [language]);
 
-  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
   const toggleLanguage = () => setLanguage(language === 'en' ? 'am' : 'en');
+  
+  const toggleWishlist = (productId) => {
+    setWishlist(prev => 
+      prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]
+    );
+  };
+
+  const isInWishlist = (productId) => wishlist.includes(productId);
   
   // Translator function
   const t = (key) => {
@@ -37,10 +55,12 @@ export function AppProvider({ children }) {
 
   const value = {
     theme,
-    toggleTheme,
     language,
     toggleLanguage,
-    t
+    t,
+    wishlist,
+    toggleWishlist,
+    isInWishlist
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

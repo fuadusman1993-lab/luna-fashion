@@ -1,5 +1,5 @@
-import { Search, Heart, Mail, Calendar, Camera } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Search, Heart, Mail, Calendar, Camera, Mic } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ export default function TopBar() {
 
   const placeholders = ['Search Occasion Bags...', 'Search LUNA Specials...', 'Search Signature Coats...', 'Search Trending Styles...'];
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,6 +21,19 @@ export default function TopBar() {
     }, 2500);
     return () => clearInterval(interval);
   }, []);
+
+  const handleCameraClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      alert(`Initializing visual search for: ${file.name}`);
+    }
+  };
 
   const handleCategoryClick = (cat) => {
      if (cat === 'All') {
@@ -30,7 +44,17 @@ export default function TopBar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-white/85 dark:bg-black/85 backdrop-blur-md transition-colors duration-300 shadow-sm sm:max-w-[480px] mx-auto pb-1">
+    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-[#000000]/80 backdrop-blur-lg transition-colors duration-300 shadow-sm sm:max-w-[480px] mx-auto pb-1 border-b border-white/10">
+      {/* Hidden file input for camera/file upload mockup */}
+      <input 
+        type="file" 
+        accept="image/*" 
+        capture="environment" 
+        className="hidden" 
+        ref={fileInputRef}
+        onChange={handleFileChange}
+      />
+
       {/* Sleek TikTok Banner */}
       <a 
         href="https://www.tiktok.com/@lunamarket2?_r=1&_t=ZS-95fxiBRtXYz" 
@@ -48,26 +72,29 @@ export default function TopBar() {
       <div className="flex items-center justify-between px-3 pt-3 pb-3 gap-3">
          
          {/* Left Icons: Message & Calendar */}
-         <div className="flex items-center gap-3 shrink-0 text-luna-black dark:text-luna-white">
+         <div className="flex items-center gap-3 shrink-0 text-white">
             <button className="hover:opacity-70 transition-opacity"><Mail strokeWidth={1} className="w-[20px] h-[20px]" /></button>
             <button className="hover:opacity-70 transition-opacity"><Calendar strokeWidth={1} className="w-[20px] h-[20px]" /></button>
          </div>
 
          {/* Fully rounded, soft-gray background search bar */}
-         <div className="flex-1 flex items-center bg-[#f0f0f0] dark:bg-[#1f1f1f] rounded-full px-3 py-2 transition-colors border border-transparent dark:border-gray-800 focus-within:border-gold dark:focus-within:border-gold">
-            <Search strokeWidth={1.5} className="w-4 h-4 text-gray-500 shrink-0" />
+         <div className="flex-1 flex items-center bg-[#1f1f1f] rounded-full px-3 py-2 transition-colors border border-transparent focus-within:border-gold">
+            <button className="shrink-0"><Search strokeWidth={1.5} className="w-4 h-4 text-gray-400 hover:text-gold" /></button>
             <input 
                type="text" 
                placeholder={placeholders[placeholderIdx]} 
-               className="bg-transparent border-none outline-none flex-1 text-[11px] font-light tracking-wide text-black dark:text-white px-2 w-full placeholder-opacity-100 placeholder:transition-opacity duration-500"
+               className="bg-transparent border-none outline-none flex-1 text-[11px] font-light tracking-wide text-white px-2 w-full placeholder-opacity-100 placeholder:transition-opacity duration-500"
             />
-            <button className="text-gray-500 hover:text-gold transition-colors shrink-0">
+            <button className="text-gray-400 hover:text-gold transition-colors shrink-0 mr-2">
+               <Mic strokeWidth={1.5} className="w-[16px] h-[16px]" />
+            </button>
+            <button onClick={handleCameraClick} className="text-gray-400 hover:text-gold transition-colors shrink-0 border-l border-white/10 pl-2">
                <Camera strokeWidth={1.5} className="w-[18px] h-[18px]" />
             </button>
          </div>
 
          {/* Right Icons: Heart */}
-         <div className="flex items-center shrink-0 text-luna-black dark:text-luna-white">
+         <div className="flex items-center shrink-0 text-white">
              <button className="hover:opacity-70 transition-opacity"><Heart strokeWidth={1} className="w-[20px] h-[20px]" /></button>
          </div>
       </div>

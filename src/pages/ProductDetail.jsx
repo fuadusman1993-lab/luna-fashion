@@ -1,3 +1,4 @@
+import { useAppContext } from '../context/AppContext';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Heart, Share2, ShoppingBag } from 'lucide-react';
 import { useState } from 'react';
@@ -6,6 +7,7 @@ export default function ProductDetail() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { toggleWishlist, isInWishlist } = useAppContext();
   
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('Black');
@@ -22,6 +24,7 @@ export default function ProductDetail() {
     );
   }
 
+  const isWished = isInWishlist(product.id);
   const WHATSAPP_NUMBER = "+251977799797"; 
 
   const handleWhatsAppOrder = () => {
@@ -46,15 +49,19 @@ export default function ProductDetail() {
          <button onClick={() => navigate(-1)} className="w-[38px] h-[38px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors shadow-sm border border-white/20">
             <ArrowLeft className="w-[18px] h-[18px]" strokeWidth={2.5} />
          </button>
-         <div className="flex space-x-3">
-            <button className="w-[38px] h-[38px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors shadow-sm border border-white/20">
-               <Share2 className="w-[18px] h-[18px]" strokeWidth={2} />
-            </button>
-            <button className="w-[38px] h-[38px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors shadow-sm border border-white/20">
-               <Heart className="w-[18px] h-[18px]" strokeWidth={2} />
-            </button>
-         </div>
-      </div>
+          <div className="flex space-x-3">
+             <button className="w-[38px] h-[38px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors shadow-sm border border-white/20">
+                <Share2 className="w-[18px] h-[18px]" strokeWidth={2} />
+             </button>
+             <button onClick={() => toggleWishlist(product.id)} className="w-[38px] h-[38px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors shadow-sm border border-white/20 active:scale-90">
+                <Heart 
+                  className={`w-[18px] h-[18px] transition-colors ${isWished ? 'text-[#D4AF37] drop-shadow-[0_0_5px_rgba(212,175,55,0.8)]' : ''}`} 
+                  fill={isWished ? '#D4AF37' : 'none'}
+                  strokeWidth={isWished ? 0 : 2} 
+                />
+             </button>
+          </div>
+       </div>
 
       {/* Snap-X Image Carousel Layer */}
       <div className="w-full h-[65vh] bg-gray-100 dark:bg-[#0f0f0f] relative overflow-hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
@@ -153,16 +160,20 @@ export default function ProductDetail() {
       </div>
 
       {/* Fixed Sticky Action Bar Base */}
-      <div className="fixed bottom-0 left-0 right-0 mx-auto z-50 bg-white dark:bg-[#111111] border-t border-gray-200 dark:border-gray-800 px-4 py-3 sm:max-w-[480px] sm:border-x sm:border-gray-800 pb-safe flex items-center justify-between">
+      <div className="fixed bottom-0 left-0 right-0 mx-auto z-50 bg-[#111111] border-t border-white/5 px-4 py-3 sm:max-w-[480px] sm:border-x sm:border-gray-800 pb-safe flex items-center justify-between">
          <div className="flex-1 mr-3">
-            <button className="w-[50px] h-[50px] border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shrink-0">
-               <Heart className="w-[20px] h-[20px] text-luna-black dark:text-white" strokeWidth={1.5} />
+            <button onClick={() => toggleWishlist(product.id)} className="w-[50px] h-[50px] border border-white/10 flex items-center justify-center hover:bg-white/5 transition-colors shrink-0 active:scale-90">
+               <Heart 
+                 className={`w-[20px] h-[20px] transition-colors ${isWished ? 'text-[#D4AF37] drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]' : 'text-white'}`} 
+                 fill={isWished ? '#D4AF37' : 'none'}
+                 strokeWidth={isWished ? 0 : 1.5} 
+               />
             </button>
          </div>
          <button 
            onClick={handleWhatsAppOrder}
            disabled={!product.inStock}
-           className="w-full relative overflow-hidden group flex-shrink-0 bg-black text-white dark:bg-gold dark:text-black h-[50px] font-bold uppercase tracking-widest flex-[3] text-[12px] flex items-center justify-center shadow-lg disabled:opacity-50 transition-transform active:scale-95"
+           className="w-full relative overflow-hidden group flex-shrink-0 bg-[#D4AF37] text-black h-[50px] font-bold uppercase tracking-widest flex-[3] text-[12px] flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.4)] disabled:opacity-50 transition-all active:scale-95 hover:scale-[1.02]"
          >
            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white/20 rounded-full group-hover:w-56 group-hover:h-56"></span>
            <ShoppingBag className="w-4 h-4 mr-2" strokeWidth={2.5} />
