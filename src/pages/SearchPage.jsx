@@ -35,22 +35,22 @@ export default function SearchPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex flex-col font-sans pb-[80px]">
+    <div className="fixed inset-0 z-[10000] bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans overflow-y-auto">
       {/* Header */}
-      <div className="w-full bg-[#0a0a0a] border-b border-white/5 mx-auto px-4 py-3 flex items-center justify-between sm:max-w-[480px]">
+      <div className="w-full bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/5 mx-auto px-4 py-3 flex items-center justify-between sm:max-w-[480px]">
         <button onClick={() => navigate(-1)} className="p-1 hover:text-gold transition-colors active:scale-95 pr-2">
           <ArrowLeft strokeWidth={2} className="w-6 h-6" />
         </button>
         
         {/* Full Interactive Search Input */}
-        <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center bg-[#1f1f1f] rounded-full px-3 py-2 border border-transparent focus-within:border-gold transition-colors">
-          <SearchIcon strokeWidth={1.5} className="w-4 h-4 text-gray-400 mr-2 shrink-0" />
+        <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center bg-gray-100 dark:bg-[#1f1f1f] rounded-full px-3 py-2 border border-transparent focus-within:border-gold transition-colors">
+          <SearchIcon strokeWidth={1.5} className="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2 shrink-0" />
           <input 
             type="text" 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search premium collections..." 
-            className="bg-transparent border-none outline-none flex-1 text-[13px] font-light tracking-wide text-white w-full placeholder-gray-500"
+            className="bg-transparent border-none outline-none flex-1 text-[13px] font-light tracking-wide text-black dark:text-white w-full placeholder-gray-400 dark:placeholder-gray-500"
             autoFocus
           />
         </form>
@@ -60,7 +60,7 @@ export default function SearchPage() {
         </button>
       </div>
 
-      <div className="flex-1 pt-4 bg-[#0a0a0a]">
+      <div className="flex-1 pt-4 bg-[#ffffff] dark:bg-[#0a0a0a] pb-[40px]">
         
         {/* Results Metadata */}
         <div className="px-4 mb-4 flex justify-between items-end">

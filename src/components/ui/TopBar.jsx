@@ -4,14 +4,14 @@ import { useAppContext } from '../../context/AppContext';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 
 export default function TopBar() {
-  const { toggleTheme, theme } = useAppContext();
+  const { toggleTheme, theme, t } = useAppContext();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'All';
   
   const [searchQuery, setSearchQuery] = useState('');
   
-  const topCategories = ['All (ሁሉንም ለማየት)', 'Makhawar (ቶብ)', 'Abaya', 'Dria', 'Dresses (ቀሚስ)', 'Makeup', 'Shoes'];
+  const topCategories = [t('allNav'), 'Makhawar (ቶብ)', 'Abaya', 'Dria', 'Dresses (ቀሚስ)', 'Makeup', 'Shoes'];
 
   const placeholders = ['Search Occasion Bags...', 'Search LUNA Specials...', 'Search Signature Coats...', 'Search Trending Styles...'];
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
@@ -38,7 +38,7 @@ export default function TopBar() {
   };
 
   const handleCategoryClick = (cat) => {
-     if (cat.startsWith('All')) {
+     if (cat === t('allNav')) {
         navigate('/');
      } else {
         navigate(`/?category=${encodeURIComponent(cat)}`);

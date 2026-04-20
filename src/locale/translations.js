@@ -1,5 +1,6 @@
 export const translations = {
   en: {
+    allNav: "All",
     home: "Home",
     shop: "Shop Collection",
     about: "About Us",
@@ -43,6 +44,7 @@ export const translations = {
     previewModeInfo: "You are viewing the dashboard in Preview Mode. Any products uploaded here will not be saved permanently without Firebase credentials."
   },
   am: {
+    allNav: "ሁሉንም",
     home: "ዋና ገፅ",
     shop: "ሱቅ",
     about: "ስለ እኛ",

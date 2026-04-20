@@ -6,7 +6,7 @@ export default function Me() {
   const { theme, toggleTheme, language, toggleLanguage, t } = useAppContext();
 
   return (
-    <div className="min-h-[90vh] bg-[#f5f5f5] dark:bg-[#0a0a0a] px-3 py-6 font-sans">
+    <div className="min-h-screen bg-[#ffffff] dark:bg-[#000000] px-3 py-6 font-sans relative z-40 pb-[90px]">
        {/* User Profile Header */}
        <div className="flex items-center space-x-4 mb-8 pt-4 px-2">
           <div className="w-[72px] h-[72px] bg-gradient-to-br from-gold to-yellow-600 rounded-full flex flex-col items-center justify-center font-display text-3xl font-bold text-black border-2 border-white dark:border-black shadow-md">
@@ -80,7 +80,7 @@ export default function Me() {
              <div className="bg-gray-50 dark:bg-[#111111] p-3 rounded-lg border border-gray-100 dark:border-white/5">
                 <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">Branch 1: Jemo</h4>
                 <p className="text-[11px] text-gray-500 font-light mb-2">Jemo 1, Sun Moon Star Mall, 1st Floor, No. 06.</p>
-                <button className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
+                <button onClick={() => window.open('https://www.google.com/maps/search/Jemo+1,+Sun+Moon+Star+Mall', '_blank')} className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
                    <Map className="w-3 h-3 mr-1" /> View on Map
                 </button>
              </div>
@@ -89,7 +89,7 @@ export default function Me() {
              <div className="bg-gray-50 dark:bg-[#111111] p-3 rounded-lg border border-gray-100 dark:border-white/5">
                 <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">Branch 2: Bethel</h4>
                 <p className="text-[11px] text-gray-500 font-light mb-2">Bethel, Mira Mall, 1st Floor.</p>
-                <button className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
+                <button onClick={() => window.open('https://www.google.com/maps/search/Bethel,+Mira+Mall', '_blank')} className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
                    <Map className="w-3 h-3 mr-1" /> View on Map
                 </button>
              </div>

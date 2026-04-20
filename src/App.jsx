@@ -45,10 +45,10 @@ function AppContent() {
           <Route path="admin" element={<Admin />} />
           <Route path="me" element={<Me />} />
           <Route path="cart" element={<Cart />} />
-          <Route path="messages" element={<Messages />} />
-          <Route path="login" element={<Login />} />
-          <Route path="search" element={<SearchPage />} />
         </Route>
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/product/:id" element={<ProductDetail />} />
       </Routes>
     </BrowserRouter>

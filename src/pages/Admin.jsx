@@ -20,7 +20,7 @@ export default function Admin() {
   const [editId, setEditId] = useState(null);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('Women');
+  const [category, setCategory] = useState('Makhawar (ቶብ)');
   const [description, setDescription] = useState('');
   const [imageFiles, setImageFiles] = useState([]);
   const [inStock, setInStock] = useState(true);
@@ -144,7 +144,7 @@ export default function Admin() {
      setEditId(product.id);
      setName(product.name);
      setPrice(product.price);
-     setCategory(product.category || 'Women');
+     setCategory(product.category || 'Makhawar (ቶብ)');
      setDescription(product.description || '');
      setInStock(product.inStock);
      setActiveTab('products');
@@ -161,7 +161,7 @@ export default function Admin() {
   };
 
   const resetForm = () => {
-     setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Women'); setImageFiles([]);
+     setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Makhawar (ቶብ)'); setImageFiles([]);
   };
 
   if (!isAuthenticated) {
@@ -290,11 +290,12 @@ export default function Admin() {
                      onChange={e => setCategory(e.target.value)}
                      className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none appearance-none cursor-pointer"
                    >
-                      <option className="text-black" value="Women">Women</option>
-                      <option className="text-black" value="Men">Men</option>
-                      <option className="text-black" value="Kids">Kids</option>
+                      <option className="text-black" value="Makhawar (ቶብ)">Makhawar (ቶብ)</option>
+                      <option className="text-black" value="Abaya">Abaya</option>
+                      <option className="text-black" value="Dria">Dria</option>
+                      <option className="text-black" value="Dresses (ቀሚስ)">Dresses (ቀሚስ)</option>
+                      <option className="text-black" value="Makeup">Makeup</option>
                       <option className="text-black" value="Shoes">Shoes</option>
-                      <option className="text-black" value="Curve">Curve</option>
                    </select>
                 </div>
                 
@@ -310,7 +311,7 @@ export default function Admin() {
                       type="file" 
                       accept="image/*" 
                       multiple
-                      onChange={e => setImageFiles(Array.from(e.target.files))}
+                      onChange={e => setImageFiles(Array.from(e.target.files).slice(0, 3))}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
                       required={!isFirebaseConfigured && !editId ? false : (!editId)}
                     />
@@ -359,7 +360,7 @@ export default function Admin() {
                                 {p.name}
                              </td>
                              <td className="px-4 py-3 font-bold">{p.price} ETB</td>
-                             <td className="px-4 py-3">{p.category || 'Women'}</td>
+                             <td className="px-4 py-3">{p.category || 'Makhawar (ቶብ)'}</td>
                              <td className="px-4 py-3">
                                 {p.inStock ? <span className="text-green-500 font-bold text-[10px] bg-green-500/10 px-2 py-1 rounded">IN STOCK</span> : <span className="text-red-500 font-bold text-[10px] bg-red-500/10 px-2 py-1 rounded">SOLD OUT</span>}
                              </td>

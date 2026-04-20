@@ -12,9 +12,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] text-white flex flex-col font-sans pb-[80px]">
+    <div className="fixed inset-0 z-[10000] bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans overflow-y-auto">
       {/* Header */}
-      <div className="w-full bg-[#0a0a0a] border-b border-white/5 mx-auto px-4 py-4 flex items-center justify-between sm:max-w-[480px]">
+      <div className="w-full bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/5 mx-auto px-4 py-4 flex items-center justify-between sm:max-w-[480px]">
         <button onClick={() => navigate(-1)} className="p-1 hover:text-gold transition-colors active:scale-95">
           <ArrowLeft strokeWidth={2} className="w-6 h-6" />
         </button>
@@ -28,7 +28,7 @@ export default function Login() {
         <p className="text-[12px] text-gray-500 font-light mb-8 text-center uppercase tracking-widest">Sign in to access premium collections</p>
 
         {/* Form Toggles */}
-        <div className="flex w-full mb-8 bg-[#111111] p-1 rounded-full shadow-inner border border-white/5">
+        <div className="flex w-full mb-8 bg-gray-100 dark:bg-[#111111] p-1 rounded-full shadow-inner border border-gray-200 dark:border-white/5">
           <button 
             onClick={() => setLoginMethod('phone')}
             className={`flex-1 py-3 text-[11px] font-bold uppercase tracking-widest rounded-full transition-all ${loginMethod === 'phone' ? 'bg-[#222] text-gold shadow-md' : 'text-gray-500 hover:text-gray-400'}`}
@@ -44,31 +44,31 @@ export default function Login() {
         </div>
 
         {/* Dynamic Form */}
-        <form onSubmit={handleFakeLogin} className="flex flex-col space-y-5 flex-1">
+        <form onSubmit={handleFakeLogin} className="flex flex-col space-y-5 flex-1 pb-10">
           {loginMethod === 'phone' ? (
-            <div className="relative flex items-center bg-[#111111] border border-white/10 rounded-xl focus-within:border-gold transition-colors">
+            <div className="relative flex items-center bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl focus-within:border-gold dark:focus-within:border-gold transition-colors">
               <Phone className="w-5 h-5 text-gray-500 absolute left-4" strokeWidth={1.5} />
-              <span className="absolute left-12 text-white font-medium text-[13px] border-r border-white/10 pr-3">+251</span>
+              <span className="absolute left-12 text-black dark:text-white font-medium text-[13px] border-r border-gray-200 dark:border-white/10 pr-3">+251</span>
               <input 
                 type="tel" 
                 placeholder="Phone Number" 
-                className="w-full bg-transparent outline-none text-white text-[14px] py-4 pl-28 pr-4 placeholder:text-gray-600 font-light"
+                className="w-full bg-transparent outline-none text-black dark:text-white text-[14px] py-4 pl-28 pr-4 placeholder:text-gray-400 dark:placeholder:text-gray-600 font-light"
                 required
               />
             </div>
           ) : (
-            <div className="relative flex items-center bg-[#111111] border border-white/10 rounded-xl focus-within:border-gold transition-colors">
+            <div className="relative flex items-center bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl focus-within:border-gold dark:focus-within:border-gold transition-colors">
               <Mail className="w-5 h-5 text-gray-500 absolute left-4" strokeWidth={1.5} />
               <input 
                 type="email" 
                 placeholder="Email Address" 
-                className="w-full bg-transparent outline-none text-white text-[14px] py-4 pl-12 pr-4 placeholder:text-gray-600 font-light"
+                className="w-full bg-transparent outline-none text-black dark:text-white text-[14px] py-4 pl-12 pr-4 placeholder:text-gray-400 dark:placeholder:text-gray-600 font-light"
                 required
               />
             </div>
           )}
 
-          <div className="relative flex items-center bg-[#111111] border border-white/10 rounded-xl focus-within:border-gold transition-colors">
+          <div className="relative flex items-center bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl focus-within:border-gold dark:focus-within:border-gold transition-colors">
             <Lock className="w-5 h-5 text-gray-500 absolute left-4" strokeWidth={1.5} />
             <input 
               type="password" 
@@ -96,23 +96,23 @@ export default function Login() {
         <div className="mt-10">
           <div className="relative flex items-center justify-center mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10"></div>
+              <div className="w-full border-t border-gray-200 dark:border-white/10"></div>
             </div>
-            <div className="relative px-4 text-[10px] uppercase tracking-widest bg-black text-gray-500 font-semibold">Or Continue With</div>
+            <div className="relative px-4 text-[10px] uppercase tracking-widest bg-white dark:bg-black text-gray-500 font-semibold">Or Continue With</div>
           </div>
           
           <div className="flex space-x-4">
-             <button onClick={handleFakeLogin} className="flex-1 flex items-center justify-center bg-[#111] border border-white/10 py-3.5 rounded-xl hover:bg-white/5 transition-colors active:scale-95">
+             <button onClick={handleFakeLogin} className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 py-3.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors active:scale-95">
                 <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
-                   <path fill="#ffffff" d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z" />
+                   <path className="dark:fill-white fill-black" d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z" />
                 </svg>
-                <span className="text-[12px] font-bold text-white">Google</span>
+                <span className="text-[12px] font-bold text-black dark:text-white">Google</span>
              </button>
-             <button onClick={handleFakeLogin} className="flex-1 flex items-center justify-center bg-[#111] border border-white/10 py-3.5 rounded-xl hover:bg-white/5 transition-colors active:scale-95">
-                <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="white">
+             <button onClick={handleFakeLogin} className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 py-3.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors active:scale-95">
+                <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" className="dark:fill-white fill-black">
                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z" />
                 </svg>
-                <span className="text-[12px] font-bold text-white">Facebook</span>
+                <span className="text-[12px] font-bold text-black dark:text-white">Facebook</span>
              </button>
           </div>
         </div>

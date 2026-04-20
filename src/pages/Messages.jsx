@@ -16,18 +16,18 @@ export default function Messages() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex flex-col font-sans pb-[80px]">
+    <div className="fixed inset-0 z-[10000] bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans overflow-y-auto">
       {/* Header */}
-      <div className="fixed top-0 left-0 right-0 w-full z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10 px-4 py-4 flex items-center shadow-md sm:max-w-[480px] mx-auto">
-        <button onClick={() => navigate(-1)} className="mr-4 text-white hover:text-gold transition-colors active:scale-95">
+      <div className="fixed top-0 left-0 right-0 w-full z-50 bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/10 px-4 py-4 flex items-center shadow-sm sm:max-w-[480px] mx-auto">
+        <button onClick={() => navigate(-1)} className="mr-4 text-black dark:text-white hover:text-gold transition-colors active:scale-95">
           <ArrowLeft strokeWidth={2} className="w-6 h-6" />
         </button>
         <h1 className="text-[17px] font-bold tracking-wider uppercase">Messages</h1>
       </div>
 
-      <div className="pt-[80px] px-4 flex-1 flex flex-col">
+      <div className="pt-[80px] px-4 flex-1 flex flex-col pb-[120px]">
         {/* Tabs */}
-        <div className="flex space-x-6 border-b border-white/10 mb-6 px-2">
+        <div className="flex space-x-6 border-b border-gray-200 dark:border-white/10 mb-6 px-2">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -45,26 +45,26 @@ export default function Messages() {
         {/* Content */}
         {activeTab === 'Promotions' && (
           <div className="flex flex-col space-y-4">
-            <div className="bg-[#111] border border-white/5 p-4 rounded-xl shadow-lg">
+            <div className="bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/5 p-4 rounded-xl shadow-sm dark:shadow-lg">
               <div className="flex items-center text-gold mb-2">
                 <Tag className="w-4 h-4 mr-2" />
                 <span className="text-[11px] font-bold uppercase tracking-widest">Flash Sale</span>
               </div>
               <h3 className="text-[15px] font-medium mb-1">Up to 40% Off Premium Bags</h3>
-              <p className="text-[12px] text-gray-400 font-light leading-relaxed mb-3">Our exclusive selection of Occasion Bags just got restocked. Grab yours before they run out!</p>
-              <div className="flex items-center text-[10px] text-gray-600">
+              <p className="text-[12px] text-gray-500 dark:text-gray-400 font-light leading-relaxed mb-3">Our exclusive selection of Occasion Bags just got restocked. Grab yours before they run out!</p>
+              <div className="flex items-center text-[10px] text-gray-500 dark:text-gray-600">
                 <Clock className="w-3 h-3 mr-1" /> Just now
               </div>
             </div>
             
-            <div className="bg-[#111] border border-white/5 p-4 rounded-xl shadow-lg opacity-80">
+            <div className="bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/5 p-4 rounded-xl shadow-sm dark:shadow-lg opacity-80">
                <div className="flex items-center text-gray-400 mb-2">
                  <Tag className="w-4 h-4 mr-2" />
                  <span className="text-[11px] font-bold uppercase tracking-widest">Welcome</span>
                </div>
-               <h3 className="text-[15px] font-medium mb-1 text-gray-300">Welcome to Luna Fashion</h3>
+               <h3 className="text-[15px] font-medium mb-1 text-gray-800 dark:text-gray-300">Welcome to Luna Fashion</h3>
                <p className="text-[12px] text-gray-500 font-light leading-relaxed mb-3">Enjoy your seamless shopping experience. Free shipping on your first big order.</p>
-               <div className="flex items-center text-[10px] text-gray-600">
+               <div className="flex items-center text-[10px] text-gray-500 dark:text-gray-600">
                  <Clock className="w-3 h-3 mr-1" /> 2 days ago
                </div>
             </div>
