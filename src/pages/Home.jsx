@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import ProductGrid from '../components/product/ProductGrid';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Shirt, Diamond, Footprints, ScanFace, Combine, MoveHorizontal, ShoppingBag } from 'lucide-react';
+import { Scissors, Shirt, Component, Combine, Sparkles, Footprints } from 'lucide-react';
 
 export default function Home() {
   const { products, loading } = useProducts();
@@ -12,14 +12,14 @@ export default function Home() {
   
   const activeCategory = searchParams.get('category');
 
-  // Minimalist SVGs mapped conceptually to the categories
+  // Minimalist SVGs mapped conceptually to the exact inventory categories
   const circleCategories = [
-    { name: 'Women', icon: Shirt },
-    { name: 'Curve', icon: Combine },
-    { name: 'Kids', icon: ScanFace },
-    { name: 'Men', icon: MoveHorizontal },
+    { name: 'Makhawar (ቶብ)', icon: Scissors },
+    { name: 'Abaya', icon: Shirt },
+    { name: 'Dria', icon: Component },
+    { name: 'Dresses (ቀሚስ)', icon: Combine },
+    { name: 'Makeup', icon: Sparkles },
     { name: 'Shoes', icon: Footprints },
-    { name: 'Occasion Bags', icon: ShoppingBag },
   ];
 
   const filterTabs = ['For You', '✨ New In', '🏷️ Deals', '🏆 Bestsellers'];

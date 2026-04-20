@@ -8,8 +8,8 @@ export function useAppContext() {
 }
 
 export function AppProvider({ children }) {
-  // Theme State - Locked to Dark Mode
-  const [theme] = useState('dark');
+  // Theme State
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   
   // Language State
   const [language, setLanguage] = useState(localStorage.getItem('lang') || 'en');
@@ -20,13 +20,13 @@ export function AppProvider({ children }) {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Apply Theme class to document root strictly
+  // Apply Theme class to document root
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove('light');
-    root.classList.add('dark');
-    localStorage.setItem('theme', 'dark');
-  }, []);
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   // Sync wishlist to local storage
   useEffect(() => {
@@ -39,6 +39,7 @@ export function AppProvider({ children }) {
   }, [language]);
 
   const toggleLanguage = () => setLanguage(language === 'en' ? 'am' : 'en');
+  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
   
   const toggleWishlist = (productId) => {
     setWishlist(prev => 
@@ -55,6 +56,7 @@ export function AppProvider({ children }) {
 
   const value = {
     theme,
+    toggleTheme,
     language,
     toggleLanguage,
     t,

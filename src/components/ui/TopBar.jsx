@@ -1,7 +1,7 @@
-import { Search, Heart, Mail, Calendar, Camera, Mic } from 'lucide-react';
+import { Search, Heart, Mail, Calendar, Camera } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../../context/AppContext';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 
 export default function TopBar() {
   const { toggleTheme, theme } = useAppContext();
@@ -9,7 +9,9 @@ export default function TopBar() {
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'All';
   
-  const topCategories = ['All', 'Women', 'Shoes', 'Curve', 'Men', 'Kids', 'Occasion Bags'];
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const topCategories = ['All (ሁሉንም ለማየት)', 'Makhawar (ቶብ)', 'Abaya', 'Dria', 'Dresses (ቀሚስ)', 'Makeup', 'Shoes'];
 
   const placeholders = ['Search Occasion Bags...', 'Search LUNA Specials...', 'Search Signature Coats...', 'Search Trending Styles...'];
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
@@ -36,11 +38,23 @@ export default function TopBar() {
   };
 
   const handleCategoryClick = (cat) => {
-     if (cat === 'All') {
+     if (cat.startsWith('All')) {
         navigate('/');
      } else {
         navigate(`/?category=${encodeURIComponent(cat)}`);
      }
+  };
+
+  const handleSearchClick = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    } else {
+      navigate(`/search`);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSearchClick();
   };
 
   return (
@@ -71,31 +85,36 @@ export default function TopBar() {
       {/* Main Action/Search Row */}
       <div className="flex items-center justify-between px-3 pt-3 pb-3 gap-3">
          
-         {/* Left Icons: Message & Calendar */}
+         {/* Left Icons: Message & Calendar mapped to real pages */}
          <div className="flex items-center gap-3 shrink-0 text-white">
-            <button className="hover:opacity-70 transition-opacity"><Mail strokeWidth={1} className="w-[20px] h-[20px]" /></button>
-            <button className="hover:opacity-70 transition-opacity"><Calendar strokeWidth={1} className="w-[20px] h-[20px]" /></button>
+            <Link to="/messages" className="hover:opacity-70 transition-opacity"><Mail strokeWidth={1} className="w-[20px] h-[20px]" /></Link>
+            <Link to="/login" className="hover:opacity-70 transition-opacity"><Calendar strokeWidth={1} className="w-[20px] h-[20px]" /></Link>
          </div>
 
          {/* Fully rounded, soft-gray background search bar */}
          <div className="flex-1 flex items-center bg-[#1f1f1f] rounded-full px-3 py-2 transition-colors border border-transparent focus-within:border-gold">
-            <button className="shrink-0"><Search strokeWidth={1.5} className="w-4 h-4 text-gray-400 hover:text-gold" /></button>
             <input 
                type="text" 
+               value={searchQuery}
+               onChange={(e) => setSearchQuery(e.target.value)}
+               onKeyDown={handleKeyDown}
                placeholder={placeholders[placeholderIdx]} 
                className="bg-transparent border-none outline-none flex-1 text-[11px] font-light tracking-wide text-white px-2 w-full placeholder-opacity-100 placeholder:transition-opacity duration-500"
             />
-            <button className="text-gray-400 hover:text-gold transition-colors shrink-0 mr-2">
-               <Mic strokeWidth={1.5} className="w-[16px] h-[16px]" />
-            </button>
-            <button onClick={handleCameraClick} className="text-gray-400 hover:text-gold transition-colors shrink-0 border-l border-white/10 pl-2">
-               <Camera strokeWidth={1.5} className="w-[18px] h-[18px]" />
-            </button>
+            {/* Search next to Camera right side */}
+            <div className="flex items-center shrink-0 space-x-2 border-l border-white/10 pl-2 ml-1">
+               <button onClick={handleSearchClick} className="text-gray-400 hover:text-gold transition-colors">
+                  <Search strokeWidth={1.5} className="w-[16px] h-[16px]" />
+               </button>
+               <button onClick={handleCameraClick} className="text-gray-400 hover:text-gold transition-colors">
+                  <Camera strokeWidth={1.5} className="w-[18px] h-[18px]" />
+               </button>
+            </div>
          </div>
 
-         {/* Right Icons: Heart */}
+         {/* Right Icons: Heart mapped to Wishlist? Wait, we can map it to me page or keep it as icon. */}
          <div className="flex items-center shrink-0 text-white">
-             <button className="hover:opacity-70 transition-opacity"><Heart strokeWidth={1} className="w-[20px] h-[20px]" /></button>
+             <Link to="/me" className="hover:opacity-70 transition-opacity"><Heart strokeWidth={1} className="w-[20px] h-[20px]" /></Link>
          </div>
       </div>
 

@@ -10,6 +10,9 @@ import Me from './pages/Me';
 import Cart from './pages/Cart';
 import ProductDetail from './pages/ProductDetail';
 import Onboarding from './components/ui/Onboarding';
+import Messages from './pages/Messages';
+import Login from './pages/Login';
+import SearchPage from './pages/SearchPage';
 
 function AppContent() {
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -42,6 +45,9 @@ function AppContent() {
           <Route path="admin" element={<Admin />} />
           <Route path="me" element={<Me />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="login" element={<Login />} />
+          <Route path="search" element={<SearchPage />} />
         </Route>
         <Route path="/product/:id" element={<ProductDetail />} />
       </Routes>

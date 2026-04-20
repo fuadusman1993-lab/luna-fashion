@@ -1,6 +1,6 @@
 import { useAppContext } from '../context/AppContext';
 import { Link } from 'react-router-dom';
-import { Settings, Shield, Package, Heart, Tag, Globe, Moon, Sun, MapPin, CreditCard, ChevronRight } from 'lucide-react';
+import { Settings, Shield, Package, Heart, Tag, Globe, Moon, Sun, MapPin, CreditCard, ChevronRight, Store, Send, PhoneCall, Map } from 'lucide-react';
 
 export default function Me() {
   const { theme, toggleTheme, language, toggleLanguage, t } = useAppContext();
@@ -65,6 +65,45 @@ export default function Me() {
                <MapPin className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
                <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Address</span>
              </div>
+          </div>
+       </div>
+
+       {/* Our Locations Panel */}
+       <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-4 p-5">
+          <div className="flex items-center mb-4 text-luna-black dark:text-white">
+             <Store className="w-5 h-5 mr-2 text-gold" />
+             <h3 className="font-bold text-[15px]">Our Locations</h3>
+          </div>
+          
+          <div className="space-y-4">
+             {/* Branch 1 */}
+             <div className="bg-gray-50 dark:bg-[#111111] p-3 rounded-lg border border-gray-100 dark:border-white/5">
+                <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">Branch 1: Jemo</h4>
+                <p className="text-[11px] text-gray-500 font-light mb-2">Jemo 1, Sun Moon Star Mall, 1st Floor, No. 06.</p>
+                <button className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
+                   <Map className="w-3 h-3 mr-1" /> View on Map
+                </button>
+             </div>
+             
+             {/* Branch 2 */}
+             <div className="bg-gray-50 dark:bg-[#111111] p-3 rounded-lg border border-gray-100 dark:border-white/5">
+                <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">Branch 2: Bethel</h4>
+                <p className="text-[11px] text-gray-500 font-light mb-2">Bethel, Mira Mall, 1st Floor.</p>
+                <button className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
+                   <Map className="w-3 h-3 mr-1" /> View on Map
+                </button>
+             </div>
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
+             <div className="flex items-center text-[11px] font-medium text-gray-700 dark:text-gray-300">
+                <PhoneCall className="w-3.5 h-3.5 mr-1.5 text-gray-400" />
+                0977799797
+             </div>
+             <a href="https://t.me/Luna_market1" target="_blank" rel="noreferrer" className="flex items-center text-[11px] font-medium text-blue-500 hover:text-blue-400 transition-colors">
+                <Send className="w-3.5 h-3.5 mr-1.5" />
+                @Luna_market1
+             </a>
           </div>
        </div>
 
