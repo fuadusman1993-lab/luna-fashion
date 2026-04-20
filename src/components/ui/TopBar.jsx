@@ -1,4 +1,4 @@
-import { Search, Heart, Mail, Camera, ShoppingCart } from 'lucide-react';
+import { Search, Heart, MessageSquare, Camera, ShoppingCart } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
@@ -75,13 +75,13 @@ export default function TopBar() {
         {/* Left Icon: Message */}
         <div className="flex items-center shrink-0 text-white">
           <Link to="/messages" className="hover:opacity-70 transition-opacity p-1">
-            <Mail strokeWidth={1.5} className="w-[22px] h-[22px]" />
+            <MessageSquare strokeWidth={1.25} className="w-[22px] h-[22px]" />
           </Link>
         </div>
 
         {/* Fully rounded, highly focused search bar */}
         <div className="flex-1 flex items-center bg-white rounded-full px-3 py-1.5 shadow-inner transition-colors">
-          <Search strokeWidth={2} className="w-[16px] h-[16px] text-gray-400 mr-2 shrink-0" />
+          <Search strokeWidth={1.25} className="w-[16px] h-[16px] text-gray-400 mr-2 shrink-0" />
           <input
             type="text"
             value={searchQuery}
@@ -91,17 +91,17 @@ export default function TopBar() {
             className="bg-transparent border-none outline-none flex-1 text-[13px] font-medium tracking-wide text-gray-800 placeholder-gray-400 w-full"
           />
           <button onClick={handleCameraClick} className="text-gray-400 hover:text-black transition-colors ml-2 shrink-0 pl-2 border-l border-gray-300">
-            <Camera strokeWidth={1.5} className="w-[18px] h-[18px]" />
+            <Camera strokeWidth={1.25} className="w-[18px] h-[18px]" />
           </button>
         </div>
 
         {/* Right Icons: Heart & Cart */}
         <div className="flex items-center shrink-0 text-white gap-2">
           <Link to="/me" className="hover:opacity-70 transition-opacity p-1">
-            <Heart strokeWidth={1.5} className="w-[22px] h-[22px]" />
+            <Heart strokeWidth={1.25} className="w-[22px] h-[22px]" />
           </Link>
           <Link to="/cart" className="hover:opacity-70 transition-opacity p-1 relative">
-            <ShoppingCart strokeWidth={1.5} className="w-[22px] h-[22px]" />
+            <ShoppingCart strokeWidth={1.25} className="w-[22px] h-[22px]" />
             <span className="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-black shadow">3</span>
           </Link>
         </div>

@@ -1,4 +1,4 @@
-import { Home, Grid, ShoppingBag, User } from 'lucide-react';
+import { Home, ShoppingBag, ShoppingCart, User } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
 
@@ -8,8 +8,8 @@ export default function BottomNavBar() {
 
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
-    { name: 'Shop', path: '/category', icon: Grid },
-    { name: 'Cart', path: '/cart', icon: ShoppingBag },
+    { name: 'Shop', path: '/category', icon: ShoppingBag },
+    { name: 'Cart', path: '/cart', icon: ShoppingCart },
     { name: 'Me', path: '/me', icon: User }
   ];
 
@@ -24,7 +24,7 @@ export default function BottomNavBar() {
             to={item.path}
             className={`flex flex-col items-center justify-center p-1 w-full transition-colors ${isActive ? 'text-luna-black dark:text-gold' : 'text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400'}`}
           >
-            <Icon className={`w-[22px] h-[22px] mb-1.5 ${isActive ? 'fill-current opacity-20' : ''}`} strokeWidth={1} />
+            <Icon className={`w-[22px] h-[22px] mb-1.5 ${isActive ? 'fill-current opacity-20' : ''}`} strokeWidth={1.25} />
             <span className="text-[10px] font-bold tracking-wide uppercase">{item.name}</span>
           </Link>
         )

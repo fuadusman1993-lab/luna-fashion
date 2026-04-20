@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import ProductGrid from '../components/product/ProductGrid';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Scissors, Shirt, Component, Combine, Sparkles, Footprints } from 'lucide-react';
+import { Scissors, Shirt, Component, Combine, Sparkles, Footprints, Heart, Flame, Tag, Star } from 'lucide-react';
 
 export default function Home() {
   const { products, loading } = useProducts();
@@ -22,7 +22,12 @@ export default function Home() {
     { name: 'Shoes', icon: Footprints },
   ];
 
-  const filterTabs = ['For You', 'New In', 'Deals', 'Best'];
+  const filterTabs = [
+    { name: 'For You', icon: Heart },
+    { name: 'New In', icon: Flame },
+    { name: 'Deals', icon: Tag },
+    { name: 'Best', icon: Star }
+  ];
 
   return (
     <div className="flex flex-col bg-white dark:bg-[#0a0a0a] min-h-[90vh]">
@@ -38,8 +43,8 @@ export default function Home() {
                  onClick={() => navigate(`/?category=${encodeURIComponent(cat.name)}`)}
                  className="flex flex-col items-center cursor-pointer group"
                >
-                  <div className={`w-[50px] h-[50px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-2 shadow-sm ${activeCategory === cat.name ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105' : 'border-gray-200 dark:border-gray-800 bg-[#fafafa] dark:bg-[#111111] text-gray-800 dark:text-gray-300 group-hover:border-gold'}`}>
-                     <Icon className="w-[20px] h-[20px]" strokeWidth={1} />
+                  <div className={`w-[50px] h-[50px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-2 shadow-sm ${activeCategory === cat.name ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105 shadow-md' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] text-gray-800 dark:text-gray-300 shadow-sm hover:shadow-md'}`}>
+                     <Icon className="w-[20px] h-[20px]" strokeWidth={1.25} />
                   </div>
                   <span className={`text-[10px] font-bold uppercase tracking-widest ${activeCategory === cat.name ? 'text-black dark:text-gold' : 'text-gray-500 dark:text-gray-400'}`}>{cat.name}</span>
                </div>
@@ -64,15 +69,19 @@ export default function Home() {
 
       {/* Dynamic Filter Tabs - Clean AliExpress Style */}
       <div className="sticky top-[90px] z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md flex justify-start items-center px-4 py-2 border-b-0 overflow-x-auto scrollbar-hide space-x-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-         {filterTabs.map((tab, idx) => (
+         {filterTabs.map((tab, idx) => {
+            const Icon = tab.icon;
+            const isSelected = activeFilter === tab.name;
+            return (
             <button 
               key={idx}
-              onClick={() => setActiveFilter(tab)}
-              className={`flex-shrink-0 px-4 py-1.5 text-[12px] rounded-full transition-colors tracking-wide ${activeFilter === tab ? 'bg-[#1a1a1a] text-white dark:bg-white dark:text-black font-bold shadow-md' : 'bg-[#f5f5f5] text-gray-700 dark:bg-[#1a1a1a] dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-800'}`}
+              onClick={() => setActiveFilter(tab.name)}
+              className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-1.5 text-[12px] rounded-full transition-colors tracking-wide border ${isSelected ? 'bg-black text-white dark:bg-white dark:text-black font-bold border-black dark:border-white shadow-md' : 'bg-[#f8f8f8] text-gray-700 dark:bg-[#111111] dark:text-gray-300 font-medium border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-[#1a1a1a]'}`}
             >
-              {tab}
+              <Icon className="w-[14px] h-[14px]" strokeWidth={isSelected ? 2 : 1.5} />
+              {tab.name}
             </button>
-         ))}
+         )})}
       </div>
 
       {/* Masonry Product Grid */}
