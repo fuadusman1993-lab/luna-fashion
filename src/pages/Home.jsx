@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import ProductGrid from '../components/product/ProductGrid';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Shirt, Diamond, Footprints, ScanFace, Combine, MoveHorizontal } from 'lucide-react';
+import { Shirt, Diamond, Footprints, ScanFace, Combine, MoveHorizontal, ShoppingBag } from 'lucide-react';
 
 export default function Home() {
   const { products, loading } = useProducts();
@@ -19,7 +19,7 @@ export default function Home() {
     { name: 'Kids', icon: ScanFace },
     { name: 'Men', icon: MoveHorizontal },
     { name: 'Shoes', icon: Footprints },
-    { name: 'Jewelry', icon: Diamond },
+    { name: 'Occasion Bags', icon: ShoppingBag },
   ];
 
   const filterTabs = ['For You', '✨ New In', '🏷️ Deals', '🏆 Bestsellers'];
@@ -39,7 +39,7 @@ export default function Home() {
                  className="flex flex-col items-center cursor-pointer group"
                >
                   <div className={`w-[50px] h-[50px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-2 shadow-sm ${activeCategory === cat.name ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105' : 'border-gray-200 dark:border-gray-800 bg-[#fafafa] dark:bg-[#111111] text-gray-800 dark:text-gray-300 group-hover:border-gold'}`}>
-                     <Icon className="w-[20px] h-[20px]" strokeWidth={1.2} />
+                     <Icon className="w-[20px] h-[20px]" strokeWidth={1} />
                   </div>
                   <span className={`text-[10px] font-bold uppercase tracking-widest ${activeCategory === cat.name ? 'text-black dark:text-gold' : 'text-gray-500 dark:text-gray-400'}`}>{cat.name}</span>
                </div>

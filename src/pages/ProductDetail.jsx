@@ -39,10 +39,10 @@ export default function ProductDetail() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-white dark:bg-[#0a0a0a] sm:max-w-md sm:mx-auto sm:border-x sm:border-gray-800 pb-[100px] font-sans">
+    <div className="relative min-h-screen bg-white dark:bg-[#0a0a0a] sm:max-w-[480px] sm:mx-auto sm:border-x sm:border-gray-800 pb-[100px] font-sans">
       
       {/* Fixed Sticky Header for precise Back navigation over the image */}
-      <div className="fixed top-0 w-full z-50 flex justify-between items-center px-4 py-4 bg-gradient-to-b from-black/60 to-transparent sm:max-w-md">
+      <div className="fixed top-0 left-0 right-0 mx-auto w-full z-50 flex justify-between items-center px-4 py-4 bg-gradient-to-b from-black/60 to-transparent sm:max-w-[480px]">
          <button onClick={() => navigate(-1)} className="w-[38px] h-[38px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors shadow-sm border border-white/20">
             <ArrowLeft className="w-[18px] h-[18px]" strokeWidth={2.5} />
          </button>
@@ -153,7 +153,7 @@ export default function ProductDetail() {
       </div>
 
       {/* Fixed Sticky Action Bar Base */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#111111] border-t border-gray-200 dark:border-gray-800 px-4 py-3 sm:max-w-md sm:mx-auto sm:border-x sm:border-gray-800 pb-safe flex items-center justify-between">
+      <div className="fixed bottom-0 left-0 right-0 mx-auto z-50 bg-white dark:bg-[#111111] border-t border-gray-200 dark:border-gray-800 px-4 py-3 sm:max-w-[480px] sm:border-x sm:border-gray-800 pb-safe flex items-center justify-between">
          <div className="flex-1 mr-3">
             <button className="w-[50px] h-[50px] border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shrink-0">
                <Heart className="w-[20px] h-[20px] text-luna-black dark:text-white" strokeWidth={1.5} />

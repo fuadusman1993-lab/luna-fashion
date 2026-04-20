@@ -1,4 +1,5 @@
-import { Search, Camera, Heart, Sun, Moon } from 'lucide-react';
+import { Search, Heart, Sun, Moon } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -8,7 +9,17 @@ export default function TopBar() {
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'All';
   
-  const topCategories = ['All', 'Women', 'Shoes', 'Curve', 'Men', 'Kids', 'Jewelry'];
+  const topCategories = ['All', 'Women', 'Shoes', 'Curve', 'Men', 'Kids', 'Occasion Bags'];
+
+  const placeholders = ['Search Occasion Bags...', 'Search LUNA Specials...', 'Search Signature Coats...', 'Search Trending Styles...'];
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholderIdx((prev) => (prev + 1) % placeholders.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleCategoryClick = (cat) => {
      if (cat === 'All') {
@@ -19,12 +30,22 @@ export default function TopBar() {
   };
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-luna-white dark:bg-luna-black transition-colors duration-300 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-luna-white dark:bg-luna-black transition-colors duration-300 shadow-sm sm:max-w-[480px] mx-auto">
+      {/* TikTok Banner */}
+      <a 
+        href="https://www.tiktok.com/@lunamarket2?_r=1&_t=ZS-95fxiBRtXYz" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="block w-full bg-[#0a0a0a] text-gold dark:bg-gold dark:text-black py-1.5 text-center text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+      >
+        Watch LUNA FASHION on TikTok
+      </a>
+
       {/* Search Row */}
-      <div className="flex items-center justify-between px-3 pt-4 pb-2">
+      <div className="flex items-center justify-between px-3 pt-3 pb-2">
          {/* Theme toggler */}
          <button onClick={toggleTheme} className="text-luna-black dark:text-luna-white p-2">
-            {theme === 'dark' ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+            {theme === 'dark' ? <Sun strokeWidth={1} className="w-6 h-6" /> : <Moon strokeWidth={1} className="w-6 h-6" />}
          </button>
 
          {/* Center Brand Logo */}
@@ -36,13 +57,20 @@ export default function TopBar() {
          </div>
 
          {/* Right Icons */}
-         <div className="flex items-center space-x-1">
-            <button className="text-luna-black dark:text-luna-white p-2">
-               <Search className="w-5 h-5" />
-            </button>
-            <button className="text-luna-black dark:text-luna-white p-2">
-               <Heart className="w-5 h-5" />
-            </button>
+         <button className="text-luna-black dark:text-luna-white p-2">
+             <Heart strokeWidth={1} className="w-6 h-6" />
+         </button>
+      </div>
+
+      {/* Dynamic Search Bar Row */}
+      <div className="px-3 pb-2">
+         <div className="flex w-full items-center bg-[#f5f5f5] dark:bg-[#1a1a1a] rounded-full px-4 py-2 transition-colors border border-transparent dark:border-gray-800 focus-within:border-gold dark:focus-within:border-gold">
+            <Search strokeWidth={1.5} className="w-4 h-4 text-gray-400 mr-2 shrink-0" />
+            <input 
+               type="text" 
+               placeholder={placeholders[placeholderIdx]} 
+               className="bg-transparent border-none outline-none flex-1 text-sm text-black dark:text-white w-full placeholder-opacity-100 placeholder:transition-opacity duration-500"
+            />
          </div>
       </div>
 
