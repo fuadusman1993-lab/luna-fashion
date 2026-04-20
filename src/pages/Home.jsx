@@ -22,7 +22,7 @@ export default function Home() {
     { name: 'Shoes', icon: Footprints },
   ];
 
-  const filterTabs = ['For You', '✨ New In', '🏷️ Deals', '🏆 Bestsellers'];
+  const filterTabs = ['For You', 'New In', 'Deals', 'Best'];
 
   return (
     <div className="flex flex-col bg-white dark:bg-[#0a0a0a] min-h-[90vh]">
@@ -47,28 +47,28 @@ export default function Home() {
          </div>
       </div>
 
-      {/* Premium Full-Width Showcase Banner */}
-      <div className="w-full h-[220px] relative flex flex-col items-center justify-center border-b-[3px] border-b-gold mb-1">
+      {/* Premium Full-Width Showcase Banner with Rounded Corners */}
+      <div className="w-[calc(100%-16px)] mx-auto h-[160px] relative flex flex-col items-center justify-center rounded-xl overflow-hidden mb-3 shadow-md mt-1">
          {/* Background Image */}
          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center"></div>
          {/* Deep Layering Overlay for Contrast */}
-         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
+         <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
          
-         <h2 className="relative z-10 text-white font-display text-[2.5rem] leading-none uppercase tracking-[0.3em] font-black text-center mb-2 drop-shadow-md">
-            LUNA <span className="text-gold">FASHION</span>
+         <h2 className="relative z-10 text-white font-display text-[2.2rem] leading-none uppercase tracking-[0.2em] font-black text-center mb-1 drop-shadow-lg">
+            LUNA <span className="text-[#D4AF37]">FASHION</span>
          </h2>
-         <span className="relative z-10 bg-white/10 text-white text-[9px] font-bold px-4 py-1.5 rounded-sm uppercase tracking-[0.3em] backdrop-blur-md mt-1 border border-white/20 shadow-lg select-none">
+         <span className="relative z-10 bg-white/20 text-white text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-md mt-1 border border-white/40 shadow-sm select-none">
             Official Showcase
          </span>
       </div>
 
-      {/* Dynamic Filter Tabs - Sticky Header Offset */}
-      <div className="sticky top-[108px] z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md flex justify-between items-center px-4 py-3 border-b border-gray-100 dark:border-gray-900 overflow-x-auto scrollbar-hide space-x-3" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+      {/* Dynamic Filter Tabs - Clean AliExpress Style */}
+      <div className="sticky top-[90px] z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md flex justify-start items-center px-4 py-2 border-b-0 overflow-x-auto scrollbar-hide space-x-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
          {filterTabs.map((tab, idx) => (
             <button 
               key={idx}
               onClick={() => setActiveFilter(tab)}
-              className={`flex-shrink-0 px-5 py-2 text-[11px] font-bold rounded-full transition-colors tracking-widest uppercase ${activeFilter === tab ? 'bg-black text-white dark:bg-gold dark:text-black shadow-md' : 'bg-[#f5f5f5] text-gray-500 dark:bg-[#1a1a1a] dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
+              className={`flex-shrink-0 px-4 py-1.5 text-[12px] rounded-full transition-colors tracking-wide ${activeFilter === tab ? 'bg-[#1a1a1a] text-white dark:bg-white dark:text-black font-bold shadow-md' : 'bg-[#f5f5f5] text-gray-700 dark:bg-[#1a1a1a] dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-800'}`}
             >
               {tab}
             </button>

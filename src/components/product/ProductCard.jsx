@@ -30,8 +30,8 @@ export default function ProductCard({ product }) {
   const isWished = isInWishlist(product.id);
 
   return (
-    <div onClick={navigateToProduct} className="relative flex flex-col bg-[#0a0a0a] overflow-hidden rounded-md border border-white/5 shadow-sm cursor-pointer transition-colors duration-300">
-      <div className="relative w-full aspect-[3/4] overflow-hidden bg-[#0f0f0f]">
+    <div onClick={navigateToProduct} className="relative flex flex-col bg-white dark:bg-[#0a0a0a] overflow-hidden rounded-xl border border-gray-100 dark:border-white/5 shadow cursor-pointer transition-colors duration-300">
+      <div className="relative w-full aspect-[3/4] overflow-hidden bg-gray-50 dark:bg-[#0f0f0f]">
         <img 
           src={product.imageUrl} 
           alt={product.name}
@@ -41,11 +41,11 @@ export default function ProductCard({ product }) {
         {/* Wishlist Button Layer */}
         <button 
           onClick={handleWishlistToggle}
-          className="absolute top-2 right-2 p-1.5 bg-black/40 backdrop-blur-md rounded-full text-white hover:bg-black/60 transition-colors z-10 border border-white/10 active:scale-90"
+          className="absolute top-2 right-2 p-1.5 bg-white/80 dark:bg-black/40 backdrop-blur-md rounded-full text-black dark:text-white hover:bg-white dark:hover:bg-black/60 transition-colors z-10 border border-gray-200 dark:border-white/10 active:scale-90 shadow-sm"
         >
           <Heart 
-            className={`w-[14px] h-[14px] transition-colors ${isWished ? 'text-[#D4AF37] drop-shadow-[0_0_5px_rgba(212,175,55,0.8)]' : 'text-white'}`} 
-            fill={isWished ? '#D4AF37' : 'none'} 
+            className={`w-[14px] h-[14px] transition-colors ${isWished ? 'text-red-500 drop-shadow-sm' : 'text-gray-800 dark:text-white'}`} 
+            fill={isWished ? '#ef4444' : 'none'} 
             strokeWidth={isWished ? 0 : 1.5}
           />
         </button>
@@ -57,33 +57,33 @@ export default function ProductCard({ product }) {
           </div>
         )}
         
-        {/* SHEIN Badges */}
+        {/* AliExpress Badges */}
         {isBestseller && product.inStock && (
-          <div className="absolute bottom-1 right-1 bg-black/80 text-gold text-[9px] font-bold px-1.5 py-0.5 rounded-sm flex items-center shadow-lg">
-             <span className="mr-0.5 text-xs">🔥</span> Bestseller
+          <div className="absolute top-2 left-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm flex items-center shadow-md">
+             Bestseller
           </div>
         )}
         {isNew && product.inStock && (
-          <div className="absolute bottom-1 left-1 bg-white/95 text-black text-[9px] font-bold px-1.5 py-0.5 rounded-sm shadow-md flex items-center">
-             <span className="mr-0.5 text-xs">✨</span> New In
+          <div className="absolute bottom-2 left-2 bg-black/80 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm shadow-md flex items-center">
+             New Arrival
           </div>
         )}
       </div>
       
-      <div className="p-2 flex flex-col">
-        <h3 className="text-[11px] text-gray-200 line-clamp-2 leading-tight font-medium mb-1">{product.name}</h3>
+      <div className="p-2 flex flex-col bg-white dark:bg-[#0a0a0a]">
+        <h3 className="text-[11px] text-gray-800 dark:text-gray-200 line-clamp-2 leading-tight font-medium mb-1">{product.name}</h3>
         
         <div className="flex justify-between items-center mt-auto">
-           <p className="font-bold text-[14px] tracking-tight text-white">
+           <p className="font-bold text-[14px] tracking-tight text-red-600 dark:text-red-500">
               {Number(product.price).toLocaleString()} <span className="text-[9px] font-medium text-gray-500">ETB</span>
            </p>
            
            <button
              onClick={handleWhatsAppOrder}
              disabled={!product.inStock}
-             className="bg-[#D4AF37] text-black p-1.5 rounded-full shadow-[0_0_12px_rgba(212,175,55,0.4)] hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100"
+             className="bg-black text-white dark:bg-[#D4AF37] dark:text-black p-1.5 rounded-full shadow-md hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100"
            >
-             <ShoppingBag className="w-3.5 h-3.5" strokeWidth={2.5} />
+             <ShoppingBag className="w-3.5 h-3.5" strokeWidth={2} />
            </button>
         </div>
         

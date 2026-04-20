@@ -7,9 +7,9 @@ export default function BottomNavBar() {
   const location = useLocation();
 
   const navItems = [
-    { name: t('home') || 'Shop', path: '/', icon: Home },
-    { name: 'Category', path: '/category', icon: Grid },
-    { name: t('cart') || 'Cart', path: '/cart', icon: ShoppingBag },
+    { name: 'Home', path: '/', icon: Home },
+    { name: 'Shop', path: '/category', icon: Grid },
+    { name: 'Cart', path: '/cart', icon: ShoppingBag },
     { name: 'Me', path: '/me', icon: User }
   ];
 
