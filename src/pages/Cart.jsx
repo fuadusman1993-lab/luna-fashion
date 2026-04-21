@@ -11,11 +11,11 @@ export default function Cart() {
   const navigate = useNavigate();
 
   // State for selected items (array of cartIds)
-  const [selectedItems, setSelectedItems] = useState(cart.map(item => item.cartId));
+  const [selectedItems, setSelectedItems] = useState((cart || []).map(item => item.cartId));
 
   // Group cart items by category (simulate store/shop folders)
   const groupedCart = useMemo(() => {
-    return cart.reduce((groups, item) => {
+    return (cart || []).reduce((groups, item) => {
       const storeName = item.category || 'Luna Official';
       if (!groups[storeName]) {
         groups[storeName] = [];
@@ -28,8 +28,8 @@ export default function Cart() {
   const recommendations = products ? products.slice(0, 6) : [];
 
   // Selection Logic
-  const allCartIds = cart.map(item => item.cartId);
-  const isAllSelected = cart.length > 0 && selectedItems.length === cart.length;
+  const allCartIds = (cart || []).map(item => item.cartId);
+  const isAllSelected = (cart?.length || 0) > 0 && selectedItems.length === (cart?.length || 0);
 
   const toggleSelectAll = () => {
     if (isAllSelected) {
@@ -60,7 +60,7 @@ export default function Cart() {
   };
 
   // Dynamic Total Calculation
-  const selectedCartItems = cart.filter(item => selectedItems.includes(item.cartId));
+  const selectedCartItems = (cart || []).filter(item => selectedItems.includes(item.cartId));
   const total = selectedCartItems.reduce((sum, item) => sum + Number(item.price) * (item.qty || 1), 0);
   const totalItemsCount = selectedCartItems.reduce((sum, item) => sum + (item.qty || 1), 0);
 
@@ -104,20 +104,20 @@ export default function Cart() {
           <div className="flex items-center gap-2">
             <CustomCheckbox isChecked={isAllSelected} onClick={toggleSelectAll} />
             <span className="text-[14px] font-bold text-black dark:text-white">All</span>
-            <span className="text-[14px] font-medium text-gray-500 ml-1">Cart({cart.length})</span>
+            <span className="text-[14px] font-medium text-gray-500 ml-1">Cart({cart?.length || 0})</span>
             <div className="flex items-center text-[10px] text-gray-500 ml-1">
               <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
               Ship to Ethiopia
-              <ChevronRight className="w-3 h-3 ml-0.5" />
             </div>
           </div>
           <button className="p-1">
             <MoreHorizontal className="w-5 h-5 text-black dark:text-white" />
           </button>
         </div>
+      </div>
 
       <div className="flex-1">
-        {cart.length === 0 ? (
+        {(cart?.length || 0) === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center px-4">
              <h2 className="text-lg font-bold text-black dark:text-white mb-2">Your cart is empty</h2>
              <button onClick={() => navigate('/shop')} className="bg-black dark:bg-white text-white dark:text-black font-bold uppercase tracking-wider py-3 px-8 text-xs rounded-full shadow-md mt-4">Start Shopping</button>
@@ -242,31 +242,28 @@ export default function Cart() {
       </div>
 
       {/* Fixed Checkout Bar - Syncs with Selected Items */}
-      {cart.length > 0 && (
-        <div className="fixed bottom-[65px] left-0 right-0 w-full z-40 bg-white dark:bg-[#111111] border-t border-gray-200 dark:border-white/10 px-4 py-3 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] max-w-[430px] mx-auto flex items-center justify-between h-[60px]">
-          <div className="flex items-center gap-2">
-            <CustomCheckbox isChecked={isAllSelected} onClick={toggleSelectAll} />
-            <span className="text-[12px] font-medium text-gray-500">All</span>
+      {(cart?.length || 0) > 0 && (
+        <div className="fixed bottom-[65px] left-0 right-0 w-full z-40 bg-white dark:bg-[#111111] border-t border-gray-200 dark:border-white/10 px-4 py-3 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] max-w-[430px] mx-auto flex items-center justify-between h-[65px]">
+          
+          <div className="flex flex-col justify-center">
+            <div className="flex items-baseline">
+              <span className="text-[12px] font-bold text-black dark:text-white mr-1.5 uppercase tracking-wider">Total:</span>
+              <span className="font-bold text-[20px] text-[#f2603f] dark:text-[#f87171] leading-none tracking-tight">
+                {total.toLocaleString()} <span className="text-[11px] font-normal text-[#f2603f]">ETB</span>
+              </span>
+            </div>
+            {total > 0 && (
+              <div className="text-[10px] text-gray-500 mt-0.5 tracking-wide">Saved {Math.floor(total * 0.25).toLocaleString()} ETB</div>
+            )}
           </div>
           
-          <div className="flex items-center gap-3">
-             <div className="text-right">
-               <div className="flex items-center justify-end">
-                 <span className="text-[12px] font-bold text-black dark:text-white mr-1">Total:</span>
-                 <span className="font-bold text-[18px] text-[#f2603f] dark:text-[#f87171] leading-none">
-                   {total.toLocaleString()} <span className="text-[12px] font-normal text-[#f2603f]">ETB</span>
-                 </span>
-               </div>
-               <div className="text-[10px] text-gray-400 mt-0.5">Saved {Math.floor(total * 0.25).toLocaleString()} ETB</div>
-             </div>
-             <button 
-               onClick={handleCheckout}
-               disabled={selectedItems.length === 0}
-               className="bg-black dark:bg-white text-white dark:text-black w-[130px] h-[40px] rounded-full font-bold tracking-wide text-[14px] flex items-center justify-center disabled:opacity-50 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500"
-             >
-               Checkout{totalItemsCount > 0 ? `(${totalItemsCount})` : ''}
-             </button>
-          </div>
+          <button 
+            onClick={handleCheckout}
+            disabled={selectedItems.length === 0}
+            className="bg-black dark:bg-white text-white dark:text-black px-8 h-[44px] rounded-full font-bold uppercase tracking-wider text-[13px] flex items-center justify-center disabled:opacity-50 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 shadow-md active:scale-95 transition-transform"
+          >
+            Checkout{totalItemsCount > 0 ? ` (${totalItemsCount})` : ''}
+          </button>
         </div>
       )}
     </div>
