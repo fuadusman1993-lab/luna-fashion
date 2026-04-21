@@ -72,6 +72,16 @@ export function AppProvider({ children }) {
     setCart(prev => prev.filter(item => item.cartId !== cartId));
   };
 
+  const updateQuantity = (cartId, delta) => {
+    setCart(prev => prev.map(item => {
+      if (item.cartId === cartId) {
+        const newQty = (item.qty || 1) + delta;
+        return { ...item, qty: newQty < 1 ? 1 : newQty };
+      }
+      return item;
+    }));
+  };
+
   const isInWishlist = (productId) => wishlist.includes(productId);
   
   // Translator function
@@ -91,6 +101,7 @@ export function AppProvider({ children }) {
     cart,
     addToCart,
     removeFromCart,
+    updateQuantity,
     toastMessage
   };
 
