@@ -46,14 +46,14 @@ export default function ProductDetail() {
       
       {/* Fixed Sticky Header for precise Back navigation over the image */}
       <div className="fixed top-0 left-0 right-0 mx-auto w-full z-50 flex justify-between items-center px-4 py-4 bg-gradient-to-b from-black/60 to-transparent sm:max-w-[480px]">
-         <button onClick={() => navigate(-1)} className="w-[38px] h-[38px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors shadow-sm border border-white/20">
-            <ArrowLeft className="w-[18px] h-[18px]" strokeWidth={2.5} />
+         <button onClick={() => navigate(-1)} className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-md outline outline-1 outline-white/30 hover:bg-black/40 transition-colors shadow-sm">
+            <ArrowLeft className="w-[20px] h-[20px]" strokeWidth={2} />
          </button>
           <div className="flex space-x-3">
-             <button className="w-[38px] h-[38px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors shadow-sm border border-white/20">
+             <button className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-md outline outline-1 outline-white/30 hover:bg-black/40 transition-colors shadow-sm">
                 <Share2 className="w-[18px] h-[18px]" strokeWidth={2} />
              </button>
-             <button onClick={() => toggleWishlist(product.id)} className="w-[38px] h-[38px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors shadow-sm border border-white/20 active:scale-90">
+             <button onClick={() => toggleWishlist(product.id)} className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-md outline outline-1 outline-white/30 hover:bg-black/40 transition-colors shadow-sm active:scale-90">
                 <Heart 
                   className={`w-[18px] h-[18px] transition-colors ${isWished ? 'text-[#D4AF37] drop-shadow-[0_0_5px_rgba(212,175,55,0.8)]' : ''}`} 
                   fill={isWished ? '#D4AF37' : 'none'}
@@ -64,7 +64,7 @@ export default function ProductDetail() {
        </div>
 
       {/* Snap-X Image Carousel Layer */}
-      <div className="w-full h-[65vh] bg-gray-100 dark:bg-[#0f0f0f] relative overflow-hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+      <div className="w-full h-[65vh] min-h-[500px] bg-gray-100 dark:bg-[#0f0f0f] relative overflow-hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
          {product.images && product.images.length > 0 ? (
            product.images.map((img, idx) => (
              <div key={idx} className="min-w-full h-full snap-start relative">
@@ -94,14 +94,14 @@ export default function ProductDetail() {
       {/* Product Content Sheet */}
       <div className="px-4 py-5 bg-white dark:bg-[#0a0a0a]">
          <div className="flex justify-between items-start mb-1">
-            <h1 className="text-[17px] font-bold leading-tight text-gray-900 dark:text-gray-100 line-clamp-2 max-w-[85%] font-sans tracking-wide">{product.name}</h1>
+            <h1 className="text-xl font-bold leading-tight text-gray-900 dark:text-gray-100 font-serif tracking-wide">{product.name}</h1>
          </div>
 
-         <div className="flex items-end space-x-2 mt-4 mb-2">
-            <span className="text-[24px] font-black text-black dark:text-white leading-none tracking-tight">
+         <div className="flex items-baseline space-x-2 mt-2 mb-2">
+            <span className="text-2xl font-bold font-serif text-black dark:text-white leading-none">
                {Number(product.price).toLocaleString()}
             </span>
-            <span className="text-[12px] font-bold text-gray-500 mb-0.5 tracking-wider">ETB</span>
+            <span className="text-[13px] font-bold text-gray-500 tracking-wider">ETB</span>
          </div>
          
          <p className="text-[12px] text-gray-400 mb-6 tracking-wide">* Pricing is fixed natively across all platforms</p>
@@ -114,9 +114,9 @@ export default function ProductDetail() {
                   <button 
                      key={color.name}
                      onClick={() => setSelectedColor(color.name)}
-                     className={`w-8 h-8 rounded-full border-2 transition-all flex justify-center items-center ${selectedColor === color.name ? 'border-gold p-0.5' : 'border-transparent hover:scale-110'}`}
+                     className={`w-9 h-9 rounded-full flex justify-center items-center transition-all ${selectedColor === color.name ? 'border-[3px] border-[#D4AF37] p-[2px]' : 'border-2 border-transparent hover:scale-110'}`}
                   >
-                     <div className="w-full h-full rounded-full border border-gray-200 dark:border-gray-800" style={{ backgroundColor: color.hex }}></div>
+                     <div className="w-full h-full rounded-full border border-gray-200 dark:border-gray-800 shadow-sm" style={{ backgroundColor: color.hex }}></div>
                   </button>
                ))}
             </div>
@@ -126,14 +126,14 @@ export default function ProductDetail() {
          <div className="mb-6">
             <div className="flex justify-between items-end mb-3">
                <h3 className="text-[11px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300">Size</h3>
-               <span className="text-[10px] text-gray-400 underline decoration-gray-400">Size Guide</span>
+               <span className="text-[11px] font-medium text-gray-500 underline hover:text-black dark:hover:text-white cursor-pointer transition-colors">Size Guide</span>
             </div>
             <div className="flex space-x-3">
                {sizes.map((size) => (
                   <button 
                      key={size}
                      onClick={() => setSelectedSize(size)}
-                     className={`w-12 h-10 border transition-colors text-[13px] font-bold flex items-center justify-center ${selectedSize === size ? 'bg-black text-white dark:bg-gold dark:text-black border-black dark:border-gold' : 'bg-transparent text-gray-800 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-gold'}`}
+                     className={`w-12 h-10 border rounded-md transition-all text-[13px] font-bold flex items-center justify-center ${selectedSize === size ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md' : 'bg-transparent text-gray-800 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white'}`}
                   >
                      {size}
                   </button>
@@ -150,35 +150,46 @@ export default function ProductDetail() {
          </div>
          
          {/* Shipping Rules Wrapper */}
-         <div className="border-t border-gray-100 dark:border-gray-900 pt-5 mt-5 bg-[#fafafa] dark:bg-[#111111] p-4 rounded-md">
-             <div className="flex justify-between items-center text-[11px] text-gray-500">
-                 <span className="uppercase tracking-wider font-semibold text-black dark:text-white">Shipping</span>
-                 <span className="font-bold text-green-600 dark:text-green-500">Ships from Ethiopia</span>
+         <div className="border border-gray-200 dark:border-gray-800 pt-4 mt-5 bg-[#fafafa] dark:bg-[#111111] p-4 rounded-lg flex items-center justify-between shadow-sm">
+             <div className="flex flex-col">
+                 <span className="uppercase tracking-widest font-bold text-black dark:text-white text-[12px] mb-1">Shipping</span>
+                 <p className="text-[11px] text-gray-500 font-medium">Standard Delivery</p>
              </div>
-             <p className="text-[10px] mt-1 text-gray-400">Arrives in 1-2 business days with standard courier tracking.</p>
+             <div className="text-right">
+                 <span className="font-bold text-[#10B981] text-[13px]">Ships from Ethiopia</span>
+                 <p className="text-[10px] mt-0.5 text-gray-400">Arrives in 1-2 days</p>
+             </div>
          </div>
       </div>
 
       {/* Fixed Sticky Action Bar Base */}
-      <div className="fixed bottom-0 left-0 right-0 mx-auto z-50 bg-[#111111] border-t border-white/5 px-4 py-3 sm:max-w-[480px] sm:border-x sm:border-gray-800 pb-safe flex items-center justify-between">
-         <div className="flex-1 mr-3">
-            <button onClick={() => toggleWishlist(product.id)} className="w-[50px] h-[50px] border border-white/10 flex items-center justify-center hover:bg-white/5 transition-colors shrink-0 active:scale-90">
-               <Heart 
-                 className={`w-[20px] h-[20px] transition-colors ${isWished ? 'text-[#D4AF37] drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]' : 'text-white'}`} 
-                 fill={isWished ? '#D4AF37' : 'none'}
-                 strokeWidth={isWished ? 0 : 1.5} 
-               />
+      <div className="fixed bottom-0 left-0 right-0 mx-auto z-50 bg-white dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-white/10 px-4 py-3 sm:max-w-[480px] sm:border-x sm:border-gray-800 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] dark:shadow-none flex items-center gap-3">
+         {/* Left: Square Wishlist */}
+         <button onClick={() => toggleWishlist(product.id)} className="w-[50px] h-[50px] bg-white dark:bg-[#151515] border border-gray-300 dark:border-white/10 rounded-xl flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-colors shrink-0 active:scale-90 shadow-sm">
+            <Heart 
+              className={`w-[22px] h-[22px] transition-colors ${isWished ? 'text-[#D4AF37]' : 'text-gray-900 dark:text-white'}`} 
+              fill={isWished ? '#D4AF37' : 'none'}
+              strokeWidth={1.5} 
+            />
+         </button>
+
+         {/* Center/Right: Action Buttons */}
+         <div className="flex flex-1 gap-2">
+            <button 
+              disabled={!product.inStock}
+              className="flex-[1.2] bg-[#D4AF37] text-black h-[50px] font-bold uppercase tracking-wider text-[12px] flex items-center justify-center rounded-xl disabled:opacity-50 transition-all active:scale-95 shadow-[0_4px_10px_rgba(212,175,55,0.3)]"
+            >
+              <ShoppingBag className="w-[18px] h-[18px] mr-2" strokeWidth={2.5} />
+              <span>Add To Cart</span>
+            </button>
+            <button 
+              onClick={handleWhatsAppOrder}
+              disabled={!product.inStock}
+              className="flex-1 bg-black text-white dark:bg-white dark:text-black h-[50px] font-bold uppercase tracking-wider text-[12px] flex items-center justify-center rounded-xl disabled:opacity-50 transition-all active:scale-95 shadow-md"
+            >
+              <span>Buy Now</span>
             </button>
          </div>
-         <button 
-           onClick={handleWhatsAppOrder}
-           disabled={!product.inStock}
-           className="w-full relative overflow-hidden group flex-shrink-0 bg-[#D4AF37] text-black h-[50px] font-bold uppercase tracking-widest flex-[3] text-[12px] flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.4)] disabled:opacity-50 transition-all active:scale-95 hover:scale-[1.02]"
-         >
-           <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white/20 rounded-full group-hover:w-56 group-hover:h-56"></span>
-           <ShoppingBag className="w-4 h-4 mr-2" strokeWidth={2.5} />
-           <span className="relative">Add To Cart</span>
-         </button>
       </div>
 
     </div>
