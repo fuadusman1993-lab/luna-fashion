@@ -4,7 +4,7 @@ import { useAppContext } from '../../context/AppContext';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 
 export default function TopBar() {
-  const { toggleTheme, theme, t } = useAppContext();
+  const { toggleTheme, theme, t, cart } = useAppContext();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'All';
@@ -103,7 +103,11 @@ export default function TopBar() {
           </Link>
           <Link to="/cart" className="hover:opacity-70 transition-opacity p-1 relative">
             <ShoppingCart strokeWidth={1.25} className="w-[22px] h-[22px]" />
-            <span className="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-black shadow">3</span>
+            {cart && cart.length > 0 && (
+               <span className="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-black shadow">
+                  {cart.length}
+               </span>
+            )}
           </Link>
         </div>
       </div>

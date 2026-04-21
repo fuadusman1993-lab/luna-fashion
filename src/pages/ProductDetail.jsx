@@ -1,13 +1,13 @@
 import { useAppContext } from '../context/AppContext';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Heart, Share2, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, Heart, Share2, ShoppingBag, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ProductDetail() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { toggleWishlist, isInWishlist, addToCart } = useAppContext();
+  const { toggleWishlist, isInWishlist, addToCart, cart } = useAppContext();
   
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('Black');
@@ -75,6 +75,14 @@ export default function ProductDetail() {
                   fill={isWished ? '#D4AF37' : 'none'}
                   strokeWidth={isWished ? 0 : 2} 
                 />
+             </button>
+             <button onClick={() => navigate('/cart')} className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-md outline outline-1 outline-white/30 hover:bg-black/40 transition-colors shadow-sm relative active:scale-90">
+                <ShoppingCart className="w-[18px] h-[18px]" strokeWidth={2} />
+                {cart && cart.length > 0 && (
+                   <span className="absolute top-0 right-0 -mr-1 -mt-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-black/20 shadow">
+                      {cart.length}
+                   </span>
+                )}
              </button>
           </div>
        </div>
@@ -192,7 +200,7 @@ export default function ProductDetail() {
          {/* Center/Right: Action Buttons */}
          <div className="flex flex-1 gap-2">
             <button 
-              onClick={() => addToCart(product)}
+              onClick={() => addToCart({ ...product, size: selectedSize, color: selectedColor, qty: 1 })}
               disabled={!product.inStock}
               className="flex-[1.2] bg-[#D4AF37] text-black h-[50px] font-bold uppercase tracking-wider text-[12px] flex items-center justify-center rounded-xl disabled:opacity-50 transition-all active:scale-95 shadow-[0_4px_10px_rgba(212,175,55,0.3)]"
             >

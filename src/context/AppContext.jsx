@@ -62,9 +62,14 @@ export function AppProvider({ children }) {
   };
 
   const addToCart = (product) => {
-    setCart(prev => [...prev, product]);
+    const item = { ...product, cartId: Date.now() + Math.random() };
+    setCart(prev => [...prev, item]);
     setToastMessage(`${product.name} Added To Cart!`);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const removeFromCart = (cartId) => {
+    setCart(prev => prev.filter(item => item.cartId !== cartId));
   };
 
   const isInWishlist = (productId) => wishlist.includes(productId);
@@ -85,6 +90,7 @@ export function AppProvider({ children }) {
     isInWishlist,
     cart,
     addToCart,
+    removeFromCart,
     toastMessage
   };
 
