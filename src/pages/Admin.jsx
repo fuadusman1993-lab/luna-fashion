@@ -22,7 +22,9 @@ export default function Admin() {
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('Makhawar (ቶብ)');
   const [description, setDescription] = useState('');
+  const [shippingTime, setShippingTime] = useState('Arrives in 1-2 days');
   const [imageFiles, setImageFiles] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [inStock, setInStock] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -63,6 +65,7 @@ export default function Admin() {
            price: Number(price),
            currency: "ETB",
            description,
+           shippingTime,
            inStock
         };
         if (localUrls.length > 0) {
@@ -115,6 +118,7 @@ export default function Admin() {
         price: Number(price),
         currency: "ETB",
         description,
+        shippingTime,
         inStock
       };
 
@@ -146,6 +150,7 @@ export default function Admin() {
      setPrice(product.price);
      setCategory(product.category || 'Makhawar (ቶብ)');
      setDescription(product.description || '');
+     setShippingTime(product.shippingTime || 'Arrives in 1-2 days');
      setInStock(product.inStock);
      setActiveTab('products');
   };
@@ -161,7 +166,7 @@ export default function Admin() {
   };
 
   const resetForm = () => {
-     setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Makhawar (ቶብ)'); setImageFiles([]);
+     setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Makhawar (ቶብ)'); setShippingTime('Arrives in 1-2 days'); setImageFiles([]);
   };
 
   if (!isAuthenticated) {
@@ -305,6 +310,11 @@ export default function Admin() {
                 </div>
 
                 <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Shipping Details</label>
+                  <input type="text" value={shippingTime} onChange={e => setShippingTime(e.target.value)} placeholder="e.g. Arrives in 1-2 days" required className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none" />
+                </div>
+
+                <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{editId ? 'Add New Images (Optional)' : t('image')}</label>
                   <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed hover:border-gold transition-colors cursor-pointer bg-gray-50 dark:bg-black/20 relative">
                     <input 
@@ -339,8 +349,17 @@ export default function Admin() {
 
           {/* Manage Products Tab */}
           {activeTab === 'manage' && (
-            <div>
-               <h2 className="text-2xl font-display text-luna-black dark:text-luna-white mb-6 uppercase tracking-wider">Manage Catalog</h2>
+            <div className="flex flex-col">
+               <div className="flex justify-between items-center mb-6">
+                 <h2 className="text-2xl font-display text-luna-black dark:text-luna-white uppercase tracking-wider">Manage Catalog</h2>
+                 <input 
+                   type="text" 
+                   placeholder="Search items..." 
+                   className="border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white px-3 py-2 w-[220px] outline-none focus:border-gold text-sm transition-colors"
+                   value={searchQuery}
+                   onChange={e => setSearchQuery(e.target.value)}
+                 />
+               </div>
                <div className="overflow-x-auto">
                  <table className="w-full text-left text-sm text-gray-700 dark:text-gray-300">
                     <thead className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white uppercase font-bold text-xs">
@@ -353,7 +372,10 @@ export default function Admin() {
                        </tr>
                     </thead>
                     <tbody>
-                       {products.map(p => (
+                       {products
+                         .filter(p => !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.category?.toLowerCase().includes(searchQuery.toLowerCase()))
+                         .slice(0, 50)
+                         .map(p => (
                           <tr key={p.id} className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
                              <td className="px-4 py-3 flex items-center font-medium">
                                 <img src={p.imageUrl} alt="" className="w-8 h-8 rounded-full object-cover mr-3 border border-gray-300 dark:border-gray-700" />

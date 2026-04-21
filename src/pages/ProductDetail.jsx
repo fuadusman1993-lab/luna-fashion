@@ -7,13 +7,29 @@ export default function ProductDetail() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { toggleWishlist, isInWishlist } = useAppContext();
+  const { toggleWishlist, isInWishlist, addToCart } = useAppContext();
   
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('Black');
 
   // Route fallback state parameter fetching
   const product = state?.product;
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.name,
+          text: `Check out ${product.name} on Luna Fashion!`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log('Error sharing', err);
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+    }
+  };
 
   if (!product) {
     return (
@@ -50,7 +66,7 @@ export default function ProductDetail() {
             <ArrowLeft className="w-[20px] h-[20px]" strokeWidth={2} />
          </button>
           <div className="flex space-x-3">
-             <button className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-md outline outline-1 outline-white/30 hover:bg-black/40 transition-colors shadow-sm">
+             <button onClick={handleShare} className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-md outline outline-1 outline-white/30 hover:bg-black/40 transition-colors shadow-sm relative active:scale-90">
                 <Share2 className="w-[18px] h-[18px]" strokeWidth={2} />
              </button>
              <button onClick={() => toggleWishlist(product.id)} className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-md outline outline-1 outline-white/30 hover:bg-black/40 transition-colors shadow-sm active:scale-90">
@@ -157,7 +173,7 @@ export default function ProductDetail() {
              </div>
              <div className="text-right">
                  <span className="font-bold text-[#10B981] text-[13px]">Ships from Ethiopia</span>
-                 <p className="text-[10px] mt-0.5 text-gray-400">Arrives in 1-2 days</p>
+                 <p className="text-[10px] mt-0.5 text-gray-400">{product.shippingTime || 'Arrives in 1-2 days'}</p>
              </div>
          </div>
       </div>
@@ -176,6 +192,7 @@ export default function ProductDetail() {
          {/* Center/Right: Action Buttons */}
          <div className="flex flex-1 gap-2">
             <button 
+              onClick={() => addToCart(product)}
               disabled={!product.inStock}
               className="flex-[1.2] bg-[#D4AF37] text-black h-[50px] font-bold uppercase tracking-wider text-[12px] flex items-center justify-center rounded-xl disabled:opacity-50 transition-all active:scale-95 shadow-[0_4px_10px_rgba(212,175,55,0.3)]"
             >

@@ -1,12 +1,21 @@
 import ProductCard from './ProductCard';
+import { PackageOpen } from 'lucide-react';
 
 export default function ProductGrid({ products }) {
+  if (!products || products.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4 w-full">
+         <PackageOpen className="w-12 h-12 text-gray-300 dark:text-gray-700 mb-3" strokeWidth={1} />
+         <h2 className="text-[15px] font-bold text-gray-900 dark:text-white tracking-widest uppercase">Collection coming soon</h2>
+         <p className="text-[11px] text-gray-500 mt-2">We are preparing our premium arrivals. Stay tuned!</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-2 gap-2 px-2 mx-auto w-full">
       {products.map((product) => (
-        <div key={product.id}>
-          <ProductCard product={product} />
-        </div>
+         <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );

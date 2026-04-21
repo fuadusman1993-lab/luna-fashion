@@ -20,6 +20,15 @@ export function AppProvider({ children }) {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Cart State
+  const [cart, setCart] = useState(() => {
+    const saved = localStorage.getItem('luna_cart');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Toast State
+  const [toastMessage, setToastMessage] = useState(null);
+
   // Apply Theme class to document root
   useEffect(() => {
     const root = window.document.documentElement;
@@ -33,6 +42,11 @@ export function AppProvider({ children }) {
     localStorage.setItem('luna_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
+  // Sync cart to local storage
+  useEffect(() => {
+    localStorage.setItem('luna_cart', JSON.stringify(cart));
+  }, [cart]);
+
   // Sync language to local storage
   useEffect(() => {
     localStorage.setItem('lang', language);
@@ -45,6 +59,12 @@ export function AppProvider({ children }) {
     setWishlist(prev => 
       prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]
     );
+  };
+
+  const addToCart = (product) => {
+    setCart(prev => [...prev, product]);
+    setToastMessage(`${product.name} Added To Cart!`);
+    setTimeout(() => setToastMessage(null), 3000);
   };
 
   const isInWishlist = (productId) => wishlist.includes(productId);
@@ -62,7 +82,10 @@ export function AppProvider({ children }) {
     t,
     wishlist,
     toggleWishlist,
-    isInWishlist
+    isInWishlist,
+    cart,
+    addToCart,
+    toastMessage
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
