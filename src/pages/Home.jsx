@@ -2,9 +2,52 @@ import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import ProductGrid from '../components/product/ProductGrid';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Scissors, Shirt, Component, Combine, Sparkles, Footprints, Heart, Flame, Tag, Star } from 'lucide-react';
+import { Heart, Flame, Star } from 'lucide-react';
 
-export default function Home() {
+const CustomIcons = {
+  Abaya: (props) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <path d="M8 4h8l3 7-2 1-2-5v13H7V7L5 12l-2-1 3-7Z" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 4v17" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Makhawar: (props) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <path d="M7 4h10l2 6-1.5 11h-11L5 10l2-6Z" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M10 4v17M14 4v17" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Dria: (props) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <path d="M9 4h6l2 5v12H7V9l2-5Z" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 9v12" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Dresses: (props) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <path d="M8 4h8l1 5-2 3 3 9H6l3-9-2-3 1-5Z" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Shoes: (props) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <path d="M4 18c0-1.5 1-3 3-3h1l3.5-5 3.5-5a2 2 0 0 1 2 0l1 1c1.5 1.5 2 3 2 6 0 1.5-1.5 2-3 2h-6l-3.5 3H7c-1.5 0-3-1-3-3z" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M14 18v3" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  Makeup: (props) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <rect x="8" y="12" width="8" height="9" rx="1" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M10 12V7l2-4 2 4v5" strokeLinecap="round" strokeLinejoin="round"/>
+      <line x1="8" y1="16" x2="16" y2="16" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  VerticalTag: (props) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <path d="M8 3h8v15l-4-3-4 3V3Z" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="12" cy="7" r="1.5" fill="none"/>
+    </svg>
+  )
+};export default function Home() {
   const { products, loading } = useProducts();
   const [activeFilter, setActiveFilter] = useState('For You');
   const [searchParams] = useSearchParams();
@@ -14,18 +57,18 @@ export default function Home() {
 
   // Minimalist SVGs mapped conceptually to the exact inventory categories
   const circleCategories = [
-    { name: 'Makhawar', icon: Scissors },
-    { name: 'Abaya', icon: Shirt },
-    { name: 'Dria', icon: Component },
-    { name: 'Dresses', icon: Combine },
-    { name: 'Shoes', icon: Footprints },
-    { name: 'Makeup', icon: Sparkles },
+    { name: 'Makhawar', icon: CustomIcons.Makhawar },
+    { name: 'Abaya', icon: CustomIcons.Abaya },
+    { name: 'Dria', icon: CustomIcons.Dria },
+    { name: 'Dresses', icon: CustomIcons.Dresses },
+    { name: 'Shoes', icon: CustomIcons.Shoes },
+    { name: 'Makeup', icon: CustomIcons.Makeup },
   ];
 
   const filterTabs = [
-    { name: 'For You', icon: Heart },
+    { name: 'For You', icon: null },
     { name: 'New In', icon: Flame },
-    { name: 'Deals', icon: Tag },
+    { name: 'Deals', icon: CustomIcons.VerticalTag },
     { name: 'Best', icon: Star }
   ];
 
@@ -76,10 +119,10 @@ export default function Home() {
             <button 
               key={idx}
               onClick={() => setActiveFilter(tab.name)}
-              className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-1.5 text-[12px] rounded-full transition-colors tracking-wide border ${isSelected ? 'bg-black text-white dark:bg-white dark:text-black font-bold border-black dark:border-white shadow-md' : 'bg-[#f8f8f8] text-gray-700 dark:bg-[#111111] dark:text-gray-300 font-medium border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-[#1a1a1a]'}`}
+              className={`flex-shrink-0 flex items-center justify-center gap-1.5 px-4 py-1.5 text-[12px] rounded-full transition-colors tracking-wide border ${isSelected ? 'bg-black text-white dark:bg-white dark:text-black font-bold border-black dark:border-white shadow-md' : 'bg-[#f8f8f8] text-gray-700 dark:bg-[#111111] dark:text-gray-300 font-medium border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-[#1a1a1a]'}`}
             >
-              <Icon className="w-[14px] h-[14px]" strokeWidth={isSelected ? 2 : 1.5} />
-              {tab.name}
+              {Icon && <Icon className="w-[14px] h-[14px]" strokeWidth={isSelected ? 2 : 1.5} />}
+              <span className={!Icon ? 'px-1' : ''}>{tab.name}</span>
             </button>
          )})}
       </div>

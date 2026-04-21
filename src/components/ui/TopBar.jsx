@@ -1,4 +1,4 @@
-import { Search, Heart, MessageSquare, Camera, ShoppingCart } from 'lucide-react';
+import { Search, Heart, MessageSquare, Camera, ShoppingCart, ArrowLeft, History, TrendingUp, X } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ export default function TopBar() {
   const activeCategory = searchParams.get('category') || 'All';
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const topCategories = [t('allNav'), 'Makhawar (ቶብ)', 'Abaya', 'Dria', 'Dresses (ቀሚስ)', 'Makeup', 'Shoes'];
 
@@ -47,8 +48,10 @@ export default function TopBar() {
 
   const handleSearchClick = () => {
     if (searchQuery.trim()) {
+      setIsSearchOpen(false);
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     } else {
+      setIsSearchOpen(false);
       navigate(`/search`);
     }
   };
@@ -80,17 +83,15 @@ export default function TopBar() {
         </div>
 
         {/* Fully rounded, highly focused search bar */}
-        <div className="flex-1 flex items-center bg-white rounded-full px-3 py-1.5 shadow-inner transition-colors">
+        <div 
+          onClick={() => setIsSearchOpen(true)}
+          className="flex-1 flex items-center bg-white rounded-full px-3 py-1.5 shadow-inner transition-colors cursor-text"
+        >
           <Search strokeWidth={1.25} className="w-[16px] h-[16px] text-gray-400 mr-2 shrink-0" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Search Trending Styles..."
-            className="bg-transparent border-none outline-none flex-1 text-[13px] font-medium tracking-wide text-gray-800 placeholder-gray-400 w-full"
-          />
-          <button onClick={handleCameraClick} className="text-gray-400 hover:text-black transition-colors ml-2 shrink-0 pl-2 border-l border-gray-300">
+          <div className="flex-1 text-[13px] font-medium tracking-wide text-gray-400 w-full overflow-hidden whitespace-nowrap text-ellipsis px-1">
+             {placeholders[placeholderIdx]}
+          </div>
+          <button onClick={(e) => { e.stopPropagation(); handleCameraClick(); }} className="text-gray-400 hover:text-black transition-colors ml-2 shrink-0 pl-2 border-l border-gray-300 pointer-events-auto">
             <Camera strokeWidth={1.25} className="w-[18px] h-[18px]" />
           </button>
         </div>
@@ -127,6 +128,76 @@ export default function TopBar() {
           })}
         </div>
       </div>
+
+      {/* Professional Search Overlay */}
+      {isSearchOpen && (
+        <div className="fixed inset-0 top-0 z-[100] bg-white dark:bg-[#0a0a0a] w-full h-[100dvh] max-w-[430px] mx-auto flex flex-col animate-in fade-in zoom-in-95 duration-200">
+          <div className="flex items-center px-3 py-3 border-b border-gray-100 dark:border-white/10 gap-2 bg-white dark:bg-[#0a0a0a]">
+            <button onClick={() => setIsSearchOpen(false)} className="p-1 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-full transition-colors shrink-0">
+              <ArrowLeft className="w-5 h-5 text-gray-800 dark:text-gray-200" />
+            </button>
+            <div className="flex-1 flex items-center bg-gray-100 dark:bg-[#1a1a1a] rounded-full px-3 py-2 transition-colors border border-gray-200 dark:border-gray-800">
+              <Search strokeWidth={1.5} className="w-[16px] h-[16px] text-gray-400 mr-2 shrink-0" />
+              <input
+                autoFocus
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Search..."
+                className="bg-transparent border-none outline-none flex-1 text-[13px] font-medium text-gray-800 dark:text-white placeholder-gray-400 w-full"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery('')} className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 shrink-0">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <button onClick={handleCameraClick} className="text-gray-400 hover:text-black dark:hover:text-white transition-colors ml-2 shrink-0 pl-2 border-l border-gray-300 dark:border-gray-700">
+                <Camera strokeWidth={1.5} className="w-[18px] h-[18px]" />
+              </button>
+            </div>
+            <button onClick={handleSearchClick} className="text-[13px] font-bold px-2 text-black dark:text-white shrink-0">
+              Search
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-4 py-5 space-y-8 bg-white dark:bg-[#0a0a0a]">
+            {/* Recent Searches */}
+            <div>
+              <div className="flex items-center justify-between mb-3 text-gray-900 dark:text-white font-bold text-[14px]">
+                <div className="flex items-center gap-1.5">
+                  <History className="w-[16px] h-[16px]" strokeWidth={2} />
+                  Recent Searches
+                </div>
+                <button className="text-[11px] text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 font-medium">Clear</button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {['Abaya Luxury', 'Summer Dress', 'Heels'].map((term, i) => (
+                  <span key={i} onClick={() => { setSearchQuery(term); handleSearchClick(); }} className="px-3.5 py-1.5 bg-gray-50 dark:bg-[#111] border border-gray-100 dark:border-white/5 text-[12px] font-medium text-gray-700 dark:text-gray-300 rounded-full cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1a1a1a]">
+                    {term}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Trending Searches */}
+            <div>
+              <div className="flex items-center mb-3 text-red-600 dark:text-red-500 font-bold text-[14px] gap-1.5">
+                <TrendingUp className="w-[16px] h-[16px]" strokeWidth={2} />
+                Trending on LUNA
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {['Gold Makhawar', 'Crystal Heels', 'Satin Dria', 'Matte Lipstick', 'Dubai Abaya Open'].map((term, i) => (
+                  <span key={i} onClick={() => { setSearchQuery(term); handleSearchClick(); }} className="px-3.5 py-1.5 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 text-[12px] font-bold rounded-full border border-red-100 dark:border-red-900/30 cursor-pointer hover:bg-red-100 dark:hover:bg-red-900/50">
+                    {term}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </header>
   );
 }
