@@ -80,17 +80,17 @@ export default function Cart() {
     text += "Is this available to order?";
     
     const encodedText = encodeURIComponent(text);
-    const telegramUrl = `https://t.me/+251977799797?text=${encodedText}`;
+    const telegramUrl = `https://t.me/Luna_market1?text=${encodedText}`;
     window.open(telegramUrl, '_blank');
   };
 
   // Helper for Custom Circle Checkbox
   const CustomCheckbox = ({ isChecked, onClick }) => (
-    <button onClick={onClick} className="shrink-0 p-1 flex items-center justify-center">
+    <button onClick={onClick} className="shrink-0 p-1 flex items-center justify-center transition-transform active:scale-90">
       {isChecked ? (
-        <CheckCircle2 className="w-5 h-5 text-black dark:text-white" fill="currentColor" strokeWidth={1} />
+        <CheckCircle2 className="w-5 h-5 text-black dark:text-white transition-colors duration-200" fill="currentColor" strokeWidth={1} />
       ) : (
-        <Circle className="w-5 h-5 text-gray-300 dark:text-gray-600" strokeWidth={1.5} />
+        <Circle className="w-5 h-5 text-gray-300 dark:text-gray-600 transition-colors duration-200" strokeWidth={1.5} />
       )}
     </button>
   );
@@ -115,13 +115,6 @@ export default function Cart() {
             <MoreHorizontal className="w-5 h-5 text-black dark:text-white" />
           </button>
         </div>
-        
-        {/* Banner */}
-        <div className="bg-[#eef3fb] dark:bg-[#1a202c] px-4 py-2 flex items-center justify-between">
-          <span className="text-[11px] font-medium text-[#4a638b] dark:text-[#8ba3c7]">Log in to synchronize your shopping cart</span>
-          <button className="bg-black dark:bg-white text-white dark:text-black text-[11px] font-bold px-4 py-1.5 rounded-full">Sign In</button>
-        </div>
-      </div>
 
       <div className="flex-1">
         {cart.length === 0 ? (
@@ -163,7 +156,8 @@ export default function Cart() {
                             <img 
                               src={item.image || item.imageUrl || (item.images && item.images[0])} 
                               alt={item.name} 
-                              className="w-[100px] h-[135px] object-cover rounded shadow-sm bg-gray-100 dark:bg-[#222]" 
+                              className="w-[100px] h-[125px] aspect-[4/5] object-cover rounded shadow-sm bg-gray-100 dark:bg-[#222] transition-opacity duration-300" 
+                              loading="lazy"
                             />
                           </Link>
                           
@@ -239,16 +233,6 @@ export default function Cart() {
               You Might Like to Fill it With
             </h3>
             <div className="w-2 h-2 rotate-45 bg-gray-300 dark:bg-gray-700"></div>
-          </div>
-          
-          <div className="flex justify-center gap-2 mb-4 px-2">
-            <button className="bg-gray-100 dark:bg-[#111] text-[12px] font-bold px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-800">All</button>
-            <button className="bg-white dark:bg-[#0a0a0a] text-[12px] font-bold px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-800 flex items-center gap-1">
-               <span className="text-red-500">🔥</span> Hot Deals
-            </button>
-            <button className="bg-black dark:bg-white text-white dark:text-black text-[12px] font-bold px-4 py-1.5 rounded-full flex items-center gap-1 shadow-sm">
-               🛒 Frequent Favorites
-            </button>
           </div>
 
           <div className="-mx-1">
