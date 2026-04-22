@@ -46,7 +46,7 @@ export default function Me() {
           </div>
           
           <div className="flex items-center space-x-3">
-             <a href="https://www.tiktok.com/@lunafashion" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white dark:bg-[#111] flex items-center justify-center shadow-sm text-black dark:text-white border border-gray-100 dark:border-gray-800 hover:scale-105 transition-transform">
+             <a href="https://www.tiktok.com/@lunamarket2?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white dark:bg-[#111] flex items-center justify-center shadow-sm text-black dark:text-white border border-gray-100 dark:border-gray-800 hover:scale-105 transition-transform">
                 <TikTokIcon />
              </a>
              <Link to="/settings" className="w-10 h-10 rounded-full bg-white dark:bg-[#111] flex items-center justify-center shadow-sm text-black dark:text-white border border-gray-100 dark:border-gray-800 hover:scale-105 transition-transform">
@@ -97,16 +97,24 @@ export default function Me() {
        </div>
 
        {/* Address & Map Integration */}
-       <div className="bg-white dark:bg-[#111111] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-4">
+       <div className="bg-white dark:bg-[#111111] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-5">
           <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
              <div className="flex items-center">
                <MapPin className="w-5 h-5 mr-3 text-gray-700 dark:text-gray-300" strokeWidth={1.5} />
-               <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200 tracking-wide">Delivery Address</span>
+               <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200 tracking-wide">My Address</span>
              </div>
              <button onClick={handleSaveAddress} className="flex items-center text-[10px] font-bold uppercase tracking-widest text-[#D4AF37] hover:text-black dark:hover:text-white transition-colors bg-[#D4AF37]/10 px-3 py-1.5 rounded-full">
                 {addressSaved ? 'Saved!' : 'Save'}
              </button>
           </div>
+          
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3 border-b border-gray-100 dark:border-gray-800">
+             <input type="text" placeholder="Full Name" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2 text-[12px] text-black dark:text-white outline-none focus:border-[#D4AF37] transition-colors" />
+             <input type="tel" placeholder="Phone Number" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2 text-[12px] text-black dark:text-white outline-none focus:border-[#D4AF37] transition-colors" />
+             <input type="text" placeholder="City" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2 text-[12px] text-black dark:text-white outline-none focus:border-[#D4AF37] transition-colors" />
+             <input type="text" placeholder="Building / Specific Location" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2 text-[12px] text-black dark:text-white outline-none focus:border-[#D4AF37] transition-colors" />
+          </div>
+
           <div className="w-full h-[180px] bg-gray-200 relative">
              <iframe 
                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d252230.02028974562!2d38.61332804027495!3d8.963479542403238!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85cef5ab402d%3A0x8467b6b037a24d49!2sAddis%20Ababa%2C%20Ethiopia!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus" 
@@ -118,9 +126,36 @@ export default function Me() {
                referrerPolicy="no-referrer-when-downgrade"
                className="grayscale contrast-125 dark:invert dark:hue-rotate-180"
              ></iframe>
-             <div className="absolute bottom-3 left-3 right-3 bg-white/90 dark:bg-black/90 backdrop-blur-md p-3 rounded-xl border border-white/20 shadow-lg">
-                <p className="text-[11px] font-semibold text-black dark:text-white mb-0.5">Addis Ababa, Ethiopia</p>
+             <div className="absolute bottom-3 left-3 right-3 bg-white/90 dark:bg-black/90 backdrop-blur-md p-3 rounded-xl border border-white/20 shadow-lg pointer-events-none">
+                <p className="text-[11px] font-semibold text-black dark:text-white mb-0.5">Delivery Pin</p>
                 <p className="text-[9px] text-gray-500 uppercase tracking-wider">Tap map to pin exact location</p>
+             </div>
+          </div>
+       </div>
+
+       {/* Our Stores Location */}
+       <div className="bg-white dark:bg-[#111111] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-4 p-5">
+          <h3 className="font-bold text-[14px] text-luna-black dark:text-white tracking-wide mb-4">Our Stores</h3>
+          
+          <div className="flex flex-col space-y-4">
+             <div className="flex justify-between items-center border-b border-gray-100 dark:border-gray-800 pb-4">
+                <div>
+                   <p className="text-[12px] font-bold text-black dark:text-white mb-1">Jemo Branch</p>
+                   <p className="text-[10px] text-gray-500 leading-relaxed">Sun Moon Star Mall<br/>1st Floor, Shop No. 06</p>
+                </div>
+                <a href="https://maps.google.com/?q=Sun+Moon+Star+Mall+Jemo+Addis+Ababa" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold uppercase tracking-widest text-white bg-black dark:bg-white dark:text-black px-4 py-2 rounded-lg hover:scale-105 transition-transform shadow-sm">
+                   Get Directions
+                </a>
+             </div>
+             
+             <div className="flex justify-between items-center">
+                <div>
+                   <p className="text-[12px] font-bold text-black dark:text-white mb-1">Bethel Branch</p>
+                   <p className="text-[10px] text-gray-500 leading-relaxed">Mira Mall<br/>1st Floor</p>
+                </div>
+                <a href="https://maps.google.com/?q=Mira+Mall+Bethel+Addis+Ababa" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold uppercase tracking-widest text-white bg-black dark:bg-white dark:text-black px-4 py-2 rounded-lg hover:scale-105 transition-transform shadow-sm">
+                   Get Directions
+                </a>
              </div>
           </div>
        </div>
