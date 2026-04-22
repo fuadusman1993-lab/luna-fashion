@@ -1,9 +1,9 @@
 import { useAppContext } from '../context/AppContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Globe, Info, ShieldAlert, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Globe, Info, ShieldAlert, ChevronRight, Moon, Sun } from 'lucide-react';
 
 export default function Settings() {
-  const { language, toggleLanguage } = useAppContext();
+  const { language, toggleLanguage, theme, toggleTheme } = useAppContext();
   const navigate = useNavigate();
 
   return (
@@ -19,6 +19,19 @@ export default function Settings() {
       <div className="px-4 pt-6 flex-1 flex flex-col md:max-w-2xl mx-auto w-full space-y-4">
         
         <div className="bg-white dark:bg-[#111111] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+          <button onClick={toggleTheme} className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+             <div className="flex items-center">
+               {theme === 'dark' ? <Moon className="w-5 h-5 mr-3 text-indigo-400" strokeWidth={1.5} /> : <Sun className="w-5 h-5 mr-3 text-orange-400" strokeWidth={1.5} />}
+               <div className="flex flex-col text-left">
+                 <span className="font-semibold text-[14px] text-gray-800 dark:text-gray-200">Dark Mode</span>
+                 <span className="text-[10px] text-gray-400 mt-0.5">Toggle app visual theme</span>
+               </div>
+             </div>
+             <div className={`w-11 h-6 rounded-full relative transition-colors ${theme === 'dark' ? 'bg-[#D4AF37]' : 'bg-gray-200 dark:bg-gray-700'}`}>
+                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${theme === 'dark' ? 'left-[26px]' : 'left-1'}`}></div>
+             </div>
+          </button>
+
           <button onClick={toggleLanguage} className="w-full flex items-center justify-between py-4 px-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
              <div className="flex items-center">
                <Globe className="w-5 h-5 mr-3 text-[#D4AF37]" strokeWidth={1.5} />

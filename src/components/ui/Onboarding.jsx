@@ -16,7 +16,8 @@ export default function Onboarding({ onComplete }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-luna-white dark:bg-luna-black text-luna-black dark:text-luna-white transition-colors flex flex-col justify-between overflow-hidden sm:max-w-md sm:mx-auto sm:border sm:border-gray-800">
+    <div className="fixed inset-0 z-[100] bg-luna-white dark:bg-luna-black text-luna-black dark:text-luna-white transition-colors flex items-center justify-center sm:bg-gray-100 sm:dark:bg-[#070707] p-0 sm:p-6 overflow-y-auto">
+       <div className="w-full min-h-screen sm:min-h-[600px] sm:h-auto sm:max-h-[85vh] sm:max-w-[420px] bg-luna-white dark:bg-luna-black sm:rounded-3xl flex flex-col justify-between overflow-y-auto sm:border border-gray-200 dark:border-gray-800 shadow-2xl relative">
       
       {/* Top Map Section */}
       <div className="relative h-[30vh] flex items-center justify-center p-6 mt-10">
@@ -74,6 +75,7 @@ export default function Onboarding({ onComplete }) {
         </p>
       </div>
 
+      </div>
     </div>
   );
 }
