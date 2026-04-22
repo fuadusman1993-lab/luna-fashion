@@ -6,7 +6,7 @@ export default function Me() {
   const { theme, toggleTheme, language, toggleLanguage, t } = useAppContext();
 
   return (
-    <div className="min-h-screen bg-[#ffffff] dark:bg-[#000000] px-3 py-6 font-sans relative z-40 pb-[90px]">
+    <div className="min-h-screen bg-[#f5f5f5] dark:bg-[#050505] px-3 py-6 font-sans relative z-40 pb-[90px]">
        {/* User Profile Header */}
        <div className="flex items-center space-x-4 mb-8 pt-4 px-2">
           <div className="w-[72px] h-[72px] bg-gradient-to-br from-gold to-yellow-600 rounded-full flex flex-col items-center justify-center font-display text-3xl font-bold text-black border-2 border-white dark:border-black shadow-md">
@@ -19,78 +19,78 @@ export default function Me() {
        </div>
 
        {/* Orders Panel */}
-       <div className="bg-white dark:bg-[#1a1a1a] rounded-xl p-5 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
+       <div className="bg-white dark:bg-[#111111] rounded-xl p-5 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
          <div className="flex justify-between items-center mb-4">
-             <h3 className="font-bold text-[15px] text-luna-black dark:text-white">My Orders</h3>
-             <span className="text-[11px] text-gray-400 font-medium">View All &gt;</span>
+             <h3 className="font-bold text-[15px] text-luna-black dark:text-white">{t('myOrders')}</h3>
+             <span className="text-[11px] text-gray-400 font-medium">{t('viewAll')}</span>
          </div>
          <div className="grid grid-cols-4 gap-4 text-center">
-            <div className="flex flex-col items-center">
+             <div className="flex flex-col items-center">
                <Package className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">Unpaid</span>
+               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('unpaid')}</span>
             </div>
             <div className="flex flex-col items-center">
                <Package className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">Processing</span>
+               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('processing')}</span>
             </div>
             <div className="flex flex-col items-center relative">
                <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></div>
                <Package className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">Shipped</span>
+               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('shipped')}</span>
             </div>
             <div className="flex flex-col items-center">
                <Package className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">Returns</span>
+               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('returns')}</span>
             </div>
          </div>
        </div>
 
        {/* Utilities / Services */}
-       <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-4">
-          <h3 className="font-bold text-[15px] text-luna-black dark:text-white pt-5 px-5 mb-2">My Services</h3>
+       <div className="bg-white dark:bg-[#111111] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-4">
+          <h3 className="font-bold text-[15px] text-luna-black dark:text-white pt-5 px-5 mb-2">{t('myServices')}</h3>
           <div className="grid grid-cols-4 gap-4 text-center pb-5 pt-2 px-2">
              <div className="flex flex-col items-center">
                <Heart className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Wishlist</span>
+               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 break-words w-full px-0.5">{t('wishlist')}</span>
              </div>
              <div className="flex flex-col items-center">
                <Tag className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Coupons</span>
+               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 break-words w-full px-0.5">{t('coupons')}</span>
              </div>
              <div className="flex flex-col items-center">
                <CreditCard className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Payment</span>
+               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 break-words w-full px-0.5">{t('payment')}</span>
              </div>
              <div className="flex flex-col items-center">
                <MapPin className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Address</span>
+               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 break-words w-full px-0.5">{t('address')}</span>
              </div>
           </div>
        </div>
 
        {/* Our Locations Panel */}
-       <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-4 p-5">
+       <div className="bg-white dark:bg-[#111111] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-4 p-5">
           <div className="flex items-center mb-4 text-luna-black dark:text-white">
              <Store className="w-5 h-5 mr-2 text-gold" />
-             <h3 className="font-bold text-[15px]">Our Locations</h3>
+             <h3 className="font-bold text-[15px]">{t('ourLocations')}</h3>
           </div>
           
           <div className="space-y-4">
              {/* Branch 1 */}
              <div className="bg-gray-50 dark:bg-[#111111] p-3 rounded-lg border border-gray-100 dark:border-white/5">
-                <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">Branch 1: Jemo</h4>
+                <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">{t('branch1')}</h4>
                 <p className="text-[11px] text-gray-500 font-light mb-2">Jemo 1, Sun Moon Star Mall, 1st Floor, No. 06.</p>
                 <button onClick={() => window.open('https://www.google.com/maps/search/Jemo+1,+Sun+Moon+Star+Mall', '_blank')} className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
-                   <Map className="w-3 h-3 mr-1" /> View on Map
+                   <Map className="w-3 h-3 mr-1" /> {t('viewOnMap')}
                 </button>
              </div>
              
              {/* Branch 2 */}
              <div className="bg-gray-50 dark:bg-[#111111] p-3 rounded-lg border border-gray-100 dark:border-white/5">
-                <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">Branch 2: Bethel</h4>
+                <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">{t('branch2')}</h4>
                 <p className="text-[11px] text-gray-500 font-light mb-2">Bethel, Mira Mall, 1st Floor.</p>
                 <button onClick={() => window.open('https://www.google.com/maps/search/Bethel,+Mira+Mall', '_blank')} className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
-                   <Map className="w-3 h-3 mr-1" /> View on Map
+                   <Map className="w-3 h-3 mr-1" /> {t('viewOnMap')}
                 </button>
              </div>
           </div>
@@ -108,12 +108,12 @@ export default function Me() {
        </div>
 
        {/* Settings & Admin Panel controls */}
-       <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-8">
+       <div className="bg-white dark:bg-[#111111] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-8">
           
           <button onClick={toggleLanguage} className="w-full flex items-center justify-between py-4 px-5 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
              <div className="flex items-center">
                <Globe className="w-5 h-5 mr-3 text-gold" />
-               <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200">Language (ቋንቋ)</span>
+               <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200">{t('language')}</span>
              </div>
              <div className="flex items-center">
                 <span className="text-xs text-gray-400 mr-2">{language === 'en' ? 'English' : 'አማርኛ'}</span>
@@ -124,7 +124,7 @@ export default function Me() {
           <button onClick={toggleTheme} className="w-full flex items-center justify-between py-4 px-5 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
              <div className="flex items-center">
                {theme === 'dark' ? <Moon className="w-5 h-5 mr-3 text-indigo-400" /> : <Sun className="w-5 h-5 mr-3 text-orange-400" />}
-               <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200">Appearance</span>
+               <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200">{t('appearance')}</span>
              </div>
              <div className="flex items-center">
                 <span className="text-xs text-gray-400 mr-2">{theme === 'dark' ? 'Dark Mode' : 'Light Mode'}</span>
@@ -136,7 +136,7 @@ export default function Me() {
              <div className="flex items-center justify-between w-full">
                <div className="flex items-center">
                  <Shield className="w-5 h-5 mr-3 text-gray-500" />
-                 <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200">About Luna Fashion</span>
+                 <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200">{t('aboutLunaFashion')}</span>
                </div>
                <ChevronRight className="w-4 h-4 text-gray-400" />
              </div>
@@ -145,7 +145,7 @@ export default function Me() {
           <Link to="/admin" className="flex items-center justify-between py-4 px-5 bg-[#faf8f0] dark:bg-[#1f1a0d] hover:brightness-95 transition">
              <div className="flex items-center">
                <Settings className="w-5 h-5 mr-3 text-gold" />
-               <span className="font-bold text-[13px] text-yellow-800 dark:text-gold tracking-wide">Owner / Admin Setup</span>
+               <span className="font-bold text-[13px] text-yellow-800 dark:text-gold tracking-wide">{t('ownerAdminSetup')}</span>
              </div>
              <ChevronRight className="w-4 h-4 text-gold/50" />
           </Link>

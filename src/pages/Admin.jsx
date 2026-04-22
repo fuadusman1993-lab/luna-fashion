@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useAppContext } from '../context/AppContext';
-import { User, Settings, PackagePlus, ListTree, Pencil, Trash2 } from 'lucide-react';
+import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard } from 'lucide-react';
 import { useProducts, addLocalProduct, updateLocalProduct, deleteLocalProduct } from '../hooks/useProducts';
 
 export default function Admin() {
@@ -14,7 +14,7 @@ export default function Admin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState('products');
+  const [activeTab, setActiveTab] = useState('overview');
 
   // Product Form State
   const [editId, setEditId] = useState(null);
@@ -225,6 +225,14 @@ export default function Admin() {
           </div>
           
           <button 
+             onClick={() => setActiveTab('overview')}
+             className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'overview' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
+          >
+             <LayoutDashboard className="w-5 h-5 mr-3" />
+             Dashboard Overview
+          </button>
+
+          <button 
              onClick={() => setActiveTab('products')}
              className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'products' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
           >
@@ -263,6 +271,35 @@ export default function Admin() {
         {/* Main Content Area */}
         <div className="flex-1 bg-white dark:bg-[#111111] border border-gray-200 dark:border-gray-800 shadow-sm p-8 transition-colors duration-300 relative">
           
+          {/* Overview Dashboard Tab */}
+          {activeTab === 'overview' && (
+             <div>
+               <h2 className="text-2xl font-display text-luna-black dark:text-luna-white uppercase tracking-wider mb-6">Store Overview</h2>
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                 <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Total Products</h3>
+                    <p className="text-4xl font-display text-black dark:text-white">{products.length}</p>
+                 </div>
+                 <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">In Stock</h3>
+                    <p className="text-4xl font-display text-green-600 dark:text-green-400">{products.filter(p => p.inStock).length}</p>
+                 </div>
+                 <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Sold Out</h3>
+                    <p className="text-4xl font-display text-red-600 dark:text-red-400">{products.filter(p => !p.inStock).length}</p>
+                 </div>
+               </div>
+               
+               <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <h3 className="text-lg font-bold text-black dark:text-white mb-4">Quick Actions</h3>
+                  <div className="flex gap-4">
+                     <button onClick={() => { setActiveTab('products'); resetForm(); }} className="bg-gold text-black px-6 py-3 font-bold uppercase tracking-wider text-sm hover:opacity-90 transition-opacity shadow-sm">Add New Product</button>
+                     <button onClick={() => setActiveTab('manage')} className="border border-gold text-gold px-6 py-3 font-bold uppercase tracking-wider text-sm hover:bg-gold hover:text-black transition-colors">Manage Catalog</button>
+                  </div>
+               </div>
+             </div>
+          )}
+
           {/* Upload / Edit Tab */}
           {activeTab === 'products' && (
             <div>

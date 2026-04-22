@@ -25,7 +25,7 @@ export default function BottomNavBar() {
             className={`flex flex-col items-center justify-center p-1 w-full transition-colors ${isActive ? 'text-luna-black dark:text-gold' : 'text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400'}`}
           >
             <Icon className={`w-[22px] h-[22px] mb-1.5 ${isActive ? 'fill-current opacity-20' : ''}`} strokeWidth={1.25} />
-            <span className="text-[10px] font-bold tracking-wide uppercase">{item.name}</span>
+            <span className="text-[10px] font-bold tracking-wide uppercase text-center break-words w-full px-0.5 leading-tight">{t(item.name.toLowerCase())}</span>
           </Link>
         )
       })}

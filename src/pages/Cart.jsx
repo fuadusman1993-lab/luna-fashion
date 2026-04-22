@@ -152,7 +152,7 @@ export default function Cart() {
                             <CustomCheckbox isChecked={isItemSelected} onClick={() => toggleItemSelect(item.cartId)} />
                           </div>
                           
-                          <Link to={`/product/${item.id}`} className="shrink-0">
+                          <Link to={`/product/${item.id}`} state={{ product: item }} className="shrink-0">
                             <img 
                               src={item.image || item.imageUrl || (item.images && item.images[0])} 
                               alt={item.name} 
@@ -164,7 +164,7 @@ export default function Cart() {
                           <div className="flex-1 flex flex-col justify-between pt-1 relative">
                             {/* Title & Trash */}
                             <div className="flex justify-between items-start gap-2">
-                              <Link to={`/product/${item.id}`} className="text-[12px] font-medium text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 pr-6 hover:underline">
+                              <Link to={`/product/${item.id}`} state={{ product: item }} className="text-[12px] font-medium text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 pr-6 hover:underline">
                                 {item.name}
                               </Link>
                               <button onClick={() => removeFromCart(item.cartId)} className="absolute right-0 top-0 p-1 text-gray-400 hover:text-red-500">

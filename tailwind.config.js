@@ -20,8 +20,10 @@ export default {
         }
       },
       fontFamily: {
+        sans: ['Inter', 'sans-serif'],
         display: ['"Playfair Display"', 'serif'],
-        body: ['"Montserrat"', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        serif: ['"Playfair Display"', 'serif'],
       }
     },
   },
