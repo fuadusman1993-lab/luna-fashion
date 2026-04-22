@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Layout from './components/ui/Layout';
 import Home from './pages/Home';
 import Shop from './pages/Shop';

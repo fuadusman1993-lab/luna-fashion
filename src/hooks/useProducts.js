@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { db, isFirebaseConfigured } from '../services/firebase';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { mockProducts } from '../data/products';
