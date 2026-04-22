@@ -195,8 +195,6 @@ export default function ProductDetail() {
              </div>
          </div>
       </div>
-
-      </div>
       </div>
 
       {/* Fixed Sticky Action Bar Base */}
