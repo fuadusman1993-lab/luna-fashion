@@ -9,11 +9,16 @@ export default function ProductDetail() {
 
   const { toggleWishlist, isInWishlist, addToCart, cart } = useAppContext();
   
-  const [selectedSize, setSelectedSize] = useState('M');
-  const [selectedColor, setSelectedColor] = useState('Black');
-
   // Route fallback state parameter fetching
   const product = state?.product;
+
+  const category = product?.category || '';
+  let availableSizes = ['S', 'M', 'L', 'XL', 'XXL'];
+  if (category.toLowerCase().includes('shoe')) availableSizes = ['36', '37', '38', '39', '40', '41'];
+  else if (category.toLowerCase().includes('makeup') || category.toLowerCase().includes('bag')) availableSizes = [];
+
+  const [selectedSize, setSelectedSize] = useState(availableSizes.length > 0 ? availableSizes[1] || availableSizes[0] : '');
+  const [selectedColor, setSelectedColor] = useState('Black');
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -50,7 +55,7 @@ export default function ProductDetail() {
     window.open(whatsappUrl, '_blank');
   };
 
-  const sizes = ['S', 'M', 'L', 'XL'];
+
   const colors = [
     { name: 'Black', hex: '#0a0a0a' },
     { name: 'Mocha', hex: '#6b4c3a' },
@@ -150,23 +155,25 @@ export default function ProductDetail() {
          </div>
 
          {/* Selection Variants - Size */}
-         <div className="mb-6">
-            <div className="flex justify-between items-end mb-3">
-               <h3 className="text-[11px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300">Size</h3>
-               <span className="text-[11px] font-medium text-gray-500 underline hover:text-black dark:hover:text-white cursor-pointer transition-colors">Size Guide</span>
-            </div>
-            <div className="flex space-x-3">
-               {sizes.map((size) => (
-                  <button 
-                     key={size}
-                     onClick={() => setSelectedSize(size)}
-                     className={`w-12 h-10 border rounded-md transition-all text-[13px] font-bold flex items-center justify-center ${selectedSize === size ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md' : 'bg-transparent text-gray-800 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white'}`}
-                  >
-                     {size}
-                  </button>
-               ))}
-            </div>
-         </div>
+         {availableSizes.length > 0 && (
+           <div className="mb-6">
+              <div className="flex justify-between items-end mb-3">
+                 <h3 className="text-[11px] font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300">Size</h3>
+                 <span className="text-[11px] font-medium text-gray-500 underline hover:text-black dark:hover:text-white cursor-pointer transition-colors">Size Guide</span>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                 {availableSizes.map((size) => (
+                    <button 
+                       key={size}
+                       onClick={() => setSelectedSize(size)}
+                       className={`w-12 h-10 border rounded-md transition-all text-[13px] font-bold flex items-center justify-center ${selectedSize === size ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md' : 'bg-transparent text-gray-800 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white'}`}
+                    >
+                       {size}
+                    </button>
+                 ))}
+              </div>
+           </div>
+         )}
 
          {/* Product Details Block */}
          <div className="border-t border-gray-100 dark:border-gray-900 pt-6 mt-2">

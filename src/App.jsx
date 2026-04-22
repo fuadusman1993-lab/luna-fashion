@@ -13,6 +13,7 @@ import Onboarding from './components/ui/Onboarding';
 import Messages from './pages/Messages';
 import Login from './pages/Login';
 import SearchPage from './pages/SearchPage';
+import Settings from './pages/Settings';
 import { useAppContext } from './context/AppContext';
 import { ShoppingBag } from 'lucide-react';
 
@@ -49,6 +50,7 @@ function AppContent() {
             <Route path="me" element={<Me />} />
             <Route path="cart" element={<Cart />} />
           </Route>
+          <Route path="/settings" element={<Settings />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<Admin />} />

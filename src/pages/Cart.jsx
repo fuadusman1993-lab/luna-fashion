@@ -173,8 +173,8 @@ export default function Cart() {
                             </div>
                             
                             {/* Variant */}
-                            <div className="mt-1 flex items-center bg-gray-50 dark:bg-[#1a1a1a] rounded px-1.5 py-0.5 w-max">
-                               <span className="text-[10px] text-gray-500">{item.color} / {item.size} <ChevronRight className="w-3 h-3 inline text-gray-400" /></span>
+                            <div className="mt-1 flex items-center bg-gray-50 dark:bg-[#1a1a1a] rounded px-1.5 py-0.5 w-max max-w-full">
+                               <span className="text-[10px] text-gray-500 whitespace-normal break-words line-clamp-2">{item.color} / {item.size} <ChevronRight className="w-3 h-3 inline text-gray-400" /></span>
                             </div>
 
                             {/* Pricing and Action Row */}
@@ -260,7 +260,7 @@ export default function Cart() {
           <button 
             onClick={handleCheckout}
             disabled={selectedItems.length === 0}
-            className="bg-black dark:bg-white text-white dark:text-black px-8 h-[44px] rounded-full font-bold uppercase tracking-wider text-[13px] flex items-center justify-center disabled:opacity-50 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 shadow-md active:scale-95 transition-transform"
+            className="bg-black dark:bg-white text-white dark:text-black px-8 h-[44px] rounded-sm font-bold uppercase tracking-wider text-[13px] flex items-center justify-center disabled:opacity-50 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 shadow-md active:scale-95 transition-transform"
           >
             Checkout{totalItemsCount > 0 ? ` (${totalItemsCount})` : ''}
           </button>

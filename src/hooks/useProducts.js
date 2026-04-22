@@ -29,8 +29,11 @@ export const deleteLocalProduct = (id) => {
 export function useProducts() {
   const [products, setProducts] = useState(isFirebaseConfigured ? [] : localProductsState);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const fetchProducts = () => {
+    setLoading(true);
+    setError(null);
     if (!isFirebaseConfigured) {
       // Fallback to mock data if Firebase isn't set up yet
       setProducts(localProductsState);
@@ -51,13 +54,24 @@ export function useProducts() {
       }));
       setProducts(fetchedProducts);
       setLoading(false);
-    }, (error) => {
-      console.error("Error fetching products from Firebase:", error);
+      setError(null);
+    }, (err) => {
+      console.error("Error fetching products from Firebase:", err);
+      setError("No Connection");
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return unsubscribe;
+  };
+
+  useEffect(() => {
+    const unsubscribe = fetchProducts();
+    return () => {
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
   }, []);
 
-  return { products, loading, isUsingMockData: !isFirebaseConfigured };
+  return { products, loading, error, retryFetch: fetchProducts, isUsingMockData: !isFirebaseConfigured };
 }

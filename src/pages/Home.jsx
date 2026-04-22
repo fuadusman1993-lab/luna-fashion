@@ -48,7 +48,7 @@ const CustomIcons = {
     </svg>
   )
 };export default function Home() {
-  const { products, loading } = useProducts();
+  const { products, loading, error, retryFetch } = useProducts();
   const [activeFilter, setActiveFilter] = useState('For You');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -86,7 +86,7 @@ const CustomIcons = {
                  onClick={() => navigate(`/?category=${encodeURIComponent(cat.name)}`)}
                  className="flex flex-col items-center cursor-pointer group flex-shrink-0"
                >
-                  <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm ${activeCategory === cat.name ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105 shadow-md' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] text-gray-800 dark:text-gray-300 hover:shadow-md'}`}>
+                  <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm ${activeCategory === cat.name ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] text-gray-800 dark:text-gray-300 hover:shadow-md'}`}>
                      <Icon className="w-[20px] h-[20px]" strokeWidth={1.25} />
                   </div>
                   <span className={`text-[11px] font-bold tracking-wide ${activeCategory === cat.name ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>{cat.name}</span>
@@ -129,12 +129,29 @@ const CustomIcons = {
 
       {/* Masonry Product Grid */}
       <div className="pb-6 pt-3 h-full flex-1 bg-white dark:bg-[#0a0a0a]">
-        {loading ? (
+        {error ? (
+           <div className="flex flex-col items-center justify-center py-20 text-center px-4">
+             <div className="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
+               <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+             </div>
+             <h2 className="text-lg font-bold text-black dark:text-white mb-2">No Connection</h2>
+             <p className="text-[12px] text-gray-500 mb-6">We couldn't connect to the server. Please check your internet connection.</p>
+             <button onClick={retryFetch} className="bg-black dark:bg-white text-white dark:text-black font-bold uppercase tracking-wider py-3 px-8 text-xs rounded-full shadow-md">Retry Now</button>
+           </div>
+        ) : loading ? (
            <div className="flex justify-center items-center py-20">
              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
            </div>
         ) : (
-           <ProductGrid products={activeCategory ? (products || []).filter(p => p.category === activeCategory) : (products || [])} />
+           <ProductGrid products={
+             (products || []).filter(p => {
+               if (activeCategory && p.category !== activeCategory) return false;
+               if (activeFilter === 'New In' && !p.isNewIn) return false;
+               if (activeFilter === 'Deals' && !p.isDeal) return false;
+               if (activeFilter === 'Best' && !p.isBestseller) return false;
+               return true;
+             })
+           } />
         )}
       </div>
 

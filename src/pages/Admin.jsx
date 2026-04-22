@@ -26,6 +26,9 @@ export default function Admin() {
   const [imageFiles, setImageFiles] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [inStock, setInStock] = useState(true);
+  const [isBestseller, setIsBestseller] = useState(false);
+  const [isNewIn, setIsNewIn] = useState(false);
+  const [isDeal, setIsDeal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
 
@@ -66,7 +69,10 @@ export default function Admin() {
            currency: "ETB",
            description,
            shippingTime,
-           inStock
+           inStock,
+           isBestseller,
+           isNewIn,
+           isDeal
         };
         if (localUrls.length > 0) {
            payload.imageUrl = localUrls[0];
@@ -119,7 +125,10 @@ export default function Admin() {
         currency: "ETB",
         description,
         shippingTime,
-        inStock
+        inStock,
+        isBestseller,
+        isNewIn,
+        isDeal
       };
 
       if (downloadURLs.length > 0) {
@@ -152,6 +161,9 @@ export default function Admin() {
      setDescription(product.description || '');
      setShippingTime(product.shippingTime || 'Arrives in 1-2 days');
      setInStock(product.inStock);
+     setIsBestseller(product.isBestseller || false);
+     setIsNewIn(product.isNewIn || false);
+     setIsDeal(product.isDeal || false);
      setActiveTab('products');
   };
 
@@ -167,6 +179,7 @@ export default function Admin() {
 
   const resetForm = () => {
      setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Makhawar (ቶብ)'); setShippingTime('Arrives in 1-2 days'); setImageFiles([]);
+     setIsBestseller(false); setIsNewIn(false); setIsDeal(false);
   };
 
   if (!isAuthenticated) {
@@ -372,9 +385,24 @@ export default function Admin() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                   <input type="checkbox" id="inStock" checked={inStock} onChange={e => setInStock(e.target.checked)} className="w-4 h-4 text-gold cursor-pointer" />
-                   <label htmlFor="inStock" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">{t('inStock')}</label>
+                <div className="flex flex-col space-y-3 p-4 bg-gray-50 dark:bg-[#151515] rounded border border-gray-200 dark:border-gray-800">
+                   <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-1">Product Tags</h3>
+                   <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="inStock" checked={inStock} onChange={e => setInStock(e.target.checked)} className="w-4 h-4 text-gold cursor-pointer" />
+                      <label htmlFor="inStock" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">{t('inStock')}</label>
+                   </div>
+                   <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="isBestseller" checked={isBestseller} onChange={e => setIsBestseller(e.target.checked)} className="w-4 h-4 text-gold cursor-pointer" />
+                      <label htmlFor="isBestseller" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">Bestseller</label>
+                   </div>
+                   <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="isNewIn" checked={isNewIn} onChange={e => setIsNewIn(e.target.checked)} className="w-4 h-4 text-gold cursor-pointer" />
+                      <label htmlFor="isNewIn" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">New In</label>
+                   </div>
+                   <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="isDeal" checked={isDeal} onChange={e => setIsDeal(e.target.checked)} className="w-4 h-4 text-gold cursor-pointer" />
+                      <label htmlFor="isDeal" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">Deals / Discounted</label>
+                   </div>
                 </div>
 
                 <button type="submit" disabled={uploading} className="w-full bg-luna-black dark:bg-gold text-white dark:text-black p-3 uppercase tracking-wider font-bold hover:opacity-90 transition-opacity disabled:opacity-50">
