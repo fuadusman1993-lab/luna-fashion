@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Globe, Info, ShieldAlert, ChevronRight } from 'lucide-react';
 
 export default function Settings() {
-  const { language, toggleLanguage, t } = useAppContext();
+  const { language, toggleLanguage } = useAppContext();
   const navigate = useNavigate();
 
   return (

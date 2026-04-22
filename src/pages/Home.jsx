@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import ProductGrid from '../components/product/ProductGrid';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Heart, Flame, Star } from 'lucide-react';
+import { Flame, Star } from 'lucide-react';
 
 const CustomIcons = {
   Abaya: (props) => (
