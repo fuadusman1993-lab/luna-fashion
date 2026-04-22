@@ -4,7 +4,7 @@ import { useAppContext } from '../../context/AppContext';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 
 export default function TopBar() {
-  const { toggleTheme, theme, t, cart } = useAppContext();
+  const { t, cart } = useAppContext();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'All';
