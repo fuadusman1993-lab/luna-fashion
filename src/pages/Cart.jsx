@@ -243,27 +243,29 @@ export default function Cart() {
 
       {/* Fixed Checkout Bar - Syncs with Selected Items */}
       {(cart?.length || 0) > 0 && (
-        <div className="fixed bottom-[65px] md:bottom-0 left-0 right-0 w-full z-40 bg-white dark:bg-[#111111] border-t border-gray-200 dark:border-white/10 px-4 py-3 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] md:max-w-4xl mx-auto flex items-center justify-between h-[65px]">
-          
-          <div className="flex flex-col justify-center">
-            <div className="flex items-baseline">
-              <span className="text-[12px] font-bold text-black dark:text-white mr-1.5 uppercase tracking-wider">Total:</span>
-              <span className="font-bold text-[20px] text-[#f2603f] dark:text-[#f87171] leading-none tracking-tight">
-                {total.toLocaleString()} <span className="text-[11px] font-normal text-[#f2603f]">ETB</span>
-              </span>
+        <div className="fixed bottom-[85px] md:bottom-8 left-0 right-0 w-full z-40 px-4 flex justify-center pointer-events-none">
+          <div className="bg-black dark:bg-[#1a1a1a] dark:border dark:border-white/10 p-4 shadow-[0_10px_30px_rgba(0,0,0,0.3)] w-full max-w-md rounded-xl flex items-center justify-between pointer-events-auto">
+            
+            <div className="flex flex-col justify-center text-white">
+              <div className="flex items-baseline">
+                <span className="text-[12px] font-bold text-gray-400 mr-1.5 uppercase tracking-wider">Total:</span>
+                <span className="font-bold text-[20px] text-[#D4AF37] leading-none tracking-tight">
+                  {total.toLocaleString()} <span className="text-[11px] font-normal text-[#D4AF37]">ETB</span>
+                </span>
+              </div>
+              {total > 0 && (
+                <div className="text-[10px] text-gray-500 mt-0.5 tracking-wide">Saved {Math.floor(total * 0.25).toLocaleString()} ETB</div>
+              )}
             </div>
-            {total > 0 && (
-              <div className="text-[10px] text-gray-500 mt-0.5 tracking-wide">Saved {Math.floor(total * 0.25).toLocaleString()} ETB</div>
-            )}
+            
+            <button 
+              onClick={handleCheckout}
+              disabled={selectedItems.length === 0}
+              className="bg-[#D4AF37] dark:bg-white text-black px-8 h-[46px] rounded font-bold uppercase tracking-widest text-[13px] flex items-center justify-center disabled:opacity-50 disabled:bg-gray-800 disabled:text-gray-500 shadow-md active:scale-95 transition-transform"
+            >
+              Checkout{totalItemsCount > 0 ? ` (${totalItemsCount})` : ''}
+            </button>
           </div>
-          
-          <button 
-            onClick={handleCheckout}
-            disabled={selectedItems.length === 0}
-            className="bg-black dark:bg-white text-white dark:text-black px-8 h-[44px] rounded-sm font-bold uppercase tracking-wider text-[13px] flex items-center justify-center disabled:opacity-50 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 shadow-md active:scale-95 transition-transform"
-          >
-            Checkout{totalItemsCount > 0 ? ` (${totalItemsCount})` : ''}
-          </button>
         </div>
       )}
     </div>

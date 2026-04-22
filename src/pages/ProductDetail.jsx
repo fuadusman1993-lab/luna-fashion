@@ -48,17 +48,10 @@ export default function ProductDetail() {
   const isWished = isInWishlist(product.id);
   const WHATSAPP_NUMBER = "+251977799797"; 
 
-  const handleWhatsAppOrder = () => {
+  const handleBuyNowOrder = () => {
     const text = `Hello Luna Fashion! I would like to order the *${product.name}*.\nPrice: ${product.price} ETB\nSize: ${selectedSize}\nColor: ${selectedColor}\nIs it still available?`;
     const encodedText = encodeURIComponent(text);
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedText}`;
-    window.open(whatsappUrl, '_blank');
-  };
-
-  const handleTelegramOrder = () => {
-    const text = `Hello Luna Fashion! I would like to order the *${product.name}*.\nPrice: ${product.price} ETB\nSize: ${selectedSize}\nColor: ${selectedColor}\nIs it still available?`;
-    const encodedText = encodeURIComponent(text);
-    const telegramUrl = `https://t.me/lunafashionbot?text=${encodedText}`;
+    const telegramUrl = `https://t.me/Luna_market1?text=${encodedText}`;
     window.open(telegramUrl, '_blank');
   };
 
@@ -216,28 +209,21 @@ export default function ProductDetail() {
          </button>
 
          {/* Center/Right: Action Buttons */}
-         <div className="flex flex-1 gap-2">
+         <div className="flex flex-[1.5] gap-2">
             <button 
               onClick={() => addToCart({ ...product, size: selectedSize, color: selectedColor, qty: 1 })}
               disabled={!product.inStock || isConfigIncomplete}
-              className="flex-1 bg-[#D4AF37] text-black h-[50px] font-bold uppercase tracking-wider text-[11px] flex items-center justify-center rounded-xl disabled:opacity-50 transition-all active:scale-95 shadow-[0_4px_10px_rgba(212,175,55,0.3)]"
+              className="flex-1 bg-[#D4AF37] text-black h-[50px] font-bold uppercase tracking-wider text-[12px] flex items-center justify-center rounded-xl disabled:opacity-50 transition-all active:scale-95 shadow-[0_4px_10px_rgba(212,175,55,0.3)]"
             >
-              <ShoppingBag className="w-[16px] h-[16px] mr-1.5" strokeWidth={2.5} />
+              <ShoppingBag className="w-[18px] h-[18px] mr-1.5" strokeWidth={2.5} />
               <span>Cart</span>
             </button>
             <button 
-              onClick={handleWhatsAppOrder}
+              onClick={handleBuyNowOrder}
               disabled={!product.inStock || isConfigIncomplete}
-              className="flex-1 bg-black text-white dark:bg-white dark:text-black h-[50px] font-bold uppercase tracking-wider text-[11px] flex items-center justify-center rounded-xl disabled:opacity-50 transition-all active:scale-95 shadow-md"
+              className="flex-1 bg-black text-white dark:bg-white dark:text-black h-[50px] font-bold uppercase tracking-wider text-[12px] flex items-center justify-center rounded-xl disabled:opacity-50 transition-all active:scale-95 shadow-md"
             >
-              <span>WhatsApp</span>
-            </button>
-            <button 
-              onClick={handleTelegramOrder}
-              disabled={!product.inStock || isConfigIncomplete}
-              className="flex-1 bg-[#229ED9] text-white h-[50px] font-bold uppercase tracking-wider text-[11px] flex items-center justify-center rounded-xl disabled:opacity-50 transition-all active:scale-95 shadow-md"
-            >
-              <span>Telegram</span>
+              <span>Buy Now</span>
             </button>
          </div>
       </div>

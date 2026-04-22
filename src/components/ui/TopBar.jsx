@@ -1,13 +1,15 @@
 import { Search, Heart, MessageSquare, Camera, ShoppingCart, ArrowLeft, History, TrendingUp, X } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../../context/AppContext';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-dom';
 
 export default function TopBar() {
   const { t, cart } = useAppContext();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'All';
+  const hideScroller = location.pathname === '/me' || location.pathname === '/shop';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -124,25 +126,27 @@ export default function TopBar() {
       </div>
 
       {/* Scroller Row (Tabs) */}
-      <div className="overflow-x-auto whitespace-nowrap px-3 scrollbar-hide mt-1" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-        <div className="flex space-x-6 items-center">
-          {topCategories.map((cat, idx) => {
-            const isActive = cat === activeCategory;
-            return (
-              <button
-                key={idx}
-                onClick={() => handleCategoryClick(cat)}
-                className={`text-[14px] pb-2 px-1 relative transition-colors ${isActive ? 'text-white font-bold' : 'text-gray-400 font-medium hover:text-gray-300'}`}
-              >
-                {cat}
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-white rounded-t-full"></span>
-                )}
-              </button>
-            )
-          })}
+      {!hideScroller && (
+        <div className="overflow-x-auto whitespace-nowrap px-3 scrollbar-hide mt-1" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+          <div className="flex space-x-6 items-center">
+            {topCategories.map((cat, idx) => {
+              const isActive = cat === activeCategory;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => handleCategoryClick(cat)}
+                  className={`text-[14px] pb-2 px-1 relative transition-colors ${isActive ? 'text-white font-bold' : 'text-gray-400 font-medium hover:text-gray-300'}`}
+                >
+                  {cat}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-white rounded-t-full"></span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Professional Search Overlay */}
       {isSearchOpen && (

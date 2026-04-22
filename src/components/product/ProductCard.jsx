@@ -16,7 +16,7 @@ export default function ProductCard({ product }) {
   };
 
   // Determine mock tags based on price/stock
-  const isBestseller = product.price > 2000;
+  const isBestseller = product.isBestseller === true;
   const isNew = product.price <= 2000 && product.inStock;
 
   const handleWishlistToggle = (e) => {
