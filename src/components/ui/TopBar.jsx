@@ -61,7 +61,7 @@ export default function TopBar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-[#000000]/90 backdrop-blur-md transition-colors duration-300 shadow-sm max-w-[430px] mx-auto pb-0 border-b border-white/10">
+    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-[#000000]/90 backdrop-blur-md transition-colors duration-300 shadow-sm max-w-7xl mx-auto pb-0 border-b border-white/10">
       {/* Hidden file input for camera/file upload mockup */}
       <input
         type="file"
@@ -73,19 +73,30 @@ export default function TopBar() {
       />
 
       {/* Main Action/Search Row */}
-      <div className="flex items-center justify-between px-3 pt-3 pb-2 gap-3">
+      <div className="flex items-center justify-between px-3 pt-3 pb-2 gap-3 md:gap-6 md:px-6">
 
-        {/* Left Icon: Message */}
+        {/* Left Icon: Message & Desktop Logo */}
         <div className="flex items-center shrink-0 text-white">
-          <Link to="/messages" className="hover:opacity-70 transition-opacity p-1">
+          <Link to="/messages" className="hover:opacity-70 transition-opacity p-1 md:hidden">
             <MessageSquare strokeWidth={1.25} className="w-[22px] h-[22px]" />
           </Link>
+          <Link to="/" className="hidden md:block font-display text-[22px] font-bold tracking-widest text-[#D4AF37] whitespace-nowrap px-2 hover:opacity-80 transition-opacity">
+            LUNA
+          </Link>
+        </div>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex shrink-0 items-center gap-8 text-[13px] font-bold tracking-widest text-gray-300">
+          <Link to="/" className="hover:text-white transition-colors uppercase">Home</Link>
+          <Link to="/shop" className="hover:text-white transition-colors uppercase">Shop</Link>
+          <Link to="/cart" className="hover:text-white transition-colors uppercase">Cart</Link>
+          <Link to="/me" className="hover:text-white transition-colors uppercase">Profile</Link>
         </div>
 
         {/* Fully rounded, highly focused search bar */}
         <div 
           onClick={() => setIsSearchOpen(true)}
-          className="flex-1 flex items-center bg-white rounded-full px-3 py-1.5 shadow-inner transition-colors cursor-text"
+          className="flex-1 md:flex-none md:w-[350px] flex items-center bg-white rounded-full px-3 py-1.5 shadow-inner transition-colors cursor-text"
         >
           <Search strokeWidth={1.25} className="w-[16px] h-[16px] text-gray-400 mr-2 shrink-0" />
           <div className="flex-1 text-[13px] font-medium tracking-wide text-gray-400 w-full overflow-hidden whitespace-nowrap text-ellipsis px-1">
@@ -135,7 +146,7 @@ export default function TopBar() {
 
       {/* Professional Search Overlay */}
       {isSearchOpen && (
-        <div className="fixed inset-0 top-0 z-[100] bg-white dark:bg-[#0a0a0a] w-full h-[100dvh] max-w-[430px] mx-auto flex flex-col animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 top-0 z-[100] bg-white dark:bg-[#0a0a0a] w-full h-[100dvh] max-w-7xl mx-auto flex flex-col animate-in fade-in zoom-in-95 duration-200">
           <div className="flex items-center px-3 py-3 border-b border-gray-100 dark:border-white/10 gap-2 bg-white dark:bg-[#0a0a0a]">
             <button onClick={() => setIsSearchOpen(false)} className="p-1 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-full transition-colors shrink-0">
               <ArrowLeft className="w-5 h-5 text-gray-800 dark:text-gray-200" />

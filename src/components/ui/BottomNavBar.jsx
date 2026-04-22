@@ -8,15 +8,15 @@ export default function BottomNavBar() {
 
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
-    { name: 'Shop', path: '/category', icon: ShoppingBag },
+    { name: 'Shop', path: '/shop', icon: ShoppingBag },
     { name: 'Cart', path: '/cart', icon: ShoppingCart },
     { name: 'Me', path: '/me', icon: User }
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 w-full bg-luna-white dark:bg-[#0a0a0a] border-t border-gray-100 dark:border-gray-900 z-50 flex justify-around items-center pt-2 pb-5 max-w-[430px] mx-auto border-x border-gray-200 dark:border-gray-800 px-2 pb-safe">
+    <nav className="fixed bottom-0 left-0 right-0 w-full bg-luna-white dark:bg-[#0a0a0a] border-t border-gray-100 dark:border-gray-900 z-50 flex md:hidden justify-around items-center pt-2 pb-5 w-full mx-auto px-2 pb-safe">
       {navItems.map((item) => {
-        const isActive = location.pathname === item.path || (location.pathname === '/shop' && item.path === '/category');
+        const isActive = location.pathname === item.path || (location.pathname === '/category' && item.path === '/shop');
         const Icon = item.icon;
         return (
           <Link

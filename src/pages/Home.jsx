@@ -134,7 +134,7 @@ const CustomIcons = {
              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
            </div>
         ) : (
-           <ProductGrid products={activeCategory ? products.filter(p => p.category === activeCategory) : products} />
+           <ProductGrid products={activeCategory ? (products || []).filter(p => p.category === activeCategory) : (products || [])} />
         )}
       </div>
 

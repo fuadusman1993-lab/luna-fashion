@@ -13,7 +13,7 @@ export default function ProductGrid({ products }) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-2 px-2 mx-auto w-full">
+    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 px-2 mx-auto w-full">
       {products.map((product) => (
          <ProductCard key={product.id} product={product} />
       ))}

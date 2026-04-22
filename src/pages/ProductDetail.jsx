@@ -58,10 +58,10 @@ export default function ProductDetail() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-white dark:bg-[#0a0a0a] sm:max-w-[480px] sm:mx-auto sm:border-x sm:border-gray-800 pb-[100px] font-sans">
+    <div className="relative min-h-screen bg-white dark:bg-[#0a0a0a] md:max-w-7xl md:mx-auto pb-[100px] font-sans">
       
       {/* Fixed Sticky Header for precise Back navigation over the image */}
-      <div className="fixed top-0 left-0 right-0 mx-auto w-full z-50 flex justify-between items-center px-4 py-4 bg-gradient-to-b from-black/60 to-transparent sm:max-w-[480px]">
+      <div className="fixed top-0 left-0 right-0 mx-auto w-full z-50 flex justify-between items-center px-4 py-4 bg-gradient-to-b from-black/60 to-transparent md:max-w-7xl">
          <button onClick={() => navigate(-1)} className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-white bg-black/20 backdrop-blur-md outline outline-1 outline-white/30 hover:bg-black/40 transition-colors shadow-sm">
             <ArrowLeft className="w-[20px] h-[20px]" strokeWidth={2} />
          </button>
@@ -87,8 +87,11 @@ export default function ProductDetail() {
           </div>
        </div>
 
+      {/* Desktop Split Layout Wrapper */}
+      <div className="flex flex-col md:flex-row md:gap-8 w-full md:px-6 md:pt-20">
+      
       {/* Snap-X Image Carousel Layer */}
-      <div className="w-full h-[65vh] min-h-[500px] bg-gray-100 dark:bg-[#0f0f0f] relative overflow-hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+      <div className="w-full md:w-1/2 md:rounded-2xl h-[65vh] min-h-[500px] bg-gray-100 dark:bg-[#0f0f0f] relative overflow-hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
          {product.images && product.images.length > 0 ? (
            product.images.map((img, idx) => (
              <div key={idx} className="min-w-full h-full snap-start relative">
@@ -116,7 +119,7 @@ export default function ProductDetail() {
       </div>
 
       {/* Product Content Sheet */}
-      <div className="px-4 py-5 bg-white dark:bg-[#0a0a0a]">
+      <div className="px-4 py-5 bg-white dark:bg-[#0a0a0a] w-full md:w-1/2">
          <div className="flex justify-between items-start mb-1">
             <h1 className="text-xl font-bold leading-tight text-gray-900 dark:text-gray-100 font-serif tracking-wide">{product.name}</h1>
          </div>
@@ -186,8 +189,11 @@ export default function ProductDetail() {
          </div>
       </div>
 
+      </div>
+      </div>
+
       {/* Fixed Sticky Action Bar Base */}
-      <div className="fixed bottom-0 left-0 right-0 mx-auto z-50 bg-white dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-white/10 px-4 py-3 sm:max-w-[480px] sm:border-x sm:border-gray-800 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] dark:shadow-none flex items-center gap-3">
+      <div className="fixed bottom-0 md:bottom-0 left-0 right-0 mx-auto z-50 bg-white dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-white/10 px-4 py-3 md:max-w-7xl pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] dark:shadow-none flex items-center gap-3">
          {/* Left: Square Wishlist */}
          <button onClick={() => toggleWishlist(product.id)} className="w-[50px] h-[50px] bg-white dark:bg-[#151515] border border-gray-300 dark:border-white/10 rounded-xl flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-colors shrink-0 active:scale-90 shadow-sm">
             <Heart 

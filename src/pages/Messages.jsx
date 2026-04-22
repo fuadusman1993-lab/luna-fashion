@@ -18,14 +18,14 @@ export default function Messages() {
   return (
     <div className="fixed inset-0 z-[10000] bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans overflow-y-auto">
       {/* Header */}
-      <div className="fixed top-0 left-0 right-0 w-full z-50 bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/10 px-4 py-4 flex items-center shadow-sm sm:max-w-[480px] mx-auto">
+      <div className="fixed top-0 left-0 right-0 w-full z-50 bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/10 px-4 py-4 flex items-center shadow-sm md:max-w-2xl mx-auto">
         <button onClick={() => navigate(-1)} className="mr-4 text-black dark:text-white hover:text-gold transition-colors active:scale-95">
           <ArrowLeft strokeWidth={2} className="w-6 h-6" />
         </button>
         <h1 className="text-[17px] font-bold tracking-wider uppercase">Messages</h1>
       </div>
 
-      <div className="pt-[80px] px-4 flex-1 flex flex-col pb-[120px]">
+      <div className="pt-[80px] px-4 flex-1 flex flex-col pb-[120px] md:max-w-2xl mx-auto w-full">
         {/* Tabs */}
         <div className="flex space-x-6 border-b border-gray-200 dark:border-white/10 mb-6 px-2">
           {tabs.map((tab) => (
@@ -81,7 +81,7 @@ export default function Messages() {
       </div>
 
       {/* Floating Chat Button */}
-      <div className="fixed bottom-[90px] left-0 right-0 sm:max-w-[480px] mx-auto px-4 pointer-events-none z-40">
+      <div className="fixed bottom-[90px] left-0 right-0 md:max-w-2xl mx-auto px-4 pointer-events-none z-40 w-full">
         <button 
           onClick={handleWhatsAppChat}
           className="w-full pointer-events-auto bg-[#D4AF37] text-black h-[54px] rounded-full font-bold uppercase tracking-widest flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all active:scale-95 hover:scale-[1.02]"

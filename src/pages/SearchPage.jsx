@@ -37,7 +37,7 @@ export default function SearchPage() {
   return (
     <div className="fixed inset-0 z-[10000] bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans overflow-y-auto">
       {/* Header */}
-      <div className="w-full bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/5 mx-auto px-4 py-3 flex items-center justify-between sm:max-w-[480px]">
+      <div className="w-full bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/5 mx-auto px-4 py-3 flex items-center justify-between md:px-6">
         <button onClick={() => navigate(-1)} className="p-1 hover:text-gold transition-colors active:scale-95 pr-2">
           <ArrowLeft strokeWidth={2} className="w-6 h-6" />
         </button>

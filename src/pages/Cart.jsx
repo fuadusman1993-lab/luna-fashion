@@ -116,7 +116,7 @@ export default function Cart() {
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 md:max-w-4xl md:mx-auto w-full mt-2">
         {(cart?.length || 0) === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center px-4">
              <h2 className="text-lg font-bold text-black dark:text-white mb-2">Your cart is empty</h2>
@@ -243,7 +243,7 @@ export default function Cart() {
 
       {/* Fixed Checkout Bar - Syncs with Selected Items */}
       {(cart?.length || 0) > 0 && (
-        <div className="fixed bottom-[65px] left-0 right-0 w-full z-40 bg-white dark:bg-[#111111] border-t border-gray-200 dark:border-white/10 px-4 py-3 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] max-w-[430px] mx-auto flex items-center justify-between h-[65px]">
+        <div className="fixed bottom-[65px] md:bottom-0 left-0 right-0 w-full z-40 bg-white dark:bg-[#111111] border-t border-gray-200 dark:border-white/10 px-4 py-3 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] md:max-w-4xl mx-auto flex items-center justify-between h-[65px]">
           
           <div className="flex flex-col justify-center">
             <div className="flex items-baseline">

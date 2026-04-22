@@ -1,41 +1,63 @@
+import { useState, useMemo } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import ProductGrid from '../components/product/ProductGrid';
-import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
-import { useSearchParams } from 'react-router-dom';
 
 export default function Shop() {
   const { products, loading } = useProducts();
   const { t } = useAppContext();
-  const [searchParams] = useSearchParams();
-  const activeCategory = searchParams.get('category');
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const categories = ['All', 'Makhawar (ቶብ)', 'Abaya', 'Dria', 'Dresses (ቀሚስ)', 'Makeup', 'Shoes'];
+
+  const filteredProducts = useMemo(() => {
+    const safeProducts = products || [];
+    if (activeCategory === 'All') return safeProducts;
+    return safeProducts.filter(p => p.category === activeCategory);
+  }, [products, activeCategory]);
 
   return (
-    <div className="bg-[#f5f5f5] dark:bg-[#050505] transition-colors duration-300 min-h-screen pb-[100px] font-sans">
+    <div className="bg-[#f5f5f5] dark:bg-[#050505] min-h-[calc(100vh-140px)] font-sans flex flex-col md:flex-row w-full mx-auto relative z-0">
       
-      {/* Shop Header Block - Matching Cart cleanly */}
-      <div className="bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-white/5 py-6 px-4 sm:px-6 lg:px-8 mb-4 shadow-sm">
-        <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center"
-        >
-          <h1 className="text-2xl font-bold font-serif text-black dark:text-white uppercase tracking-widest mb-2">{t('theCollection')}</h1>
-          <div className="w-12 h-0.5 bg-[#D4AF37] mx-auto mb-3"></div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 font-medium max-w-md mx-auto px-4">
-            {t('collectionDesc')}
-          </p>
-        </motion.div>
+      {/* Sidebar Navigation */}
+      <div className="w-full md:w-[220px] shrink-0 bg-[#f5f5f5] dark:bg-[#050505] overflow-x-auto md:overflow-y-auto no-scrollbar border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-800 flex md:flex-col pb-2 md:pb-10 pt-2 md:pt-6 px-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+         {categories.map(category => (
+            <button
+               key={category}
+               onClick={() => setActiveCategory(category)}
+               className={`shrink-0 md:w-full text-center md:text-left px-4 py-2 md:py-4 text-[12px] md:text-[13px] font-medium leading-tight transition-colors flex items-center justify-center md:justify-start min-h-[40px] md:min-h-[60px] mr-2 md:mr-0 rounded-full md:rounded-none border md:border-0 md:border-l-[3px] ${
+                  activeCategory === category 
+                  ? 'bg-white dark:bg-[#111111] text-black dark:text-white border-transparent md:border-[#D4AF37] shadow-sm font-bold md:bg-white md:dark:bg-[#111111]' 
+                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 border-gray-200 dark:border-gray-800 md:border-transparent bg-transparent'
+               }`}
+            >
+               {category.split(' ')[0]}
+            </button>
+         ))}
       </div>
 
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 pb-10">
-        {loading ? (
+      {/* Main Content Area */}
+      <div className="flex-1 bg-white dark:bg-[#111111] overflow-y-auto px-2 md:px-6 pt-4 pb-[100px] no-scrollbar" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+         <div className="flex justify-between items-center mb-4 px-2">
+             <h2 className="text-[13px] font-bold text-black dark:text-white uppercase tracking-wide">
+                {activeCategory === 'All' ? t('theCollection') || 'All Items' : activeCategory}
+             </h2>
+             <span className="text-[10px] text-gray-400 font-medium">{filteredProducts.length} items</span>
+         </div>
+         
+         {loading ? (
            <div className="flex justify-center items-center py-20">
-             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
+             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gold"></div>
            </div>
-        ) : (
-           <ProductGrid products={activeCategory ? products.filter(p => p.category === activeCategory) : products} />
-        )}
+         ) : filteredProducts.length > 0 ? (
+           <div className="-mx-1">
+             <ProductGrid products={filteredProducts} />
+           </div>
+         ) : (
+           <div className="flex flex-col items-center justify-center py-20 text-center px-4">
+              <p className="text-gray-400 text-[11px]">No items found in this category.</p>
+           </div>
+         )}
       </div>
     </div>
   );

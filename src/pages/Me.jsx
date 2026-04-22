@@ -1,154 +1,81 @@
 import { useAppContext } from '../context/AppContext';
 import { Link } from 'react-router-dom';
-import { Settings, Shield, Package, Heart, Tag, Globe, Moon, Sun, MapPin, CreditCard, ChevronRight, Store, Send, PhoneCall, Map } from 'lucide-react';
+import { Package, Heart, MapPin, Globe } from 'lucide-react';
 
 export default function Me() {
-  const { theme, toggleTheme, language, toggleLanguage, t } = useAppContext();
+  const { language, toggleLanguage, t } = useAppContext();
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] dark:bg-[#050505] px-3 py-6 font-sans relative z-40 pb-[90px]">
+    <div className="min-h-screen bg-[#f5f5f5] dark:bg-[#050505] px-3 py-6 font-sans relative z-40 pb-[90px] md:max-w-2xl mx-auto w-full">
+       
        {/* User Profile Header */}
-       <div className="flex items-center space-x-4 mb-8 pt-4 px-2">
-          <div className="w-[72px] h-[72px] bg-gradient-to-br from-gold to-yellow-600 rounded-full flex flex-col items-center justify-center font-display text-3xl font-bold text-black border-2 border-white dark:border-black shadow-md">
+       <div className="flex items-center space-x-4 mb-6 pt-4 px-2">
+          <div className="w-[65px] h-[65px] bg-gradient-to-br from-gold to-yellow-600 rounded-full flex flex-col items-center justify-center font-display text-2xl font-bold text-black border-2 border-white dark:border-black shadow-sm shrink-0">
              {language === 'en' ? 'L' : 'ሉ'}
           </div>
           <div>
-            <h2 className="text-[20px] font-bold text-luna-black dark:text-luna-white tracking-tight">Luna Guest</h2>
-            <p className="text-xs text-gray-500 font-medium tracking-wide">Silver Member</p>
+            <h2 className="text-[18px] font-bold text-luna-black dark:text-luna-white tracking-tight">Luna Guest</h2>
+            <p className="text-[11px] text-gray-500 font-medium tracking-wide">Silver Member</p>
           </div>
        </div>
 
        {/* Orders Panel */}
-       <div className="bg-white dark:bg-[#111111] rounded-xl p-5 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
+       <div className="bg-white dark:bg-[#111111] rounded-xl p-4 mb-4 shadow-sm border border-gray-100 dark:border-gray-800">
          <div className="flex justify-between items-center mb-4">
-             <h3 className="font-bold text-[15px] text-luna-black dark:text-white">{t('myOrders')}</h3>
-             <span className="text-[11px] text-gray-400 font-medium">{t('viewAll')}</span>
+             <h3 className="font-bold text-[14px] text-luna-black dark:text-white">{t('myOrders') || 'My Orders'}</h3>
+             <span className="text-[10px] text-gray-400 font-medium">{t('viewAll') || 'View All >'}</span>
          </div>
-         <div className="grid grid-cols-4 gap-4 text-center">
-             <div className="flex flex-col items-center">
-               <Package className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('unpaid')}</span>
+         <div className="grid grid-cols-4 gap-2 text-center">
+            <div className="flex flex-col items-center">
+               <Package className="w-[20px] h-[20px] mb-1.5 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
+               <span className="text-[9px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('unpaid') || 'Unpaid'}</span>
             </div>
             <div className="flex flex-col items-center">
-               <Package className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('processing')}</span>
+               <Package className="w-[20px] h-[20px] mb-1.5 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
+               <span className="text-[9px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('processing') || 'Processing'}</span>
             </div>
             <div className="flex flex-col items-center relative">
-               <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></div>
-               <Package className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('shipped')}</span>
+               <div className="absolute -top-1 -right-0.5 w-2 h-2 bg-red-500 rounded-full border border-white"></div>
+               <Package className="w-[20px] h-[20px] mb-1.5 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
+               <span className="text-[9px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('shipped') || 'Shipped'}</span>
             </div>
             <div className="flex flex-col items-center">
-               <Package className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('returns')}</span>
+               <Package className="w-[20px] h-[20px] mb-1.5 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
+               <span className="text-[9px] font-medium text-gray-600 dark:text-gray-400 tracking-tight">{t('returns') || 'Returns'}</span>
             </div>
          </div>
        </div>
 
-       {/* Utilities / Services */}
+       {/* Services Panel */}
        <div className="bg-white dark:bg-[#111111] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-4">
-          <h3 className="font-bold text-[15px] text-luna-black dark:text-white pt-5 px-5 mb-2">{t('myServices')}</h3>
-          <div className="grid grid-cols-4 gap-4 text-center pb-5 pt-2 px-2">
-             <div className="flex flex-col items-center">
-               <Heart className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 break-words w-full px-0.5">{t('wishlist')}</span>
-             </div>
-             <div className="flex flex-col items-center">
-               <Tag className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 break-words w-full px-0.5">{t('coupons')}</span>
-             </div>
-             <div className="flex flex-col items-center">
-               <CreditCard className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 break-words w-full px-0.5">{t('payment')}</span>
-             </div>
-             <div className="flex flex-col items-center">
-               <MapPin className="w-[22px] h-[22px] mb-2 text-gray-700 dark:text-gray-300 stroke-[1.5]" />
-               <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 break-words w-full px-0.5">{t('address')}</span>
-             </div>
-          </div>
-       </div>
-
-       {/* Our Locations Panel */}
-       <div className="bg-white dark:bg-[#111111] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-4 p-5">
-          <div className="flex items-center mb-4 text-luna-black dark:text-white">
-             <Store className="w-5 h-5 mr-2 text-gold" />
-             <h3 className="font-bold text-[15px]">{t('ourLocations')}</h3>
-          </div>
           
-          <div className="space-y-4">
-             {/* Branch 1 */}
-             <div className="bg-gray-50 dark:bg-[#111111] p-3 rounded-lg border border-gray-100 dark:border-white/5">
-                <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">{t('branch1')}</h4>
-                <p className="text-[11px] text-gray-500 font-light mb-2">Jemo 1, Sun Moon Star Mall, 1st Floor, No. 06.</p>
-                <button onClick={() => window.open('https://www.google.com/maps/search/Jemo+1,+Sun+Moon+Star+Mall', '_blank')} className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
-                   <Map className="w-3 h-3 mr-1" /> {t('viewOnMap')}
-                </button>
-             </div>
-             
-             {/* Branch 2 */}
-             <div className="bg-gray-50 dark:bg-[#111111] p-3 rounded-lg border border-gray-100 dark:border-white/5">
-                <h4 className="text-[12px] font-bold text-gray-900 dark:text-gray-100 mb-1">{t('branch2')}</h4>
-                <p className="text-[11px] text-gray-500 font-light mb-2">Bethel, Mira Mall, 1st Floor.</p>
-                <button onClick={() => window.open('https://www.google.com/maps/search/Bethel,+Mira+Mall', '_blank')} className="flex items-center text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] hover:opacity-80 active:scale-95 transition-all">
-                   <Map className="w-3 h-3 mr-1" /> {t('viewOnMap')}
-                </button>
-             </div>
-          </div>
-          
-          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
-             <div className="flex items-center text-[11px] font-medium text-gray-700 dark:text-gray-300">
-                <PhoneCall className="w-3.5 h-3.5 mr-1.5 text-gray-400" />
-                0977799797
-             </div>
-             <a href="https://t.me/Luna_market1" target="_blank" rel="noreferrer" className="flex items-center text-[11px] font-medium text-blue-500 hover:text-blue-400 transition-colors">
-                <Send className="w-3.5 h-3.5 mr-1.5" />
-                @Luna_market1
-             </a>
-          </div>
-       </div>
-
-       {/* Settings & Admin Panel controls */}
-       <div className="bg-white dark:bg-[#111111] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-8">
-          
-          <button onClick={toggleLanguage} className="w-full flex items-center justify-between py-4 px-5 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+          <button className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
              <div className="flex items-center">
-               <Globe className="w-5 h-5 mr-3 text-gold" />
-               <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200">{t('language')}</span>
+               <Heart className="w-4 h-4 mr-3 text-gray-700 dark:text-gray-300" strokeWidth={1.5} />
+               <span className="font-semibold text-[12px] text-gray-800 dark:text-gray-200">{t('wishlist') || 'Wishlist'}</span>
+             </div>
+             <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+
+          <button className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+             <div className="flex items-center">
+               <MapPin className="w-4 h-4 mr-3 text-gray-700 dark:text-gray-300" strokeWidth={1.5} />
+               <span className="font-semibold text-[12px] text-gray-800 dark:text-gray-200">{t('address') || 'Address Management'}</span>
+             </div>
+             <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+
+          <button onClick={toggleLanguage} className="w-full flex items-center justify-between py-4 px-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+             <div className="flex items-center">
+               <Globe className="w-4 h-4 mr-3 text-[#D4AF37]" strokeWidth={1.5} />
+               <span className="font-semibold text-[12px] text-gray-800 dark:text-gray-200">{t('language') || 'Language'}</span>
              </div>
              <div className="flex items-center">
-                <span className="text-xs text-gray-400 mr-2">{language === 'en' ? 'English' : 'አማርኛ'}</span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
+                <span className="text-[10px] text-gray-400 mr-2 font-medium">{language === 'en' ? 'English' : 'አማርኛ'}</span>
+                <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
              </div>
           </button>
 
-          <button onClick={toggleTheme} className="w-full flex items-center justify-between py-4 px-5 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-             <div className="flex items-center">
-               {theme === 'dark' ? <Moon className="w-5 h-5 mr-3 text-indigo-400" /> : <Sun className="w-5 h-5 mr-3 text-orange-400" />}
-               <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200">{t('appearance')}</span>
-             </div>
-             <div className="flex items-center">
-                <span className="text-xs text-gray-400 mr-2">{theme === 'dark' ? 'Dark Mode' : 'Light Mode'}</span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-             </div>
-          </button>
-
-          <Link to="/about" className="flex items-center py-4 px-5 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-             <div className="flex items-center justify-between w-full">
-               <div className="flex items-center">
-                 <Shield className="w-5 h-5 mr-3 text-gray-500" />
-                 <span className="font-semibold text-[13px] text-gray-800 dark:text-gray-200">{t('aboutLunaFashion')}</span>
-               </div>
-               <ChevronRight className="w-4 h-4 text-gray-400" />
-             </div>
-          </Link>
-          
-          <Link to="/admin" className="flex items-center justify-between py-4 px-5 bg-[#faf8f0] dark:bg-[#1f1a0d] hover:brightness-95 transition">
-             <div className="flex items-center">
-               <Settings className="w-5 h-5 mr-3 text-gold" />
-               <span className="font-bold text-[13px] text-yellow-800 dark:text-gold tracking-wide">{t('ownerAdminSetup')}</span>
-             </div>
-             <ChevronRight className="w-4 h-4 text-gold/50" />
-          </Link>
        </div>
     </div>
   );
