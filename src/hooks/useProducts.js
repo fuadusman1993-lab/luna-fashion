@@ -31,7 +31,7 @@ export function useProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchProducts = () => {
+  const fetchProducts = useCallback(() => {
     setLoading(true);
     setError(null);
     if (!isFirebaseConfigured) {
@@ -62,7 +62,7 @@ export function useProducts() {
     });
 
     return unsubscribe;
-  };
+  }, []);
 
   useEffect(() => {
     const unsubscribe = fetchProducts();
