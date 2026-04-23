@@ -1,4 +1,4 @@
-import { Search, Heart, MessageSquare, Camera, ShoppingCart, ArrowLeft, History, TrendingUp, X } from 'lucide-react';
+import { Search, Heart, MessageSquare, Camera, ShoppingCart, ArrowLeft, History, TrendingUp, X, Bell } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-dom';
@@ -75,13 +75,10 @@ export default function TopBar() {
       />
 
       {/* Main Action/Search Row */}
-      <div className="flex items-center justify-between px-3 pt-3 pb-2 gap-3 md:gap-6 md:px-6">
+      <div className="flex items-center justify-between px-3 pt-1 pb-2 gap-2 md:gap-6 md:px-6">
 
-        {/* Left Icon: Message & Desktop Logo */}
+        {/* Left Icon: Desktop Logo */}
         <div className="flex items-center shrink-0 text-white">
-          <Link to="/messages" className="hover:opacity-70 transition-opacity p-1 md:hidden">
-            <MessageSquare strokeWidth={1.25} className="w-[22px] h-[22px]" />
-          </Link>
           <Link to="/" className="hidden md:block font-display text-[22px] font-bold tracking-widest text-[#D4AF37] whitespace-nowrap px-2 hover:opacity-80 transition-opacity">
             LUNA
           </Link>
@@ -109,9 +106,12 @@ export default function TopBar() {
           </button>
         </div>
 
-        {/* Right Icons: Heart & Cart */}
-        <div className="flex items-center shrink-0 text-white gap-2">
-          <Link to="/me" className="hover:opacity-70 transition-opacity p-1">
+        {/* Right Icons: Notifications, Heart & Cart */}
+        <div className="flex items-center shrink-0 text-white gap-1.5">
+          <Link to="/messages" className="hover:opacity-70 transition-opacity p-1">
+            <Bell strokeWidth={1.25} className="w-[22px] h-[22px]" />
+          </Link>
+          <Link to="/wishlist" className="hover:opacity-70 transition-opacity p-1">
             <Heart strokeWidth={1.25} className="w-[22px] h-[22px]" />
           </Link>
           <Link to="/cart" className="hover:opacity-70 transition-opacity p-1 relative">

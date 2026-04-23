@@ -30,6 +30,7 @@ export default function Admin() {
   const [isNewIn, setIsNewIn] = useState(false);
   const [isDeal, setIsDeal] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [successMsg, setSuccessMsg] = useState('');
 
   const handleLogin = async (e) => {
@@ -118,11 +119,18 @@ export default function Admin() {
             const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
             await new Promise((resolve, reject) => {
-               uploadTask.on('state_changed', null, reject, async () => {
-                  const url = await getDownloadURL(uploadTask.snapshot.ref);
-                  downloadURLs.push(url);
-                  resolve();
-               });
+               uploadTask.on('state_changed', 
+                 (snapshot) => {
+                   const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                   setUploadProgress(Math.round(progress));
+                 },
+                 reject, 
+                 async () => {
+                   const url = await getDownloadURL(uploadTask.snapshot.ref);
+                   downloadURLs.push(url);
+                   resolve();
+                 }
+               );
             });
          }));
          defaultImageUrl = downloadURLs[0];
@@ -189,7 +197,7 @@ export default function Admin() {
 
   const resetForm = () => {
      setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Makhawar (ቶብ)'); setShippingTime('Arrives in 1-2 days'); setImageFiles([]);
-     setIsBestseller(false); setIsNewIn(false); setIsDeal(false);
+     setIsBestseller(false); setIsNewIn(false); setIsDeal(false); setUploadProgress(0);
   };
 
   if (!isAuthenticated) {
@@ -415,8 +423,13 @@ export default function Admin() {
                    </div>
                 </div>
 
-                <button type="submit" disabled={uploading} className="w-full bg-luna-black dark:bg-gold text-white dark:text-black p-3 uppercase tracking-wider font-bold hover:opacity-90 transition-opacity disabled:opacity-50">
-                  {uploading ? t('publishing') : (editId ? 'SAVE CHANGES' : t('publish'))}
+                <button type="submit" disabled={uploading} className="w-full bg-luna-black dark:bg-gold text-white dark:text-black p-3 uppercase tracking-wider font-bold hover:opacity-90 transition-opacity disabled:opacity-50 relative overflow-hidden">
+                  {uploading && uploadProgress > 0 && uploadProgress < 100 && (
+                    <div className="absolute top-0 left-0 h-full bg-white/20 dark:bg-black/20 transition-all duration-300" style={{ width: `${uploadProgress}%` }}></div>
+                  )}
+                  <span className="relative z-10">
+                    {uploading ? (uploadProgress > 0 ? `UPLOADING (${uploadProgress}%)` : t('publishing')) : (editId ? 'SAVE CHANGES' : t('publish'))}
+                  </span>
                 </button>
               </form>
             </div>
@@ -452,9 +465,11 @@ export default function Admin() {
                          .slice(0, 50)
                          .map(p => (
                           <tr key={p.id} className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                             <td className="px-4 py-3 flex items-center font-medium">
-                                <img src={p.imageUrl} alt="" className="w-8 h-8 rounded-full object-cover mr-3 border border-gray-300 dark:border-gray-700" />
-                                {p.name}
+                             <td className="px-4 py-3 flex items-center font-medium min-w-[200px]">
+                                <div className="flex-shrink-0 w-10 h-10 mr-3">
+                                   <img src={p.imageUrl} alt="" className="w-full h-full rounded object-cover border border-gray-300 dark:border-gray-700" />
+                                </div>
+                                <span className="truncate max-w-[150px]">{p.name}</span>
                              </td>
                              <td className="px-4 py-3 font-bold">{p.price} ETB</td>
                              <td className="px-4 py-3">{p.category || 'Makhawar (ቶብ)'}</td>

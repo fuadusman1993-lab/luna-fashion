@@ -57,12 +57,12 @@ const CustomIcons = {
 
   // Minimalist SVGs mapped conceptually to the exact inventory categories
   const circleCategories = [
-    { name: 'Makhawar', icon: CustomIcons.Makhawar },
-    { name: 'Abaya', icon: CustomIcons.Abaya },
-    { name: 'Dria', icon: CustomIcons.Dria },
-    { name: 'Dresses', icon: CustomIcons.Dresses },
-    { name: 'Shoes', icon: CustomIcons.Shoes },
-    { name: 'Makeup', icon: CustomIcons.Makeup },
+    { id: 'Makhawar (ቶብ)', name: 'Makhawar', icon: CustomIcons.Makhawar },
+    { id: 'Abaya', name: 'Abaya', icon: CustomIcons.Abaya },
+    { id: 'Dria', name: 'Dria', icon: CustomIcons.Dria },
+    { id: 'Dresses (ቀሚስ)', name: 'Dresses', icon: CustomIcons.Dresses },
+    { id: 'Shoes', name: 'Shoes', icon: CustomIcons.Shoes },
+    { id: 'Makeup', name: 'Makeup', icon: CustomIcons.Makeup },
   ];
 
   const filterTabs = [
@@ -83,13 +83,13 @@ const CustomIcons = {
                return (
                <div 
                  key={idx} 
-                 onClick={() => navigate(`/?category=${encodeURIComponent(cat.name)}`)}
+                 onClick={() => navigate(`/?category=${encodeURIComponent(cat.id)}`)}
                  className="flex flex-col items-center cursor-pointer group flex-shrink-0"
                >
-                  <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm ${activeCategory === cat.name ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] text-gray-800 dark:text-gray-300 hover:shadow-md'}`}>
+                  <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm ${activeCategory === cat.id ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] text-gray-800 dark:text-gray-300 hover:shadow-md'}`}>
                      <Icon className="w-[20px] h-[20px]" strokeWidth={1.25} />
                   </div>
-                  <span className={`text-[11px] font-bold tracking-wide ${activeCategory === cat.name ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>{cat.name}</span>
+                  <span className={`text-[11px] font-bold tracking-wide ${activeCategory === cat.id ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>{cat.name}</span>
                </div>
             )})}
          </div>
