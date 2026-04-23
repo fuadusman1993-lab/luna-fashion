@@ -1,14 +1,64 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Phone, Lock } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useAppContext } from '../context/AppContext';
 
 export default function Login() {
   const navigate = useNavigate();
-  const [loginMethod, setLoginMethod] = useState('phone'); // phone or email
+  const [loginMethod, setLoginMethod] = useState('email'); // default to email since phone needs recaptcha
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  const { login, signup, loginWithGoogle } = useAuth();
+  const { showToast } = useAppContext();
 
-  const handleFakeLogin = (e) => {
+  const handleEmailLogin = async (e) => {
     e.preventDefault();
-    navigate('/me');
+    if (loginMethod === 'phone') {
+      showToast('Phone auth requires Recaptcha. Please use Email.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await login(email, password);
+      showToast('Successfully logged in!');
+      navigate('/me');
+    } catch (error) {
+      // If login fails, try to sign them up
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        try {
+          await signup(email, password);
+          showToast('Account created successfully!');
+          navigate('/me');
+        } catch (signupError) {
+          showToast(signupError.message.replace('Firebase: ', ''));
+        }
+      } else {
+        showToast(error.message.replace('Firebase: ', ''));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+      await loginWithGoogle();
+      showToast('Successfully logged in with Google!');
+      navigate('/me');
+    } catch (error) {
+      showToast(error.message.replace('Firebase: ', ''));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFacebookLogin = () => {
+    showToast('Facebook login coming soon');
   };
 
   return (
@@ -44,7 +94,7 @@ export default function Login() {
         </div>
 
         {/* Dynamic Form */}
-        <form onSubmit={handleFakeLogin} className="flex flex-col space-y-5 flex-1 pb-10">
+        <form onSubmit={handleEmailLogin} className="flex flex-col space-y-5 flex-1 pb-10">
           {loginMethod === 'phone' ? (
             <div className="relative flex items-center bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl focus-within:border-gold dark:focus-within:border-gold transition-colors">
               <Phone className="w-5 h-5 text-gray-500 absolute left-4" strokeWidth={1.5} />
@@ -61,6 +111,8 @@ export default function Login() {
               <Mail className="w-5 h-5 text-gray-500 absolute left-4" strokeWidth={1.5} />
               <input 
                 type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email Address" 
                 className="w-full bg-transparent outline-none text-black dark:text-white text-[14px] py-4 pl-12 pr-4 placeholder:text-gray-400 dark:placeholder:text-gray-600 font-light"
                 required
@@ -72,8 +124,10 @@ export default function Login() {
             <Lock className="w-5 h-5 text-gray-500 absolute left-4" strokeWidth={1.5} />
             <input 
               type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password" 
-              className="w-full bg-transparent outline-none text-white text-[14px] py-4 pl-12 pr-4 placeholder:text-gray-600 font-light"
+              className="w-full bg-transparent outline-none text-black dark:text-white text-[14px] py-4 pl-12 pr-4 placeholder:text-gray-400 dark:placeholder:text-gray-600 font-light"
               required
             />
           </div>
@@ -85,9 +139,10 @@ export default function Login() {
           <div className="pt-4 mt-auto">
             <button 
               type="submit"
-              className="w-full bg-[#D4AF37] text-black h-[54px] rounded-full font-bold uppercase tracking-widest flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all active:scale-95 hover:scale-[1.02]"
+              disabled={loading}
+              className="w-full bg-[#D4AF37] text-black h-[54px] rounded-full font-bold uppercase tracking-widest flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all active:scale-95 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign In Securely
+              {loading ? 'Processing...' : 'Sign In Securely'}
             </button>
           </div>
         </form>
@@ -102,13 +157,13 @@ export default function Login() {
           </div>
           
           <div className="flex space-x-4">
-             <button onClick={handleFakeLogin} className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 py-3.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors active:scale-95">
+             <button onClick={handleGoogleLogin} disabled={loading} className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 py-3.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                    <path className="dark:fill-white fill-black" d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z" />
                 </svg>
                 <span className="text-[12px] font-bold text-black dark:text-white">Google</span>
              </button>
-             <button onClick={handleFakeLogin} className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 py-3.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors active:scale-95">
+             <button onClick={handleFacebookLogin} disabled={loading} className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 py-3.5 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg className="w-5 h-5 mr-3 dark:fill-white fill-black" viewBox="0 0 24 24">
                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z" />
                 </svg>

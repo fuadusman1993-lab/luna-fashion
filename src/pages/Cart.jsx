@@ -3,6 +3,7 @@ import { useAppContext } from '../context/AppContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Trash2, Store, MoreHorizontal, ChevronRight, CheckCircle2, Circle } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
+import { useOrders } from '../hooks/useOrders';
 import ProductGrid from '../components/product/ProductGrid';
 
 export default function Cart() {
@@ -64,24 +65,48 @@ export default function Cart() {
   const total = selectedCartItems.reduce((sum, item) => sum + Number(item.price) * (item.qty || 1), 0);
   const totalItemsCount = selectedCartItems.reduce((sum, item) => sum + (item.qty || 1), 0);
 
-  const handleCheckout = () => {
+  const { createOrder, loading: orderLoading } = useOrders();
+
+  const handleCheckout = async () => {
     if (selectedItems.length === 0) return;
     
-    let text = "✨ *Luna Fashion Order Request* ✨\n\n";
-    selectedCartItems.forEach(item => {
-      const qty = item.qty || 1;
-      text += `🛍️ *${item.name}*\n`;
-      text += `   ↳ Variant: ${item.size} / ${item.color}\n`;
-      text += `   ↳ Qty: ${qty} x ${Number(item.price).toLocaleString()} ETB\n`;
-      text += `   ↳ Subtotal: ${(Number(item.price) * qty).toLocaleString()} ETB\n\n`;
-    });
-    text += `💳 *Final Total: ${total.toLocaleString()} ETB*\n`;
-    text += "📍 Shipping to: Ethiopia\n\n";
-    text += "Is this available to order?";
-    
-    const encodedText = encodeURIComponent(text);
-    const telegramUrl = `https://t.me/Luna_market1?text=${encodedText}`;
-    window.open(telegramUrl, '_blank');
+    try {
+      // 1. Create Order in Firestore
+      const orderPayload = {
+        items: selectedCartItems,
+        totalAmount: total,
+        totalItemsCount,
+        contactPhone: 'guest-no-phone', // This can be updated later if a phone form is added
+        shippingDestination: 'Ethiopia'
+      };
+      
+      const orderId = await createOrder(orderPayload);
+      console.log('Order created with ID: ', orderId);
+      
+      // 2. Format Telegram Message
+      let text = "✨ *Luna Fashion Order Request* ✨\n\n";
+      text += `*Order ID:* ${orderId}\n\n`; // Add Order ID for tracking
+      selectedCartItems.forEach(item => {
+        const qty = item.qty || 1;
+        text += `🛍️ *${item.name}*\n`;
+        text += `   ↳ Variant: ${item.size} / ${item.color}\n`;
+        text += `   ↳ Qty: ${qty} x ${Number(item.price).toLocaleString()} ETB\n`;
+        text += `   ↳ Subtotal: ${(Number(item.price) * qty).toLocaleString()} ETB\n\n`;
+      });
+      text += `💳 *Final Total: ${total.toLocaleString()} ETB*\n`;
+      text += "📍 Shipping to: Ethiopia\n\n";
+      text += "Is this available to order?";
+      
+      // 3. Open Telegram
+      const encodedText = encodeURIComponent(text);
+      const telegramUrl = `https://t.me/Luna_market1?text=${encodedText}`;
+      window.open(telegramUrl, '_blank');
+      
+      // Optionally clear the cart of selected items here
+    } catch (err) {
+      console.error('Failed to create order in Firestore', err);
+      alert('There was an issue processing your order. Please try again.');
+    }
   };
 
   // Helper for Custom Circle Checkbox

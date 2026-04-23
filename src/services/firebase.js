@@ -1,29 +1,24 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// The user needs to populate this file with their specific Firebase config map
-// which they get from console.firebase.google.com
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDt4tE_fFdKF01W5atJ1jYlol3IOuzgQYM",
+  authDomain: "luna-fashion-eefb2.firebaseapp.com",
+  projectId: "luna-fashion-eefb2",
+  storageBucket: "luna-fashion-eefb2.firebasestorage.app",
+  messagingSenderId: "593821929374",
+  appId: "1:593821929374:web:cf8d9c4f946f290153908f",
+  measurementId: "G-BR3TR9ZZ59"
 };
 
-// Check if valid config has been added (basic check on API key)
-export const isFirebaseConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
+export const isFirebaseConfigured = true;
 
-let app, auth, db, storage;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const googleProvider = new GoogleAuthProvider();
 
-if (isFirebaseConfigured) {
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  storage = getStorage(app);
-}
-
-export { auth, db, storage };
+export { app, auth, db, storage, googleProvider };

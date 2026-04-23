@@ -1,12 +1,14 @@
 import { useAppContext } from '../context/AppContext';
-import { Link } from 'react-router-dom';
-import { Package, Heart, MapPin, Settings as SettingsIcon, Save } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { Package, Heart, LogOut, Settings as SettingsIcon, LogIn } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Me() {
-  const { language, t } = useAppContext();
-  const [addressSaved, setAddressSaved] = useState(false);
-
+  const { language } = useAppContext();
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+  
   // Custom SVG for TikTok
   const TikTokIcon = () => (
     <svg fill="currentColor" viewBox="0 0 24 24" className="w-[20px] h-[20px]">
@@ -25,9 +27,25 @@ export default function Me() {
   ];
   const maxVal = Math.max(...chartData.map(d => d.value));
 
-  const handleSaveAddress = () => {
-    setAddressSaved(true);
-    setTimeout(() => setAddressSaved(false), 3000);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to log out', error);
+    }
+  };
+
+  const getUserInitial = () => {
+    if (currentUser?.displayName) return currentUser.displayName.charAt(0).toUpperCase();
+    if (currentUser?.email) return currentUser.email.charAt(0).toUpperCase();
+    return language === 'en' ? 'G' : 'እ'; // G for Guest
+  };
+
+  const getDisplayName = () => {
+    if (currentUser?.displayName) return currentUser.displayName;
+    if (currentUser?.email) return currentUser.email.split('@')[0];
+    return 'Guest User';
   };
 
   return (
@@ -37,11 +55,13 @@ export default function Me() {
        <div className="flex items-center justify-between mb-8 pt-4 px-2">
           <div className="flex items-center space-x-4">
              <div className="w-[65px] h-[65px] bg-gradient-to-br from-[#bf953f] to-[#fbf5b7] rounded-full flex flex-col items-center justify-center font-display text-2xl font-bold text-black border-2 border-white dark:border-black shadow-sm shrink-0">
-                {language === 'en' ? 'L' : 'ሉ'}
+                {getUserInitial()}
              </div>
              <div>
-               <h2 className="text-[18px] font-bold text-luna-black dark:text-luna-white tracking-tight">Luna Guest</h2>
-               <p className="text-[11px] text-gray-500 font-medium tracking-wide uppercase">Silver Member</p>
+               <h2 className="text-[18px] font-bold text-luna-black dark:text-luna-white tracking-tight">{getDisplayName()}</h2>
+               <p className="text-[11px] text-gray-500 font-medium tracking-wide uppercase">
+                 {currentUser ? 'Silver Member' : 'Welcome to Luna'}
+               </p>
              </div>
           </div>
           
@@ -54,6 +74,26 @@ export default function Me() {
              </Link>
           </div>
        </div>
+
+       {/* Authentication Status / Action */}
+       {!currentUser ? (
+         <div className="bg-white dark:bg-[#111111] rounded-2xl p-5 mb-5 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center text-center">
+            <h3 className="font-bold text-[14px] text-luna-black dark:text-white tracking-wide mb-2">Sign in to sync your profile</h3>
+            <p className="text-[11px] text-gray-500 font-medium mb-4">Access your orders, wishlist, and exclusive offers.</p>
+            <Link to="/login" className="bg-[#D4AF37] text-black w-full py-3 rounded-full font-bold uppercase tracking-widest text-[12px] shadow-md hover:scale-[1.02] transition-transform">
+               Sign In / Register
+            </Link>
+         </div>
+       ) : (
+         <div className="bg-white dark:bg-[#111111] rounded-2xl p-4 mb-5 shadow-sm border border-gray-100 dark:border-gray-800 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={handleLogout}>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                <LogOut className="w-4 h-4 text-red-600 dark:text-red-400" />
+              </div>
+              <span className="text-[13px] font-semibold text-gray-800 dark:text-gray-200">Sign Out</span>
+            </div>
+         </div>
+       )}
 
        {/* Business Dashboard Chart */}
        <div className="bg-white dark:bg-[#111111] rounded-2xl p-5 mb-5 shadow-sm border border-gray-100 dark:border-gray-800">
