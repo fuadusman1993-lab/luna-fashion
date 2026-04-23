@@ -35,6 +35,59 @@ export default function Admin() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [successMsg, setSuccessMsg] = useState('');
 
+  // Native Client-Side Image Compressor for Mobile
+  const compressImage = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // Strict max dimensions to save bandwidth (e.g. 1080px)
+          const MAX_WIDTH = 1080;
+          const MAX_HEIGHT = 1350;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Output highly optimized JPEG
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                type: 'image/jpeg',
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            } else {
+              resolve(file); // Fallback if compression fails
+            }
+          }, 'image/jpeg', 0.80); // 80% quality
+        };
+        img.onerror = (error) => reject(error);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
@@ -117,7 +170,17 @@ export default function Admin() {
       let defaultImageUrl = null;
       
       if (imageFiles.length > 0) {
-         await Promise.all(imageFiles.map(async (file) => {
+         await Promise.all(imageFiles.map(async (originalFile) => {
+            // Compress the image before uploading to avoid mobile timeouts
+            let file = originalFile;
+            try {
+              if (originalFile.type.startsWith('image/')) {
+                file = await compressImage(originalFile);
+              }
+            } catch (err) {
+              console.warn("Image compression failed, using original", err);
+            }
+
             const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
             await new Promise((resolve, reject) => {
