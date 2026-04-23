@@ -1,7 +1,7 @@
 import { useAppContext } from '../context/AppContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Share2, ShoppingBag, ShoppingCart } from 'lucide-react';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState } from 'react';
 
 export default function ProductDetail() {
   const { state } = useLocation();

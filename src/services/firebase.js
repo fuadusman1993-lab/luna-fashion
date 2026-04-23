@@ -3,6 +3,7 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDt4tE_fFdKF01W5atJ1jYlol3IOuzgQYM",
   authDomain: "luna-fashion-eefb2.firebaseapp.com",
