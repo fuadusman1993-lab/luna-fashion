@@ -46,8 +46,18 @@ export default function Admin() {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setIsAuthenticated(true);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userEmail = userCredential.user.email;
+      
+      // List of allowed admin emails
+      const ADMIN_EMAILS = ['admin@lunafashion.com']; 
+      
+      if (ADMIN_EMAILS.includes(userEmail)) {
+        setIsAuthenticated(true);
+      } else {
+        await signOut(auth); // Sign them back out
+        setError('Access denied: You do not have admin privileges.');
+      }
     } catch (err) {
       setError(err.message);
     }
