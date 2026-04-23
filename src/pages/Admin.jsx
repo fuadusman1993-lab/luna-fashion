@@ -26,6 +26,7 @@ export default function Admin() {
   const [description, setDescription] = useState('');
   const [shippingTime, setShippingTime] = useState('Arrives in 1-2 days');
   const [imageFiles, setImageFiles] = useState([]);
+  const [productColors, setProductColors] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [inStock, setInStock] = useState(true);
   const [isBestseller, setIsBestseller] = useState(false);
@@ -34,6 +35,20 @@ export default function Admin() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [successMsg, setSuccessMsg] = useState('');
+
+  const addColorVariant = () => {
+    setProductColors([...productColors, { name: '', hex: '#000000', file: null, imageUrl: null }]);
+  };
+
+  const updateColorVariant = (index, field, value) => {
+    const newColors = [...productColors];
+    newColors[index][field] = value;
+    setProductColors(newColors);
+  };
+
+  const removeColorVariant = (index) => {
+    setProductColors(productColors.filter((_, i) => i !== index));
+  };
 
   // Native Client-Side Image Compressor for Mobile
   const compressImage = (file) => {
@@ -201,6 +216,32 @@ export default function Admin() {
          defaultImageUrl = downloadURLs[0];
       }
 
+      // Process colors if any exist
+      let processedColors = [];
+      if (productColors.length > 0) {
+        processedColors = await Promise.all(productColors.map(async (colorObj) => {
+          let imageUrl = colorObj.imageUrl; // keep existing if editing
+          if (colorObj.file) {
+            let fileToUpload = colorObj.file;
+            try {
+              if (fileToUpload.type.startsWith('image/')) {
+                fileToUpload = await compressImage(fileToUpload);
+              }
+            } catch(e) { console.warn('Color image compression failed', e); }
+
+            const storageRef = ref(storage, `products/color_${Date.now()}_${fileToUpload.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, fileToUpload);
+            await new Promise((resolve, reject) => {
+               uploadTask.on('state_changed', null, reject, async () => {
+                 imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                 resolve();
+               });
+            });
+          }
+          return { name: colorObj.name, hex: colorObj.hex, imageUrl };
+        }));
+      }
+
       const payload = {
         name,
         category,
@@ -217,6 +258,10 @@ export default function Admin() {
       if (downloadURLs.length > 0) {
         payload.imageUrl = defaultImageUrl;
         payload.images = downloadURLs;
+      }
+      
+      if (processedColors.length > 0) {
+        payload.colors = processedColors;
       }
 
       if (editId) {
@@ -247,6 +292,7 @@ export default function Admin() {
      setIsBestseller(product.isBestseller || false);
      setIsNewIn(product.isNewIn || false);
      setIsDeal(product.isDeal || false);
+     setProductColors(product.colors || []);
      setActiveTab('products');
   };
 
@@ -261,7 +307,7 @@ export default function Admin() {
   };
 
   const resetForm = () => {
-     setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Makhawar (ቶብ)'); setShippingTime('Arrives in 1-2 days'); setImageFiles([]);
+     setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Makhawar (ቶብ)'); setShippingTime('Arrives in 1-2 days'); setImageFiles([]); setProductColors([]);
      setIsBestseller(false); setIsNewIn(false); setIsDeal(false); setUploadProgress(0);
   };
 
@@ -459,7 +505,7 @@ export default function Admin() {
                       multiple
                       onChange={e => setImageFiles(Array.from(e.target.files).slice(0, 3))}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
-                      required={!isFirebaseConfigured && !editId ? false : (!editId)}
+                      required={!isFirebaseConfigured && !editId ? false : (!editId && productColors.length === 0)}
                     />
                     <div className="space-y-1 text-center relative z-0">
                       <div className="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
@@ -469,6 +515,30 @@ export default function Admin() {
                       </div>
                     </div>
                   </div>
+                </div>
+
+                {/* Color Variant Builder */}
+                <div className="border border-gray-200 dark:border-gray-800 p-4 rounded bg-gray-50 dark:bg-black/20">
+                   <div className="flex justify-between items-center mb-3">
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300">Color Variants (Dynamic Images)</label>
+                      <button type="button" onClick={addColorVariant} className="text-xs bg-gold text-black px-2 py-1 font-bold shadow-sm hover:scale-105 active:scale-95 transition-transform">+ Add Color</button>
+                   </div>
+                   {productColors.map((color, index) => (
+                     <div key={index} className="flex flex-col md:flex-row gap-3 mb-3 p-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111] items-center relative rounded">
+                        <button type="button" onClick={() => removeColorVariant(index)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 text-xs w-5 h-5 flex items-center justify-center hover:bg-red-600 z-20">x</button>
+                        <input type="text" placeholder="Color Name (e.g. Red)" value={color.name} onChange={e => updateColorVariant(index, 'name', e.target.value)} className="w-full md:w-1/3 bg-transparent border border-gray-300 dark:border-gray-700 p-2 text-sm dark:text-white outline-none focus:border-gold" required />
+                        <div className="flex items-center space-x-2">
+                           <input type="color" value={color.hex} onChange={e => updateColorVariant(index, 'hex', e.target.value)} className="w-10 h-10 cursor-pointer rounded overflow-hidden p-0 border-0" title="Pick Color Hex" />
+                           <span className="text-xs text-gray-500 font-mono uppercase">{color.hex}</span>
+                        </div>
+                        
+                        <div className="flex-1 flex flex-col justify-center border-2 border-dashed border-gray-300 dark:border-gray-700 p-2 text-center text-xs relative cursor-pointer hover:border-gold transition-colors min-h-[40px] w-full">
+                           <input type="file" accept="image/*" onChange={e => updateColorVariant(index, 'file', e.target.files[0])} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                           <span className="text-gray-500 font-bold">{color.file ? color.file.name : (color.imageUrl ? 'Image Attached ✓' : 'Upload Color Image')}</span>
+                        </div>
+                     </div>
+                   ))}
+                   {productColors.length === 0 && <p className="text-xs text-gray-500 italic mt-2">No color variants added. Customers will see default generic images.</p>}
                 </div>
 
                 <div className="flex flex-col space-y-3 p-4 bg-gray-50 dark:bg-[#151515] rounded border border-gray-200 dark:border-gray-800">

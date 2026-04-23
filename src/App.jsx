@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import SearchPage from './pages/SearchPage';
 import Settings from './pages/Settings';
 import Wishlist from './pages/Wishlist';
+import Orders from './pages/Orders';
 import { useAppContext } from './context/AppContext';
 import { ShoppingBag } from 'lucide-react';
 
@@ -57,6 +58,7 @@ function AppContent() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
       </BrowserRouter>

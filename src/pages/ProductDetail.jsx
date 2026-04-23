@@ -17,8 +17,16 @@ export default function ProductDetail() {
   if (category.toLowerCase().includes('shoe')) availableSizes = ['36', '37', '38', '39', '40', '41'];
   else if (category.toLowerCase().includes('makeup') || category.toLowerCase().includes('bag')) availableSizes = [];
 
+  const colors = product?.colors && product.colors.length > 0 
+    ? product.colors 
+    : [
+        { name: 'Black', hex: '#0a0a0a' },
+        { name: 'Mocha', hex: '#6b4c3a' },
+        { name: 'Ivory', hex: '#f8f5f0' }
+      ];
+
   const [selectedSize, setSelectedSize] = useState(availableSizes.length > 0 ? availableSizes[1] || availableSizes[0] : '');
-  const [selectedColor, setSelectedColor] = useState('Black');
+  const [selectedColor, setSelectedColor] = useState(colors[0]?.name || 'Black');
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -56,11 +64,11 @@ export default function ProductDetail() {
   };
 
   const isConfigIncomplete = (availableSizes.length > 0 && !selectedSize) || !selectedColor;
-  const colors = [
-    { name: 'Black', hex: '#0a0a0a' },
-    { name: 'Mocha', hex: '#6b4c3a' },
-    { name: 'Ivory', hex: '#f8f5f0' }
-  ];
+
+  const activeColorObj = colors.find(c => c.name === selectedColor);
+  const displayImages = activeColorObj?.imageUrl 
+    ? [activeColorObj.imageUrl, ...(product.images || []).filter(img => img !== activeColorObj.imageUrl)] 
+    : (product.images && product.images.length > 0 ? product.images : [product.imageUrl]);
 
   return (
     <div className="relative min-h-screen bg-white dark:bg-[#0a0a0a] md:max-w-7xl md:mx-auto pb-[100px] font-sans">
@@ -97,21 +105,15 @@ export default function ProductDetail() {
       
       {/* Snap-X Image Carousel Layer */}
       <div className="w-full md:w-1/2 md:rounded-2xl h-[65vh] min-h-[500px] bg-gray-100 dark:bg-[#0f0f0f] relative overflow-hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-         {product.images && product.images.length > 0 ? (
-           product.images.map((img, idx) => (
-             <div key={idx} className="min-w-full h-full snap-start relative">
+         {displayImages.map((img, idx) => (
+             <div key={idx} id={`img-${idx}`} className="min-w-full h-full snap-start relative">
                  <img src={img} alt={`${product.name} view ${idx + 1}`} className="w-full h-full object-cover object-center" />
              </div>
-           ))
-         ) : (
-           <div className="min-w-full h-full snap-start relative">
-               <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover object-center" />
-           </div>
-         )}
+         ))}
 
          {/* Overlay Carousel Indicators */}
          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1.5 z-20">
-             {(product.images && product.images.length > 0 ? product.images : [product.imageUrl]).map((_, idx) => (
+             {displayImages.map((_, idx) => (
                <div key={idx} className={`h-1 rounded-full ${idx === 0 ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}`}></div>
              ))}
          </div>

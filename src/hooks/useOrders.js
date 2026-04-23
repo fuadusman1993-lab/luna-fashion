@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { db } from '../services/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 
 export function useOrders() {
@@ -31,5 +31,33 @@ export function useOrders() {
     }
   };
 
-  return { createOrder, loading, error };
+  const getUserOrders = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const q = query(
+        collection(db, 'orders'), 
+        where('userId', '==', currentUser ? currentUser.uid : 'guest')
+      );
+      const querySnapshot = await getDocs(q);
+      const ordersList = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setLoading(false);
+      // Sort in JS instead of compound index to avoid missing index errors
+      return ordersList.sort((a, b) => {
+         const timeA = a.createdAt?.seconds || 0;
+         const timeB = b.createdAt?.seconds || 0;
+         return timeB - timeA;
+      });
+    } catch (err) {
+      console.error('Error fetching orders:', err);
+      setError(err.message);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  return { createOrder, getUserOrders, loading, error };
 }
