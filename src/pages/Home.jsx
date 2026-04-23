@@ -61,8 +61,8 @@ const CustomIcons = {
     { id: 'Abaya', name: 'Abaya', icon: CustomIcons.Abaya },
     { id: 'Dria', name: 'Dria', icon: CustomIcons.Dria },
     { id: 'Dresses (ቀሚስ)', name: 'Dresses', icon: CustomIcons.Dresses },
-    { id: 'Shoes', name: 'Shoes', icon: CustomIcons.Shoes },
     { id: 'Makeup', name: 'Makeup', icon: CustomIcons.Makeup },
+    { id: 'Shoes', name: 'Shoes', icon: CustomIcons.Shoes },
   ];
 
   const filterTabs = [

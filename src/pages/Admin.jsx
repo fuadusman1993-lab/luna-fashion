@@ -4,10 +4,12 @@ import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useAppContext } from '../context/AppContext';
-import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard } from 'lucide-react';
+import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard, ArrowLeft } from 'lucide-react';
 import { useProducts, addLocalProduct, updateLocalProduct, deleteLocalProduct } from '../hooks/useProducts';
+import { useNavigate } from 'react-router-dom';
 
 export default function Admin() {
+  const navigate = useNavigate();
   const { t } = useAppContext();
   const { products } = useProducts();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -251,6 +253,9 @@ export default function Admin() {
         {/* Sidebar Tabs */}
         <div className="w-full md:w-64 flex flex-col space-y-2">
           <div className="mb-8 px-4">
+             <button onClick={() => navigate(-1)} className="flex items-center text-sm font-bold uppercase tracking-widest text-gold hover:text-black dark:hover:text-white transition-colors mb-4">
+               <ArrowLeft className="w-4 h-4 mr-2" /> Back
+             </button>
              <h1 className="text-3xl font-display text-luna-black dark:text-luna-white">{t('dashboard')}</h1>
              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{t('manageInventory')}</p>
           </div>

@@ -8,6 +8,7 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const isCart = location.pathname === '/cart';
+  const noScroller = location.pathname === '/shop' || location.pathname === '/me';
 
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -27,11 +28,15 @@ export default function Layout() {
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
 
-    if (isLeftSwipe && location.pathname === '/') {
-      navigate('/shop');
+    if (isLeftSwipe) {
+      if (location.pathname === '/') navigate('/shop');
+      else if (location.pathname === '/shop') navigate('/cart');
+      else if (location.pathname === '/cart') navigate('/me');
     }
-    if (isRightSwipe && location.pathname === '/shop') {
-      navigate('/');
+    if (isRightSwipe) {
+      if (location.pathname === '/me') navigate('/cart');
+      else if (location.pathname === '/cart') navigate('/shop');
+      else if (location.pathname === '/shop') navigate('/');
     }
   };
 
@@ -43,7 +48,7 @@ export default function Layout() {
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-        className={`flex-grow ${isCart ? 'pt-0' : 'pt-[110px]'} pb-[80px] overflow-x-hidden bg-white dark:bg-[#0a0a0a]`}
+        className={`flex-grow ${isCart ? 'pt-0' : noScroller ? 'pt-[60px]' : 'pt-[110px]'} pb-[80px] overflow-x-hidden bg-white dark:bg-[#0a0a0a]`}
       >
         <Outlet />
       </main>

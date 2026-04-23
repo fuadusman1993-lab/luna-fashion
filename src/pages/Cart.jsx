@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Trash2, Store, MoreHorizontal, ChevronRight, CheckCircle2, Circle } from 'lucide-react';
+import { Trash2, Store, MoreHorizontal, ChevronRight, CheckCircle2, Circle, ArrowLeft } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { useOrders } from '../hooks/useOrders';
 import ProductGrid from '../components/product/ProductGrid';
@@ -127,6 +127,9 @@ export default function Cart() {
       <div className="sticky top-0 left-0 right-0 w-full bg-white dark:bg-[#0a0a0a] z-50 shadow-sm border-b border-gray-100 dark:border-white/5">
         <div className="flex items-center justify-between px-3 h-[44px]">
           <div className="flex items-center gap-2">
+            <button onClick={() => navigate(-1)} className="p-1 mr-1 text-black dark:text-white hover:text-gold active:scale-95 transition-all">
+              <ArrowLeft className="w-5 h-5" />
+            </button>
             <CustomCheckbox isChecked={isAllSelected} onClick={toggleSelectAll} />
             <span className="text-[14px] font-bold text-black dark:text-white">All</span>
             <span className="text-[14px] font-medium text-gray-500 ml-1">Cart({cart?.length || 0})</span>
