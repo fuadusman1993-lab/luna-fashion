@@ -36,8 +36,31 @@ export default function Admin() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [successMsg, setSuccessMsg] = useState('');
 
+  const PREDEFINED_COLORS = [
+    { name: 'Original (As Shown)', hex: '#f5f5f5' },
+    { name: 'Black', hex: '#0a0a0a' },
+    { name: 'White', hex: '#ffffff' },
+    { name: 'Mocha', hex: '#6b4c3a' },
+    { name: 'Ivory', hex: '#f8f5f0' },
+    { name: 'Gold', hex: '#D4AF37' },
+    { name: 'Silver', hex: '#C0C0C0' },
+    { name: 'Red', hex: '#ef4444' },
+    { name: 'Blue', hex: '#3b82f6' },
+    { name: 'Green', hex: '#22c55e' },
+    { name: 'Pink', hex: '#ec4899' },
+    { name: 'Navy', hex: '#1e3a8a' }
+  ];
+
   const addColorVariant = () => {
-    setProductColors([...productColors, { name: '', hex: '#000000', file: null, imageUrl: null }]);
+    setProductColors([...productColors, { name: PREDEFINED_COLORS[0].name, hex: PREDEFINED_COLORS[0].hex, file: null, imageUrl: null }]);
+  };
+
+  const handleColorSelect = (index, selectedName) => {
+    const selectedColor = PREDEFINED_COLORS.find(c => c.name === selectedName);
+    const newColors = [...productColors];
+    newColors[index].name = selectedColor.name;
+    newColors[index].hex = selectedColor.hex;
+    setProductColors(newColors);
   };
 
   const updateColorVariant = (index, field, value) => {
@@ -526,10 +549,18 @@ export default function Admin() {
                    {productColors.map((color, index) => (
                      <div key={index} className="flex flex-col md:flex-row gap-3 mb-3 p-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#111] items-center relative rounded">
                         <button type="button" onClick={() => removeColorVariant(index)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 text-xs w-5 h-5 flex items-center justify-center hover:bg-red-600 z-20">x</button>
-                        <input type="text" placeholder="Color Name (e.g. Red)" value={color.name} onChange={e => updateColorVariant(index, 'name', e.target.value)} className="w-full md:w-1/3 bg-transparent border border-gray-300 dark:border-gray-700 p-2 text-sm dark:text-white outline-none focus:border-gold" required />
-                        <div className="flex items-center space-x-2">
-                           <input type="color" value={color.hex} onChange={e => updateColorVariant(index, 'hex', e.target.value)} className="w-10 h-10 cursor-pointer rounded overflow-hidden p-0 border-0" title="Pick Color Hex" />
-                           <span className="text-xs text-gray-500 font-mono uppercase">{color.hex}</span>
+                        
+                        <div className="w-full md:w-1/3 flex items-center gap-2">
+                           <div className="w-6 h-6 rounded-full border border-gray-300 shadow-inner flex-shrink-0" style={{ backgroundColor: color.hex }}></div>
+                           <select 
+                              value={color.name} 
+                              onChange={e => handleColorSelect(index, e.target.value)} 
+                              className="w-full bg-transparent border border-gray-300 dark:border-gray-700 p-2 text-sm dark:text-white outline-none focus:border-gold appearance-none cursor-pointer"
+                           >
+                              {PREDEFINED_COLORS.map(pc => (
+                                 <option key={pc.name} value={pc.name} className="text-black">{pc.name}</option>
+                              ))}
+                           </select>
                         </div>
                         
                         <div className="flex-1 flex flex-col justify-center border-2 border-dashed border-gray-300 dark:border-gray-700 p-2 text-center text-xs relative cursor-pointer hover:border-gold transition-colors min-h-[40px] w-full">

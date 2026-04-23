@@ -20,13 +20,16 @@ export default function ProductDetail() {
   const colors = product?.colors && product.colors.length > 0 
     ? product.colors 
     : [
+        { name: 'Original (As Shown)', hex: '#f5f5f5' },
         { name: 'Black', hex: '#0a0a0a' },
         { name: 'Mocha', hex: '#6b4c3a' },
         { name: 'Ivory', hex: '#f8f5f0' }
       ];
 
+  const initialColor = colors.find(c => c.name.includes('Original'))?.name || colors[0]?.name || 'Black';
+  
   const [selectedSize, setSelectedSize] = useState(availableSizes.length > 0 ? availableSizes[1] || availableSizes[0] : '');
-  const [selectedColor, setSelectedColor] = useState(colors[0]?.name || 'Black');
+  const [selectedColor, setSelectedColor] = useState(initialColor);
 
   const handleShare = async () => {
     if (navigator.share) {
