@@ -44,14 +44,17 @@ export function AuthProvider({ children }) {
       if (user) {
         try {
           const userDoc = await getDoc(doc(db, 'users', user.uid));
-          if (userDoc.exists()) {
+          if (user.email === 'admin@lunafashion.com') {
+             setIsAdmin(true);
+          } else if (userDoc.exists()) {
             setIsAdmin(userDoc.data().isAdmin === true);
           } else {
             setIsAdmin(false);
           }
         } catch (err) {
           console.error("Failed to fetch user role", err);
-          setIsAdmin(false);
+          // Fallback just in case Firestore fails
+          setIsAdmin(user.email === 'admin@lunafashion.com');
         }
       } else {
         setIsAdmin(false);

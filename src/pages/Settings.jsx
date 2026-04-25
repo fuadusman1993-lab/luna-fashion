@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, User, MapPin, Globe, Bell, Info, ShieldAlert, ChevronRight, Lock, Moon, Sun, Shield } from 'lucide-react';
+import { ArrowLeft, User, MapPin, Globe, Bell, ShieldAlert, ChevronRight, Lock, Moon, Sun, Shield, DollarSign } from 'lucide-react';
 
 export default function Settings() {
   const { language, toggleLanguage, theme, toggleTheme } = useAppContext();
@@ -37,11 +37,11 @@ export default function Settings() {
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-[#0a0a0a] text-white flex flex-col font-sans overflow-y-auto no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+    <div className="fixed inset-0 z-[10000] bg-gray-50 dark:bg-[#0a0a0a] text-black dark:text-white flex flex-col font-sans overflow-y-auto no-scrollbar [&::-webkit-scrollbar]:hidden transition-colors duration-300" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
       
       {/* Header - Back Arrow on Left */}
-      <div className="sticky top-0 left-0 right-0 w-full z-50 bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-4 flex items-center justify-start md:max-w-2xl mx-auto">
-        <button onClick={() => navigate(-1)} className="text-white hover:text-[#D4AF37] transition-colors active:scale-95 shrink-0 flex items-center">
+      <div className="sticky top-0 left-0 right-0 w-full z-50 bg-gray-50/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-4 flex items-center justify-start md:max-w-2xl mx-auto transition-colors duration-300 border-b border-gray-200 dark:border-transparent">
+        <button onClick={() => navigate(-1)} className="text-black dark:text-white hover:text-[#D4AF37] transition-colors active:scale-95 shrink-0 flex items-center">
           <ArrowLeft strokeWidth={1.5} className="w-[22px] h-[22px]" />
           <span className="ml-2 font-medium text-[15px]">Settings</span>
         </button>
@@ -49,122 +49,133 @@ export default function Settings() {
 
       <div className="flex-1 flex flex-col md:max-w-2xl mx-auto w-full">
         
-        {/* GROUP 1: Admin, Profile, Shipping */}
-        <div className="bg-[#111111] flex flex-col border-y border-white/5">
+        {/* GROUP 1: Admin, Profile, Shipping, Currency */}
+        <div className="bg-white dark:bg-[#111111] flex flex-col border-y border-gray-200 dark:border-white/5 transition-colors duration-300">
           {/* Admin Panel - ONLY VISIBLE IF ADMIN */}
           {isAdmin && (
-            <button onClick={handleAdminClick} className="w-full flex items-center justify-between py-4 px-4 border-b border-white/5 hover:bg-white/5 transition">
+            <button onClick={handleAdminClick} className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
                <div className="flex items-center">
                  <Lock className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
-                 <span className="font-semibold text-[14px] text-white tracking-wide">Admin Panel</span>
+                 <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Admin Panel</span>
                </div>
-               <ChevronRight className="w-4 h-4 text-gray-500" />
+               <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
             </button>
           )}
 
           {/* Profile */}
-          <Link to="/me" className="w-full flex items-center justify-between py-4 px-4 border-b border-white/5 hover:bg-white/5 transition">
+          <Link to="/me" className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                <User className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
-               <span className="font-semibold text-[14px] text-white tracking-wide">Profile Management</span>
+               <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Profile Management</span>
              </div>
-             <ChevronRight className="w-4 h-4 text-gray-500" />
+             <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </Link>
 
           {/* Shipping Address */}
-          <button className="w-full flex items-center justify-between py-4 px-4 hover:bg-white/5 transition">
+          <button className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                <MapPin className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
-               <span className="font-semibold text-[14px] text-white tracking-wide">Shipping address</span>
+               <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Shipping address</span>
              </div>
              <div className="flex items-center">
-                <span className="text-[12px] font-bold text-white mr-2">ETB</span>
                 <span className="text-[16px]">🇪🇹</span>
-                <ChevronRight className="w-4 h-4 text-gray-500 ml-2" />
+                <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 ml-2" />
+             </div>
+          </button>
+          
+          {/* Currency */}
+          <button className="w-full flex items-center justify-between py-4 px-4 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+             <div className="flex items-center">
+               <DollarSign className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
+               <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Currency</span>
+             </div>
+             <div className="flex items-center">
+                <span className="text-[12px] font-bold text-gray-500 dark:text-gray-400 mr-2 uppercase tracking-widest">ETB</span>
+                <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 ml-2" />
              </div>
           </button>
         </div>
 
         {/* Thick Divider */}
-        <div className="h-[10px] bg-[#0a0a0a] w-full"></div>
+        <div className="h-[10px] bg-gray-50 dark:bg-[#0a0a0a] w-full transition-colors duration-300"></div>
 
         {/* GROUP 2: App Settings */}
-        <div className="bg-[#111111] flex flex-col border-y border-white/5">
+        <div className="bg-white dark:bg-[#111111] flex flex-col border-y border-gray-200 dark:border-white/5 transition-colors duration-300">
           {/* Language Options */}
-          <button onClick={toggleLanguage} className="w-full flex items-center justify-between py-4 px-4 border-b border-white/5 hover:bg-white/5 transition">
+          <button onClick={toggleLanguage} className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                <Globe className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
-               <span className="font-semibold text-[14px] text-white tracking-wide">Language Selection</span>
+               <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Language Selection</span>
              </div>
-             <div className="flex items-center bg-[#1a1a1a] rounded-full p-1 border border-white/10">
-                <span className={`text-[10px] font-bold px-3 py-1 rounded-full transition-colors ${language === 'en' ? 'bg-[#22c55e] text-black shadow-sm' : 'text-gray-400'}`}>ENG</span>
-                <span className={`text-[10px] font-bold px-3 py-1 rounded-full transition-colors ${language === 'am' ? 'bg-[#22c55e] text-black shadow-sm' : 'text-gray-400'}`}>አማርኛ</span>
+             <div className="flex items-center bg-gray-100 dark:bg-[#1a1a1a] rounded-full p-1 border border-gray-200 dark:border-white/10 transition-colors duration-300">
+                <span className={`text-[10px] font-bold px-3 py-1 rounded-full transition-colors ${language === 'en' ? 'bg-[#22c55e] text-black shadow-sm' : 'text-gray-500 dark:text-gray-400'}`}>ENG</span>
+                <span className={`text-[10px] font-bold px-3 py-1 rounded-full transition-colors ${language === 'am' ? 'bg-[#22c55e] text-black shadow-sm' : 'text-gray-500 dark:text-gray-400'}`}>አማርኛ</span>
              </div>
           </button>
 
           {/* Display Mode Toggle */}
-          <button onClick={toggleTheme} className="w-full flex items-center justify-between py-4 px-4 border-b border-white/5 hover:bg-white/5 transition">
+          <button onClick={toggleTheme} className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                {theme === 'dark' ? (
                   <Moon className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
                ) : (
                   <Sun className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
                )}
-               <span className="font-semibold text-[14px] text-white tracking-wide">Display Mode</span>
+               <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Display Mode</span>
              </div>
              <div className="flex items-center">
                 <span className="text-[12px] font-bold text-gray-400 mr-3 uppercase">{theme}</span>
-                <div className={`w-11 h-6 rounded-full relative transition-colors duration-300 ${theme === 'dark' ? 'bg-[#22c55e]' : 'bg-gray-700'}`}>
+                <div className={`w-11 h-6 rounded-full relative transition-colors duration-300 ${theme === 'dark' ? 'bg-[#22c55e]' : 'bg-gray-300 dark:bg-gray-700'}`}>
                    <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-300 shadow-sm ${theme === 'dark' ? 'left-[26px]' : 'left-1'}`}></div>
                 </div>
              </div>
           </button>
 
           {/* Notifications Toggle */}
-          <button onClick={() => setNotificationsEnabled(!notificationsEnabled)} className="w-full flex items-center justify-between py-4 px-4 hover:bg-white/5 transition">
+          <button onClick={() => setNotificationsEnabled(!notificationsEnabled)} className="w-full flex items-center justify-between py-4 px-4 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                <Bell className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
-               <span className="font-semibold text-[14px] text-white tracking-wide">Push Notifications</span>
+               <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Push Notifications</span>
              </div>
-             <div className={`w-11 h-6 rounded-full relative transition-colors duration-300 ${notificationsEnabled ? 'bg-[#22c55e]' : 'bg-gray-700'}`}>
+             <div className={`w-11 h-6 rounded-full relative transition-colors duration-300 ${notificationsEnabled ? 'bg-[#22c55e]' : 'bg-gray-300 dark:bg-gray-700'}`}>
                 <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-300 shadow-sm ${notificationsEnabled ? 'left-[26px]' : 'left-1'}`}></div>
              </div>
           </button>
         </div>
 
         {/* Thick Divider */}
-        <div className="h-[10px] bg-[#0a0a0a] w-full"></div>
+        <div className="h-[10px] bg-gray-50 dark:bg-[#0a0a0a] w-full transition-colors duration-300"></div>
 
         {/* GROUP 3: Pages */}
-        <div className="bg-[#111111] flex flex-col border-y border-white/5">
+        <div className="bg-white dark:bg-[#111111] flex flex-col border-y border-gray-200 dark:border-white/5 transition-colors duration-300">
           {/* About Us */}
-          <Link to="/about" className="w-full flex items-center justify-between py-4 px-4 border-b border-white/5 hover:bg-white/5 transition">
+          <Link to="/about" className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
-               <Info className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
-               <span className="font-semibold text-[14px] text-white tracking-wide">About Us</span>
+               <span className="w-[18px] h-[18px] mr-3 flex items-center justify-center font-serif italic text-[#D4AF37] font-bold text-lg">i</span>
+               <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">About Us</span>
              </div>
-             <ChevronRight className="w-4 h-4 text-gray-500" />
+             <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </Link>
 
           {/* Privacy & Terms */}
-          <Link to="/privacy" className="w-full flex items-center justify-between py-4 px-4 hover:bg-white/5 transition">
+          <Link to="/privacy" className="w-full flex items-center justify-between py-4 px-4 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                <Shield className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
-               <span className="font-semibold text-[14px] text-white tracking-wide">Privacy & Terms</span>
+               <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Privacy & Terms</span>
              </div>
-             <ChevronRight className="w-4 h-4 text-gray-500" />
+             <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </Link>
         </div>
 
         {/* Spacer before footer */}
-        <div className="flex-1 bg-[#0a0a0a] min-h-[40px]"></div>
+        <div className="flex-1 bg-gray-50 dark:bg-[#0a0a0a] min-h-[40px] transition-colors duration-300"></div>
 
         {/* Premium Gold Footer */}
-        <div className="py-10 flex flex-col items-center justify-center bg-[#111111] border-t border-white/5">
-           <h3 className="font-display font-black tracking-[0.3em] text-[24px] text-[#D4AF37] mb-1 drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">LUNA</h3>
-           <p className="text-[9px] font-bold tracking-widest uppercase text-gray-500 mb-1">Version 1.0.0</p>
-           <p className="text-[9px] text-gray-500">© 2010-{new Date().getFullYear()} Luna Fashion.</p>
-           <p className="text-[9px] text-gray-500">All rights reserved.</p>
+        <div className="py-10 flex flex-col items-center justify-center bg-gray-100 dark:bg-[#111111] border-t border-gray-200 dark:border-white/5 transition-colors duration-300">
+           <h3 className="font-display font-black tracking-[0.3em] text-[24px] bg-clip-text text-transparent bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728] mb-1 drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]">LUNA</h3>
+           <p className="text-[9px] font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-1">Version 1.0.0</p>
+           <p className="text-[9px] text-gray-400 dark:text-gray-500">© 2010-{new Date().getFullYear()} Luna Fashion.</p>
+           <p className="text-[9px] text-gray-400 dark:text-gray-500">All rights reserved.</p>
         </div>
 
       </div>
