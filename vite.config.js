@@ -17,22 +17,22 @@ export default defineConfig({
         background_color: '#0a0a0a',
         display: "standalone",
         orientation: "portrait",
-        display_override: ["standalone", "window-controls-overlay"],
+        display_override: ["standalone"],
         start_url: "/",
         scope: "/",
         icons: [
           {
-            src: '/logo.jpg?v=2',
+            src: '/logo.jpg',
             sizes: '64x64',
             type: 'image/jpeg'
           },
           {
-            src: '/logo.jpg?v=2',
+            src: '/logo.jpg',
             sizes: '192x192',
             type: 'image/jpeg'
           },
           {
-            src: '/logo.jpg?v=2',
+            src: '/logo.jpg',
             sizes: '512x512',
             type: 'image/jpeg',
             purpose: 'any maskable'
