@@ -29,9 +29,9 @@ export default function SplashScreen({ onComplete }) {
   return (
     <div className="fixed inset-0 z-[99999] bg-black flex items-center justify-center overflow-hidden">
       <img 
-        src="/logo.jpg" 
+        src="/splash-logo.png" 
         alt="Luna Fashion" 
-        className={`w-48 md:w-64 h-auto object-contain transition-all duration-1000 ease-out ${fade}`}
+        className={`w-64 md:w-80 h-auto object-contain transition-all duration-1000 ease-out drop-shadow-[0_0_15px_rgba(212,175,55,0.3)] ${fade}`}
       />
     </div>
   );
