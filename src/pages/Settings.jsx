@@ -61,8 +61,8 @@ export default function Settings() {
 
       <div className="flex-1 flex flex-col md:max-w-2xl mx-auto w-full">
         
-        {/* GROUP 1: Admin, Profile, Shipping, Currency */}
-        <div className="bg-white dark:bg-[#111111] flex flex-col border-y border-gray-200 dark:border-white/5 transition-colors duration-300">
+        {/* SETTINGS LIST (Merged into single block for tighter layout) */}
+        <div className="bg-white dark:bg-[#111111] flex flex-col border-b border-gray-200 dark:border-white/5 transition-colors duration-300">
           {/* Admin Panel - ONLY VISIBLE IF ADMIN */}
           {isAdmin && (
             <button onClick={handleAdminClick} className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
@@ -96,7 +96,7 @@ export default function Settings() {
           </button>
           
           {/* Currency */}
-          <button className="w-full flex items-center justify-between py-4 px-4 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+          <button className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                <DollarSign className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
                <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Currency</span>
@@ -106,13 +106,7 @@ export default function Settings() {
                 <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 ml-2" />
              </div>
           </button>
-        </div>
 
-        {/* Thick Divider */}
-        <div className="h-[10px] bg-gray-50 dark:bg-[#0a0a0a] w-full transition-colors duration-300"></div>
-
-        {/* GROUP 2: App Settings */}
-        <div className="bg-white dark:bg-[#111111] flex flex-col border-y border-gray-200 dark:border-white/5 transition-colors duration-300">
           {/* Language Options */}
           <button onClick={toggleLanguage} className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
@@ -144,7 +138,7 @@ export default function Settings() {
           </button>
 
           {/* Notifications Toggle */}
-          <button onClick={() => setNotificationsEnabled(!notificationsEnabled)} className="w-full flex items-center justify-between py-4 px-4 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+          <button onClick={() => setNotificationsEnabled(!notificationsEnabled)} className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                <Bell className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
                <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Push Notifications</span>
@@ -153,13 +147,7 @@ export default function Settings() {
                 <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-300 shadow-sm ${notificationsEnabled ? 'left-[26px]' : 'left-1'}`}></div>
              </div>
           </button>
-        </div>
 
-        {/* Thick Divider */}
-        <div className="h-[10px] bg-gray-50 dark:bg-[#0a0a0a] w-full transition-colors duration-300"></div>
-
-        {/* GROUP 3: Pages */}
-        <div className="bg-white dark:bg-[#111111] flex flex-col border-y border-gray-200 dark:border-white/5 transition-colors duration-300">
           {/* About Us */}
           <Link to="/about" className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
@@ -179,15 +167,18 @@ export default function Settings() {
           </Link>
         </div>
 
-        {/* Spacer before footer */}
-        <div className="flex-1 bg-gray-50 dark:bg-[#0a0a0a] min-h-[40px] transition-colors duration-300"></div>
+        {/* Spacer pushes footer down gracefully without large gaps */}
+        <div className="flex-1 min-h-[40px]"></div>
 
         {/* Premium Gold Footer */}
-        <div className="py-10 flex flex-col items-center justify-center bg-gray-100 dark:bg-[#111111] border-t border-gray-200 dark:border-white/5 transition-colors duration-300">
-           <img src="/logo.jpg" alt="Luna Fashion" className="h-[40px] w-auto object-contain mb-3 drop-shadow-sm" />
-           <p className="text-[9px] font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-1">Version 1.0.0</p>
-           <p className="text-[9px] text-gray-400 dark:text-gray-500">© 2010-{new Date().getFullYear()} Luna Fashion.</p>
-           <p className="text-[9px] text-gray-400 dark:text-gray-500">All rights reserved.</p>
+        <div className="py-12 flex flex-col items-center justify-center transition-colors duration-300 mt-auto">
+           <div className="flex items-center justify-center mb-6">
+             <img src="/logo.png" alt="Luna Logo" className="h-[55px] w-auto object-contain drop-shadow-md" />
+             <span className="font-serif italic font-bold text-[28px] tracking-wide ml-3 text-black dark:text-white">Luna Fashion</span>
+           </div>
+           <p className="text-[10px] font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-1">Version 1.0.0</p>
+           <p className="text-[10px] text-gray-400 dark:text-gray-500">© 2010-{new Date().getFullYear()} Luna Fashion.</p>
+           <p className="text-[10px] text-gray-400 dark:text-gray-500">All rights reserved.</p>
         </div>
 
       </div>

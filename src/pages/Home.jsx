@@ -103,10 +103,10 @@ const CustomIcons = {
 
       {/* Premium Full-Width Showcase Banner with Rounded Corners */}
       <div className="w-[calc(100%-16px)] mx-auto h-[160px] relative flex flex-col items-center justify-center rounded-xl overflow-hidden mb-3 shadow-2xl mt-1 border border-[#D4AF37]/20">
-         {/* Background Image - Reliable luxury texture */}
-         <div className="absolute inset-0 bg-[#0a0a0a] bg-[url('https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-40 mix-blend-overlay"></div>
-         {/* Deep Layering Overlay for Contrast */}
-         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/80 backdrop-blur-[0.5px]"></div>
+         {/* Background Image - Luxury store interior */}
+         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center"></div>
+         {/* Simple Dark Tint Overlay for text readability */}
+         <div className="absolute inset-0 bg-black/60"></div>
          
          <h2 className="relative z-10 font-display text-[2.5rem] leading-none uppercase tracking-[0.1em] font-black text-center mb-3 drop-shadow-[0_4px_15px_rgba(0,0,0,1)] bg-clip-text text-transparent bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728]">
             LUNA <span className="font-light tracking-[0.15em] opacity-90">MARKET</span>

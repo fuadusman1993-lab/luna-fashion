@@ -35,7 +35,7 @@ export default function Shop() {
         </h1>
         
         {/* Right: Search & Cart */}
-        <div className="flex items-center gap-4 text-black dark:text-white shrink-0">
+        <div className="flex items-center gap-4 text-black dark:text-white shrink-0 ml-auto">
           <button onClick={() => navigate('/search')}><Search className="w-[20px] h-[20px]" strokeWidth={1.5} /></button>
           <button onClick={() => navigate('/cart')} className="relative">
              <ShoppingCart className="w-[20px] h-[20px]" strokeWidth={1.5} />
