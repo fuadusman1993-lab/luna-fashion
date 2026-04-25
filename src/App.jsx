@@ -21,6 +21,8 @@ import SplashScreen from './components/ui/SplashScreen';
 import { useAppContext } from './context/AppContext';
 import { ShoppingBag } from 'lucide-react';
 
+let initialLoadComplete = false;
+
 function AppContent() {
   const [isInitializing, setIsInitializing] = useState(true);
   const [showSplash, setShowSplash] = useState(false);
@@ -42,9 +44,9 @@ function AppContent() {
       // Ensure the new flag is set if we used the fallback
       if (oldOnboarded) localStorage.setItem('hasSeenOnboarding', 'true');
 
-      // 3. Fix the Route Memory
+      // 3. Fix the Route Memory ONLY ON INITIAL LOAD
       const lastRoute = localStorage.getItem('lastRoute');
-      if (lastRoute && window.location.pathname === '/' && lastRoute !== '/') {
+      if (!initialLoadComplete && lastRoute && window.location.pathname === '/' && lastRoute !== '/') {
         navigate(lastRoute, { replace: true });
       }
     } else {
@@ -52,6 +54,7 @@ function AppContent() {
       setShowSplash(true);
       setShowOnboarding(true);
     }
+    initialLoadComplete = true;
     setIsInitializing(false);
   }, [navigate]);
 

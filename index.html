@@ -19,16 +19,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>
-      // Automatically register the functional Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then(
-            function(registration) { console.log('SW active.'); },
-            function(err) { console.log('SW config issue: ', err); }
-          );
-        });
-      }
-    </script>
   </body>
 </html>
