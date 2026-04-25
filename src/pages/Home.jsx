@@ -103,13 +103,13 @@ const CustomIcons = {
 
       {/* Premium Full-Width Showcase Banner with Rounded Corners */}
       <div className="w-[calc(100%-16px)] mx-auto h-[160px] relative flex flex-col items-center justify-center rounded-xl overflow-hidden mb-3 shadow-2xl mt-1 border border-[#D4AF37]/20">
-         {/* Background Image - Luxury store interior */}
-         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center"></div>
+         {/* Background Image - Luxury Women's Boutique */}
+         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center"></div>
          {/* Simple Dark Tint Overlay for text readability */}
          <div className="absolute inset-0 bg-black/60"></div>
          
-         <h2 className="relative z-10 font-display text-[2.5rem] leading-none uppercase tracking-[0.1em] font-black text-center mb-3 drop-shadow-[0_4px_15px_rgba(0,0,0,1)] bg-clip-text text-transparent bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728]">
-            LUNA <span className="font-light tracking-[0.15em] opacity-90">MARKET</span>
+         <h2 className="relative z-10 font-display text-[2.1rem] md:text-[2.5rem] leading-none uppercase tracking-widest font-black text-center mb-3 drop-shadow-[0_4px_15px_rgba(0,0,0,1)] bg-clip-text text-transparent bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728]">
+            LUNA MARKET
          </h2>
          
          <span className="relative z-10 bg-black/40 text-[#D4AF37] text-[9px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-md border border-[#D4AF37]/30 shadow-sm select-none">
