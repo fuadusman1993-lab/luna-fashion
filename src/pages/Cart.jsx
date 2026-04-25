@@ -184,7 +184,7 @@ export default function Cart() {
                             <img 
                               src={item.image || item.imageUrl || (item.images && item.images[0])} 
                               alt={item.name} 
-                              className="w-[100px] h-[125px] aspect-[4/5] object-cover rounded shadow-sm bg-gray-100 dark:bg-[#222] transition-opacity duration-300" 
+                              className="w-16 h-16 aspect-square object-cover rounded-md shadow-sm border border-gray-100 dark:border-gray-800 bg-gray-100 dark:bg-[#222] transition-opacity duration-300" 
                               loading="lazy"
                             />
                           </Link>

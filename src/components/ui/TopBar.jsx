@@ -79,8 +79,8 @@ export default function TopBar() {
 
         {/* Left Icon: Desktop Logo */}
         <div className="flex items-center shrink-0 text-white">
-          <Link to="/" className="hidden md:block font-display text-[22px] font-bold tracking-widest text-[#D4AF37] whitespace-nowrap px-2 hover:opacity-80 transition-opacity">
-            LUNA
+          <Link to="/" className="hidden md:block px-2 hover:opacity-80 transition-opacity">
+            <img src="/logo.jpg" alt="Luna Fashion" className="h-[32px] w-auto object-contain" />
           </Link>
         </div>
 

@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, User, MapPin, Globe, Bell, ShieldAlert, ChevronRight, Lock, Moon, Sun, Shield, DollarSign } from 'lucide-react';
+import { ArrowLeft, User, MapPin, Globe, Bell, ShieldAlert, ChevronRight, Lock, Moon, Sun, Shield, DollarSign, Search, ShoppingCart } from 'lucide-react';
 
 export default function Settings() {
-  const { language, toggleLanguage, theme, toggleTheme } = useAppContext();
+  const { language, toggleLanguage, theme, toggleTheme, cart } = useAppContext();
   const { isAdmin, adminPin } = useAuth();
   const navigate = useNavigate();
   
@@ -39,12 +39,24 @@ export default function Settings() {
   return (
     <div className="fixed inset-0 z-[10000] bg-gray-50 dark:bg-[#0a0a0a] text-black dark:text-white flex flex-col font-sans overflow-y-auto no-scrollbar [&::-webkit-scrollbar]:hidden transition-colors duration-300" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
       
-      {/* Header - Back Arrow on Left */}
-      <div className="sticky top-0 left-0 right-0 w-full z-50 bg-gray-50/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-4 flex items-center justify-start md:max-w-2xl mx-auto transition-colors duration-300 border-b border-gray-200 dark:border-transparent">
+      {/* Header - Back Arrow on Left, Search/Cart on Right */}
+      <div className="sticky top-0 left-0 right-0 w-full z-50 bg-gray-50/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-4 flex items-center justify-between md:max-w-2xl mx-auto transition-colors duration-300 border-b border-gray-200 dark:border-transparent">
         <button onClick={() => navigate(-1)} className="text-black dark:text-white hover:text-[#D4AF37] transition-colors active:scale-95 shrink-0 flex items-center">
           <ArrowLeft strokeWidth={1.5} className="w-[22px] h-[22px]" />
           <span className="ml-2 font-medium text-[15px]">Settings</span>
         </button>
+        
+        <div className="flex items-center gap-4 text-black dark:text-white shrink-0">
+          <button onClick={() => navigate('/search')}><Search className="w-[20px] h-[20px]" strokeWidth={1.5} /></button>
+          <button onClick={() => navigate('/cart')} className="relative">
+             <ShoppingCart className="w-[20px] h-[20px]" strokeWidth={1.5} />
+             {cart && cart.length > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white dark:border-black shadow-sm">
+                   {cart.length}
+                </span>
+             )}
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 flex flex-col md:max-w-2xl mx-auto w-full">
@@ -172,7 +184,7 @@ export default function Settings() {
 
         {/* Premium Gold Footer */}
         <div className="py-10 flex flex-col items-center justify-center bg-gray-100 dark:bg-[#111111] border-t border-gray-200 dark:border-white/5 transition-colors duration-300">
-           <h3 className="font-display font-black tracking-[0.3em] text-[24px] bg-clip-text text-transparent bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728] mb-1 drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]">LUNA</h3>
+           <img src="/logo.jpg" alt="Luna Fashion" className="h-[40px] w-auto object-contain mb-3 drop-shadow-sm" />
            <p className="text-[9px] font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-1">Version 1.0.0</p>
            <p className="text-[9px] text-gray-400 dark:text-gray-500">© 2010-{new Date().getFullYear()} Luna Fashion.</p>
            <p className="text-[9px] text-gray-400 dark:text-gray-500">All rights reserved.</p>

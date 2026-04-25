@@ -34,10 +34,20 @@ export default function SearchPage() {
            (product.description && product.description.toLowerCase().includes(q));
   });
 
+  // Live suggestions based on the current 'query' state (what they are currently typing, not yet submitted)
+  const suggestions = query.trim() ? products.filter(product => {
+    const q = query.toLowerCase();
+    return product.name.toLowerCase().includes(q) || product.category.toLowerCase().includes(q);
+  }).slice(0, 5) : [];
+
+  const handleSuggestionClick = (suggestion) => {
+    navigate(`/product/${suggestion.id}`, { state: { product: suggestion } });
+  };
+
   return (
     <div className="fixed inset-0 z-[10000] bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans overflow-y-auto">
       {/* Header */}
-      <div className="w-full bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/5 mx-auto px-4 py-3 flex items-center justify-between md:px-6">
+      <div className="relative w-full bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/5 mx-auto px-4 py-3 flex items-center justify-between md:px-6 z-50">
         <button onClick={() => navigate(-1)} className="p-1 hover:text-gold transition-colors active:scale-95 pr-2">
           <ArrowLeft strokeWidth={2} className="w-6 h-6" />
         </button>
@@ -58,6 +68,27 @@ export default function SearchPage() {
         <button className="p-2 ml-2 hover:text-gold transition-colors shrink-0 active:scale-95">
            <SlidersHorizontal strokeWidth={1.5} className="w-5 h-5 text-gray-400" />
         </button>
+
+        {/* Live Search Suggestions Dropdown */}
+        {query.trim() && query !== initialQuery && suggestions.length > 0 && (
+          <div className="absolute top-[60px] left-12 right-12 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2">
+            <ul>
+              {suggestions.map((suggestion) => (
+                <li 
+                  key={suggestion.id} 
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer border-b border-gray-100 dark:border-white/5 last:border-0 transition-colors"
+                >
+                  <SearchIcon className="w-3.5 h-3.5 text-gray-400 mr-3 shrink-0" />
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="text-[13px] font-medium text-black dark:text-white truncate">{suggestion.name}</span>
+                    <span className="text-[10px] text-gray-500 uppercase tracking-widest">{suggestion.category.split('(')[0].trim()}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 pt-4 bg-[#ffffff] dark:bg-[#0a0a0a] pb-[40px]">

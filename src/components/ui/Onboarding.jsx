@@ -21,14 +21,15 @@ export default function Onboarding({ onComplete }) {
       {/* Top Map Section */}
       <div className="relative h-[30vh] flex items-center justify-center p-6 mt-10">
          <div className="absolute inset-0 opacity-40 dark:opacity-20" style={mapStyle}></div>
-         <motion.h1 
+         <motion.div 
            initial={{ opacity: 0, scale: 0.9 }}
            animate={{ opacity: 1, scale: 1 }}
            transition={{ duration: 0.8 }}
-           className="relative z-10 font-display text-4xl md:text-5xl font-bold text-gradient-gold text-center leading-tight tracking-wider"
+           className="relative z-10 flex flex-col items-center"
          >
-           Welcome to <br/> LUNA
-         </motion.h1>
+           <span className="text-gray-400 font-medium tracking-widest uppercase text-xs mb-4">Welcome to</span>
+           <img src="/logo.jpg" alt="Luna Fashion" className="h-[100px] w-auto object-contain drop-shadow-2xl" />
+         </motion.div>
       </div>
 
       {/* Middle Settings Panel */}

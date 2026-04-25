@@ -3,7 +3,7 @@ import { ShoppingBag, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { memo } from 'react';
 
-const ProductCard = memo(function ProductCard({ product }) {
+const ProductCard = memo(function ProductCard({ product, index = 0 }) {
   const { t, isInWishlist, toggleWishlist, addToCart } = useAppContext();
   const navigate = useNavigate();
 
@@ -27,12 +27,16 @@ const ProductCard = memo(function ProductCard({ product }) {
   const isWished = isInWishlist(product.id);
 
   return (
-    <div onClick={navigateToProduct} className="relative flex flex-col bg-white dark:bg-[#0a0a0a] overflow-hidden rounded-xl border border-gray-100 dark:border-white/5 shadow cursor-pointer transition-colors duration-300 h-full">
+    <div 
+      onClick={navigateToProduct} 
+      className="relative flex flex-col bg-white dark:bg-[#0a0a0a] overflow-hidden rounded-xl border border-gray-100 dark:border-white/5 shadow cursor-pointer transition-all duration-300 h-full group hover:shadow-xl hover:border-gold/30 animate-in fade-in slide-in-from-bottom-4 fill-mode-both"
+      style={{ animationDelay: `${index * 50}ms` }}
+    >
       <div className="relative w-full aspect-square overflow-hidden bg-gray-50 dark:bg-[#0f0f0f]">
         <img
           src={product.imageUrl}
           alt={product.name}
-          className="absolute inset-0 w-full h-full object-cover rounded-t-xl"
+          className="absolute inset-0 w-full h-full object-cover rounded-t-xl transition-transform duration-700 ease-out group-hover:scale-105"
         />
 
         {/* Wishlist Button Layer */}

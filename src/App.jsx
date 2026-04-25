@@ -17,10 +17,12 @@ import Settings from './pages/Settings';
 import Privacy from './pages/Privacy';
 import Wishlist from './pages/Wishlist';
 import Orders from './pages/Orders';
+import SplashScreen from './components/ui/SplashScreen';
 import { useAppContext } from './context/AppContext';
 import { ShoppingBag } from 'lucide-react';
 
 function AppContent() {
+  const [showSplash, setShowSplash] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const { toastMessage } = useAppContext();
 
@@ -36,14 +38,16 @@ function AppContent() {
     setShowOnboarding(false);
   };
 
-  if (showOnboarding) {
+  if (showOnboarding && !showSplash) {
     return <Onboarding onComplete={handleOnboardingComplete} />;
   }
 
   return (
     <>
-      <BrowserRouter>
-        <Routes>
+      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+      {!showSplash && (
+        <BrowserRouter>
+          <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
@@ -64,6 +68,7 @@ function AppContent() {
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
       </BrowserRouter>
+      )}
 
       {/* Global Toast Notification Overlay */}
       {toastMessage && (

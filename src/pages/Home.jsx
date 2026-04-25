@@ -108,9 +108,7 @@ const CustomIcons = {
          {/* Deep Layering Overlay for Contrast */}
          <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
          
-         <h2 className="relative z-10 text-white font-display text-[2.2rem] leading-none uppercase tracking-[0.2em] font-black text-center mb-1 drop-shadow-lg">
-            LUNA <span className="text-[#D4AF37]">FASHION</span>
-         </h2>
+         <img src="/logo.jpg" alt="Luna Fashion" className="relative z-10 h-[70px] w-auto object-contain drop-shadow-2xl mb-1" />
          <span className="relative z-10 bg-white/20 text-white text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-md mt-1 border border-white/40 shadow-sm select-none">
             Official Showcase
          </span>

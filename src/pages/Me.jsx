@@ -1,12 +1,12 @@
 import { useAppContext } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { Package, Heart, LogOut, Settings as SettingsIcon, LogIn } from 'lucide-react';
+import { Package, Heart, LogOut, Settings as SettingsIcon, LogIn, ArrowLeft, Search, ShoppingCart } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useOrders } from '../hooks/useOrders';
 
 export default function Me() {
-  const { language } = useAppContext();
+  const { language, cart } = useAppContext();
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const { getUserOrders } = useOrders();
@@ -87,10 +87,31 @@ export default function Me() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] dark:bg-[#050505] px-3 py-6 font-sans relative z-40 pb-[90px] md:max-w-2xl mx-auto w-full">
+    <div className="min-h-screen bg-[#f5f5f5] dark:bg-[#050505] font-sans relative z-40 pb-[90px] w-full flex flex-col">
        
-       {/* User Profile Header */}
-       <div className="flex items-center justify-between mb-8 pt-4 px-2">
+       {/* Sticky Global Header */}
+       <div className="sticky top-0 left-0 right-0 w-full z-50 bg-[#f5f5f5]/95 dark:bg-[#050505]/95 backdrop-blur-md px-4 py-4 flex items-center justify-between transition-colors duration-300 border-b border-gray-200 dark:border-transparent md:max-w-2xl mx-auto">
+         <button onClick={() => navigate(-1)} className="text-black dark:text-white hover:text-[#D4AF37] transition-colors active:scale-95 shrink-0 flex items-center">
+           <ArrowLeft strokeWidth={1.5} className="w-[22px] h-[22px]" />
+           <span className="ml-2 font-medium text-[15px]">Profile</span>
+         </button>
+         
+         <div className="flex items-center gap-4 text-black dark:text-white shrink-0">
+           <button onClick={() => navigate('/search')}><Search className="w-[20px] h-[20px]" strokeWidth={1.5} /></button>
+           <button onClick={() => navigate('/cart')} className="relative">
+              <ShoppingCart className="w-[20px] h-[20px]" strokeWidth={1.5} />
+              {cart && cart.length > 0 && (
+                 <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white dark:border-black shadow-sm">
+                    {cart.length}
+                 </span>
+              )}
+           </button>
+         </div>
+       </div>
+
+       <div className="flex-1 px-3 py-6 md:max-w-2xl mx-auto w-full">
+         {/* User Profile Info */}
+         <div className="flex items-center justify-between mb-8 px-2">
           <div className="flex items-center space-x-4">
              <div className="w-[65px] h-[65px] bg-gradient-to-br from-[#bf953f] to-[#fbf5b7] rounded-full flex flex-col items-center justify-center font-display text-2xl font-bold text-black border-2 border-white dark:border-black shadow-sm shrink-0">
                 {getUserInitial()}
@@ -209,6 +230,7 @@ export default function Me() {
           </div>
        </div>
 
+       </div>
     </div>
   );
 }
