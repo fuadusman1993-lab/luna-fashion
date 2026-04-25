@@ -11,6 +11,7 @@ export default function SearchPage() {
   
   const initialQuery = searchParams.get('q') || '';
   const [query, setQuery] = useState(initialQuery);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   // Keep local query input in sync with URL if user navigates back/fwd
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function SearchPage() {
     e.preventDefault();
     if (query.trim()) {
       setSearchParams({ q: query });
+      setShowSuggestions(false);
     } else {
       setSearchParams({});
     }
@@ -34,11 +36,19 @@ export default function SearchPage() {
            (product.description && product.description.toLowerCase().includes(q));
   });
 
+  // Trending categories to show when empty
+  const defaultSuggestions = [
+    { id: 'trend-1', name: 'Trending: Abaya', category: 'Abaya', isTrending: true },
+    { id: 'trend-2', name: 'Trending: Makhawar', category: 'Makhawar', isTrending: true },
+    { id: 'trend-3', name: 'Trending: Heels', category: 'Shoes', isTrending: true },
+    { id: 'trend-4', name: 'Trending: Dresses', category: 'Dresses', isTrending: true },
+  ];
+
   // Live suggestions based on the current 'query' state (what they are currently typing, not yet submitted)
   const suggestions = query.trim() ? products.filter(product => {
     const q = query.toLowerCase();
     return product.name.toLowerCase().includes(q) || product.category.toLowerCase().includes(q);
-  }).slice(0, 5) : [];
+  }).slice(0, 5) : defaultSuggestions;
 
   const handleSuggestionClick = (suggestion) => {
     navigate(`/product/${suggestion.id}`, { state: { product: suggestion } });
@@ -53,42 +63,53 @@ export default function SearchPage() {
         </button>
         
         {/* Full Interactive Search Input */}
-        <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center bg-gray-100 dark:bg-[#1f1f1f] rounded-full px-3 py-2 border border-transparent focus-within:border-gold transition-colors">
+        <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center bg-gray-100 dark:bg-[#1f1f1f] rounded-full px-3 py-2 border border-transparent focus-within:border-gold transition-colors relative z-50">
           <SearchIcon strokeWidth={1.5} className="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2 shrink-0" />
           <input 
             type="text" 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
             placeholder="Search premium collections..." 
             className="bg-transparent border-none outline-none flex-1 text-[13px] font-light tracking-wide text-black dark:text-white w-full placeholder-gray-400 dark:placeholder-gray-500"
             autoFocus
           />
+
+          {/* Live Search Suggestions Dropdown pinned directly below input */}
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="absolute top-[115%] left-0 right-0 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] overflow-hidden z-[100] animate-in fade-in zoom-in-95">
+              <ul>
+                {suggestions.map((suggestion) => (
+                  <li 
+                    key={suggestion.id} 
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      if (suggestion.isTrending) {
+                        setQuery(suggestion.category);
+                        setSearchParams({ q: suggestion.category });
+                        setShowSuggestions(false);
+                      } else {
+                        handleSuggestionClick(suggestion);
+                      }
+                    }}
+                    className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer border-b border-gray-100 dark:border-white/5 last:border-0 transition-colors"
+                  >
+                    <SearchIcon className="w-3.5 h-3.5 text-gray-400 mr-3 shrink-0" />
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="text-[13px] font-medium text-black dark:text-white truncate">{suggestion.name}</span>
+                      <span className="text-[10px] text-gray-500 uppercase tracking-widest">{suggestion.category.split('(')[0].trim()}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </form>
         
         <button className="p-2 ml-2 hover:text-gold transition-colors shrink-0 active:scale-95">
            <SlidersHorizontal strokeWidth={1.5} className="w-5 h-5 text-gray-400" />
         </button>
-
-        {/* Live Search Suggestions Dropdown */}
-        {query.trim() && query !== initialQuery && suggestions.length > 0 && (
-          <div className="absolute top-[60px] left-12 right-12 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2">
-            <ul>
-              {suggestions.map((suggestion) => (
-                <li 
-                  key={suggestion.id} 
-                  onClick={() => handleSuggestionClick(suggestion)}
-                  className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer border-b border-gray-100 dark:border-white/5 last:border-0 transition-colors"
-                >
-                  <SearchIcon className="w-3.5 h-3.5 text-gray-400 mr-3 shrink-0" />
-                  <div className="flex flex-col overflow-hidden">
-                    <span className="text-[13px] font-medium text-black dark:text-white truncate">{suggestion.name}</span>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest">{suggestion.category.split('(')[0].trim()}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
 
       <div className="flex-1 pt-4 bg-[#ffffff] dark:bg-[#0a0a0a] pb-[40px]">

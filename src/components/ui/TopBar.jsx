@@ -78,9 +78,11 @@ export default function TopBar() {
       <div className="flex items-center justify-between px-3 pt-1 pb-2 gap-2 md:gap-6 md:px-6">
 
         {/* Left Icon: Desktop Logo */}
-        <div className="flex items-center shrink-0 text-white">
+        <div className="flex items-center shrink-0">
           <Link to="/" className="hidden md:block px-2 hover:opacity-80 transition-opacity">
-            <img src="/logo.jpg" alt="Luna Fashion" className="h-[32px] w-auto object-contain" />
+            <span className="font-serif italic font-bold text-[22px] tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728] drop-shadow-sm">
+               Luna Fashion
+            </span>
           </Link>
         </div>
 

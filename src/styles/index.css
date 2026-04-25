@@ -3,9 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    overscroll-behavior-y: contain;
+  }
   body {
-    @apply bg-gray-100 dark:bg-[#070707] text-luna-black font-body overscroll-contain transition-colors duration-300 ease-in-out;
-    -webkit-overflow-scrolling: touch;
+    @apply bg-gray-100 dark:bg-[#070707] text-luna-black font-body transition-colors duration-300 ease-in-out;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-display text-luna-black;
@@ -15,10 +17,9 @@
   ::-webkit-scrollbar {
     display: none;
   }
-  /* Hide scrollbar for IE, Edge and Firefox */
+  /* Hide scrollbar for Firefox */
   * {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    scrollbar-width: none;
   }
 }
 
