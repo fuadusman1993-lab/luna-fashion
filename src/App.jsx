@@ -32,27 +32,24 @@ function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 1. Check 'hasSeenOnboarding' Flag
   useEffect(() => {
     const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding') === 'true';
-    const oldOnboarded = localStorage.getItem('luna_onboarded') === 'true'; // Fallback for existing users
+    const oldOnboarded = localStorage.getItem('luna_onboarded') === 'true';
+
+    // ALWAYS show a quick splash screen on initial startup for the app feel
+    setShowSplash(true);
 
     if (hasSeenOnboarding || oldOnboarded) {
-      // COMPLETELY BYPASS Splash Screen and Onboarding
-      setShowSplash(false);
       setShowOnboarding(false);
-      // Ensure the new flag is set if we used the fallback
       if (oldOnboarded) localStorage.setItem('hasSeenOnboarding', 'true');
-
-      // Removed automatic route memory redirect that was forcing users to /settings
     } else {
-      // Show Splash then Onboarding for new users
-      setShowSplash(true);
+      // Show Onboarding after splash for new users
       setShowOnboarding(true);
     }
+    
     initialLoadComplete = true;
     setIsInitializing(false);
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     if (!isInitializing && !showSplash && !showOnboarding) {

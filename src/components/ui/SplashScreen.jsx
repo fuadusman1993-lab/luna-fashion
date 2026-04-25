@@ -12,12 +12,12 @@ export default function SplashScreen({ onComplete }) {
     // Trigger fade out
     const timerOut = setTimeout(() => {
       setFade('opacity-0 scale-105');
-    }, 2000);
+    }, 1000);
 
     // Complete splash
     const timerComplete = setTimeout(() => {
       onComplete();
-    }, 2500);
+    }, 1500);
 
     return () => {
       clearTimeout(timerIn);
