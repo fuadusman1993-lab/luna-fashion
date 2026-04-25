@@ -127,7 +127,7 @@ export default function Cart() {
       <div className="sticky top-0 left-0 right-0 w-full bg-white dark:bg-[#0a0a0a] z-50 shadow-sm border-b border-gray-100 dark:border-white/5">
         <div className="flex items-center justify-between px-3 h-[44px]">
           <div className="flex items-center gap-2">
-            <button onClick={() => navigate(-1)} className="p-1 mr-1 text-black dark:text-white hover:text-gold active:scale-95 transition-all">
+            <button onClick={() => navigate(-1)} className="hidden md:flex p-1 mr-1 text-black dark:text-white hover:text-gold active:scale-95 transition-all">
               <ArrowLeft className="w-5 h-5" />
             </button>
             <CustomCheckbox isChecked={isAllSelected} onClick={toggleSelectAll} />

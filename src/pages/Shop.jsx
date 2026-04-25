@@ -25,7 +25,7 @@ export default function Shop() {
       {/* Custom Shop Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-gray-900 sticky top-0 z-50">
         {/* Left: Back Button */}
-        <button onClick={() => navigate(-1)} className="text-black dark:text-white shrink-0">
+        <button onClick={() => navigate(-1)} className="hidden md:block text-black dark:text-white shrink-0">
            <ArrowLeft className="w-[22px] h-[22px]" strokeWidth={1.5} />
         </button>
         

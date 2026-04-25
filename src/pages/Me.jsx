@@ -91,10 +91,12 @@ export default function Me() {
        
        {/* Sticky Global Header */}
        <div className="sticky top-0 left-0 right-0 w-full z-50 bg-[#f5f5f5]/95 dark:bg-[#050505]/95 backdrop-blur-md px-4 py-4 flex items-center justify-between transition-colors duration-300 border-b border-gray-200 dark:border-transparent md:max-w-2xl mx-auto">
-         <button onClick={() => navigate(-1)} className="text-black dark:text-white hover:text-[#D4AF37] transition-colors active:scale-95 shrink-0 flex items-center">
-           <ArrowLeft strokeWidth={1.5} className="w-[22px] h-[22px]" />
-           <span className="ml-2 font-medium text-[15px]">Profile</span>
-         </button>
+         <div className="flex items-center">
+           <button onClick={() => navigate(-1)} className="hidden md:flex text-black dark:text-white hover:text-[#D4AF37] transition-colors active:scale-95 shrink-0 items-center mr-2">
+             <ArrowLeft strokeWidth={1.5} className="w-[22px] h-[22px]" />
+           </button>
+           <span className="font-medium text-[15px] text-black dark:text-white">Profile</span>
+         </div>
          
          <div className="flex items-center gap-4 text-black dark:text-white shrink-0">
            <button onClick={() => navigate('/search')}><Search className="w-[20px] h-[20px]" strokeWidth={1.5} /></button>
