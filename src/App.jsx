@@ -14,6 +14,7 @@ import Messages from './pages/Messages';
 import Login from './pages/Login';
 import SearchPage from './pages/SearchPage';
 import Settings from './pages/Settings';
+import Privacy from './pages/Privacy';
 import Wishlist from './pages/Wishlist';
 import Orders from './pages/Orders';
 import { useAppContext } from './context/AppContext';
@@ -47,11 +48,12 @@ function AppContent() {
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
             <Route path="category" element={<Shop />} />
-            <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
             <Route path="me" element={<Me />} />
             <Route path="cart" element={<Cart />} />
           </Route>
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/login" element={<Login />} />
