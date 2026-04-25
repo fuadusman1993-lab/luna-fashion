@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { auth, db, storage, isFirebaseConfigured } from '../services/firebase';
 import { signInWithEmailAndPassword, signOut, EmailAuthProvider, reauthenticateWithCredential, updateEmail, updatePassword } from 'firebase/auth';
-import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp, query, where, getDocs, Timestamp, writeBatch } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useAppContext } from '../context/AppContext';
 import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard, ArrowLeft, Image as ImageIcon, Shield, BarChart2, Users } from 'lucide-react';
@@ -58,6 +58,29 @@ export default function Admin() {
       setTopPages(top);
     } catch (err) {
       console.warn("Analytics fetch error:", err);
+    }
+    setAnalyticsLoading(false);
+  };
+
+  const resetAnalyticsStats = async () => {
+    if (!window.confirm("Are you sure you want to permanently delete all page visits? This will reset the counters to 0.")) return;
+    setAnalyticsLoading(true);
+    try {
+      const snap = await getDocs(collection(db, 'page_visits'));
+      const batch = writeBatch(db);
+      snap.forEach(document => {
+        batch.delete(document.ref);
+      });
+      await batch.commit();
+      
+      // Reset local state
+      setDailyVisits(0);
+      setWeeklyVisits(0);
+      setTopPages([]);
+      alert("Analytics successfully reset to 0.");
+    } catch (err) {
+      console.error("Failed to reset analytics:", err);
+      alert("Error resetting analytics.");
     }
     setAnalyticsLoading(false);
   };
@@ -989,9 +1012,14 @@ export default function Admin() {
              <div>
                <div className="flex justify-between items-center mb-6">
                  <h2 className="text-2xl font-display text-luna-black dark:text-luna-white uppercase tracking-wider">Live Analytics</h2>
-                 <button onClick={fetchAnalytics} className="text-xs font-bold uppercase border border-gray-300 dark:border-gray-700 px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                   Refresh
-                 </button>
+                 <div className="flex gap-2">
+                   <button onClick={resetAnalyticsStats} className="text-[10px] font-bold uppercase border border-red-500 text-red-500 px-3 py-1 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                     Reset Stats
+                   </button>
+                   <button onClick={fetchAnalytics} className="text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                     Refresh
+                   </button>
+                 </div>
                </div>
                
                {analyticsLoading ? (
