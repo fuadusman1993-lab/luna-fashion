@@ -22,19 +22,19 @@ export default defineConfig({
         scope: "/",
         icons: [
           {
-            src: '/logo.jpg',
+            src: '/logo.png',
             sizes: '64x64',
-            type: 'image/jpeg'
+            type: 'image/png'
           },
           {
-            src: '/logo.jpg',
+            src: '/logo.png',
             sizes: '192x192',
-            type: 'image/jpeg'
+            type: 'image/png'
           },
           {
-            src: '/logo.jpg',
+            src: '/logo.png',
             sizes: '512x512',
-            type: 'image/jpeg',
+            type: 'image/png',
             purpose: 'any maskable'
           }
         ]
