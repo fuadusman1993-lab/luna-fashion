@@ -8,7 +8,8 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const isCart = location.pathname === '/cart';
-  const noScroller = location.pathname === '/shop' || location.pathname === '/me';
+  const isShop = location.pathname === '/shop';
+  const noScroller = location.pathname === '/me';
 
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -42,13 +43,13 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f9f9f9] dark:bg-[#0a0a0a] transition-colors duration-300 max-w-7xl w-full mx-auto relative shadow-2xl">
-      {!isCart && <TopBar />}
+      {!isCart && !isShop && <TopBar />}
 
       <main 
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-        className={`flex-grow ${isCart ? 'pt-0' : noScroller ? 'pt-[60px]' : 'pt-[110px]'} pb-[80px] overflow-x-hidden bg-white dark:bg-[#0a0a0a]`}
+        className={`flex-grow ${isCart || isShop ? 'pt-0' : noScroller ? 'pt-[60px]' : 'pt-[110px]'} pb-[80px] overflow-x-hidden bg-white dark:bg-[#0a0a0a]`}
       >
         <Outlet />
       </main>

@@ -70,17 +70,6 @@ const CustomIcons = {
       {/* Circle Categories Horizontal Scroller (Line Icons Edition) */}
       <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
          <div className="flex space-x-4 px-2 items-center">
-            {/* All Category Circle */}
-            <div 
-              onClick={() => navigate('/')}
-              className="flex flex-col items-center cursor-pointer group flex-shrink-0"
-            >
-               <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm overflow-hidden ${!activeCategory ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md'}`}>
-                  <span className={`font-bold text-lg uppercase ${!activeCategory ? 'text-gold' : 'text-gray-400 dark:text-gray-500'}`}>ALL</span>
-               </div>
-               <span className={`text-[11px] font-sans tracking-wide transition-colors ${!activeCategory ? 'text-gold font-bold drop-shadow-sm' : 'text-green-600 dark:text-green-500 font-medium'}`}>All</span>
-            </div>
-
             {categories.map((cat, idx) => {
                // We map dynamic database categories
                const cleanName = cat.name.split('(')[0].trim();

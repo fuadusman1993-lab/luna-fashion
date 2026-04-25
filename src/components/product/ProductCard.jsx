@@ -71,8 +71,8 @@ const ProductCard = memo(function ProductCard({ product }) {
         <h3 className="text-[13px] text-green-600 dark:text-green-500 line-clamp-2 leading-tight font-medium mb-1">{product.name}</h3>
 
         <div className="flex justify-between items-center mt-auto">
-          <p className="font-bold text-[14px] tracking-tight text-red-600 dark:text-red-500">
-            {Number(product.price).toLocaleString()} <span className="text-[9px] font-medium text-gray-500">ETB</span>
+          <p className="font-bold text-[14px] tracking-tight text-[#D4AF37] dark:text-white">
+             {Number(product.price).toLocaleString()} <span className="text-[9px] font-medium text-gray-500 dark:text-gray-400">ETB</span>
           </p>
 
           <button

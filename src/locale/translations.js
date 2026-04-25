@@ -2,7 +2,7 @@ export const translations = {
   en: {
     allNav: "All",
     home: "Home",
-    shop: "Shop Collection",
+    shop: "Shop",
     about: "About Us",
     contact: "Contact",
     admin: "Admin",

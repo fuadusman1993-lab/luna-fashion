@@ -1,14 +1,17 @@
 import { useState, useMemo } from 'react';
 import { useProducts } from '../hooks/useProducts';
+import { useCategories } from '../hooks/useCategories';
 import ProductGrid from '../components/product/ProductGrid';
 import { useAppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
+import { Search, ShoppingCart, ArrowLeft } from 'lucide-react';
 
 export default function Shop() {
   const { products, loading, error, retryFetch } = useProducts();
-  const { t } = useAppContext();
+  const { categories, loading: categoriesLoading } = useCategories();
+  const { cart } = useAppContext();
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('All');
-
-  const categories = ['All', 'Makhawar (ቶብ)', 'Abaya', 'Dria', 'Dresses (ቀሚስ)', 'Makeup', 'Shoes'];
 
   const filteredProducts = useMemo(() => {
     const safeProducts = products || [];
@@ -17,30 +20,83 @@ export default function Shop() {
   }, [products, activeCategory]);
 
   return (
-    <div className="bg-[#f5f5f5] dark:bg-[#050505] min-h-[calc(100vh-140px)] font-sans flex flex-col md:flex-row w-full mx-auto relative z-0">
+    <div className="bg-[#f5f5f5] dark:bg-[#050505] min-h-[calc(100vh-80px)] font-sans flex flex-col w-full mx-auto relative z-0">
       
-      {/* Sidebar Navigation */}
-      <div className="w-full md:w-[220px] shrink-0 bg-[#f5f5f5] dark:bg-[#050505] overflow-x-auto md:overflow-y-auto no-scrollbar border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-800 flex md:flex-col pb-2 md:pb-10 pt-2 md:pt-6 px-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-         {categories.map(category => (
-            <button
-               key={category}
-               onClick={() => setActiveCategory(category)}
-               className={`shrink-0 md:w-full text-center md:text-left px-4 py-2 md:py-4 text-[12px] md:text-[13px] font-medium leading-tight transition-colors flex items-center justify-center md:justify-start min-h-[40px] md:min-h-[60px] mr-2 md:mr-0 rounded-full md:rounded-none border md:border-0 md:border-l-[3px] ${
-                  activeCategory === category 
-                  ? 'bg-white dark:bg-[#111111] text-black dark:text-white border-transparent md:border-[#D4AF37] shadow-sm font-bold md:bg-white md:dark:bg-[#111111]' 
-                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 border-gray-200 dark:border-gray-800 md:border-transparent bg-transparent'
-               }`}
+      {/* Custom Shop Header */}
+      <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-gray-900 sticky top-0 z-50">
+        {/* Left: Search & Cart */}
+        <div className="flex items-center gap-4 text-black dark:text-white shrink-0">
+          <button onClick={() => navigate('/search')}><Search className="w-[20px] h-[20px]" strokeWidth={1.5} /></button>
+          <button onClick={() => navigate('/cart')} className="relative">
+             <ShoppingCart className="w-[20px] h-[20px]" strokeWidth={1.5} />
+             {cart && cart.length > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white dark:border-black shadow-sm">
+                   {cart.length}
+                </span>
+             )}
+          </button>
+        </div>
+        
+        {/* Center: Title */}
+        <h1 className="text-[15px] font-display tracking-widest uppercase font-bold text-black dark:text-white absolute left-1/2 -translate-x-1/2">
+           SHOP
+        </h1>
+        
+        {/* Right: Back Button */}
+        <button onClick={() => navigate(-1)} className="text-black dark:text-white shrink-0">
+           <ArrowLeft className="w-[22px] h-[22px]" strokeWidth={1.5} />
+        </button>
+      </div>
+
+      {/* Dynamic Category Navigation */}
+      <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide bg-white dark:bg-[#111111] shrink-0" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+         <div className="flex space-x-4 px-2 items-center">
+            {/* All Category Circle */}
+            <div 
+              onClick={() => setActiveCategory('All')}
+              className="flex flex-col items-center cursor-pointer group flex-shrink-0"
             >
-               {category.split(' ')[0]}
-            </button>
-         ))}
+               <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm overflow-hidden ${activeCategory === 'All' ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md'}`}>
+                  <span className={`font-bold text-lg uppercase ${activeCategory === 'All' ? 'text-gold' : 'text-gray-400 dark:text-gray-500'}`}>ALL</span>
+               </div>
+               <span className={`text-[11px] font-sans tracking-wide transition-colors ${activeCategory === 'All' ? 'text-gold font-bold drop-shadow-sm' : 'text-green-600 dark:text-green-500 font-medium'}`}>All</span>
+            </div>
+
+            {categories.map((cat, idx) => {
+               const cleanName = cat.name.split('(')[0].trim();
+               const isActive = activeCategory === cat.name;
+               return (
+               <div 
+                 key={cat.id || idx} 
+                 onClick={() => setActiveCategory(cat.name)}
+                 className="flex flex-col items-center cursor-pointer group flex-shrink-0"
+               >
+                  <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm overflow-hidden ${isActive ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md'}`}>
+                     {cat.imageUrl ? (
+                        <img src={cat.imageUrl} alt={cleanName} className="w-full h-full object-cover" />
+                     ) : (
+                        <span className="font-bold text-gray-400 dark:text-gray-500 text-lg uppercase">{cleanName.charAt(0)}</span>
+                     )}
+                  </div>
+                  <span className={`text-[11px] font-sans tracking-wide transition-colors ${isActive ? 'text-gold font-bold drop-shadow-sm' : 'text-green-600 dark:text-green-500 font-medium'}`}>{cleanName}</span>
+               </div>
+            )})}
+            {categoriesLoading && categories.length === 0 && (
+               [1, 2, 3, 4, 5].map((skeleton) => (
+                  <div key={`sk-${skeleton}`} className="flex flex-col items-center flex-shrink-0 space-y-1.5">
+                     <div className="w-[54px] h-[54px] rounded-full bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
+                     <div className="w-12 h-3 rounded bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
+                  </div>
+               ))
+            )}
+         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 bg-white dark:bg-[#111111] overflow-y-auto px-2 md:px-6 pt-4 pb-[100px] no-scrollbar" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+      <div className="flex-1 bg-[#f5f5f5] dark:bg-[#050505] overflow-y-auto px-2 md:px-6 pt-4 pb-[100px] no-scrollbar" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
          <div className="flex justify-between items-center mb-4 px-2">
              <h2 className="text-[13px] font-bold text-black dark:text-white uppercase tracking-wide">
-                {activeCategory === 'All' ? t('theCollection') || 'All Items' : activeCategory}
+                {activeCategory === 'All' ? 'The Collection' : activeCategory}
              </h2>
              <span className="text-[10px] text-gray-400 font-medium">{filteredProducts.length} items</span>
          </div>
