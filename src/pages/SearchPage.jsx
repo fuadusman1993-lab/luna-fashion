@@ -68,7 +68,7 @@ export default function SearchPage() {
               <h2 className="text-[17px] font-bold tracking-widest uppercase">
                  {initialQuery ? `Results for "${initialQuery}"` : 'Browse All'}
               </h2>
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">{filteredProducts.length} Items Found</p>
+              <p className="text-[10px] text-[#22c55e] font-bold uppercase tracking-widest mt-1">{filteredProducts.length} Items Found</p>
            </div>
         </div>
 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { auth, db, storage, isFirebaseConfigured } from '../services/firebase';
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut, EmailAuthProvider, reauthenticateWithCredential, updateEmail, updatePassword } from 'firebase/auth';
 import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useAppContext } from '../context/AppContext';
-import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard, ArrowLeft, Image as ImageIcon, Shield } from 'lucide-react';
 import { useProducts, addLocalProduct, updateLocalProduct, deleteLocalProduct } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 import { useNavigate } from 'react-router-dom';
@@ -13,10 +13,19 @@ import { useAuth } from '../context/AuthContext';
 export default function Admin() {
   const navigate = useNavigate();
   const { t } = useAppContext();
-  const { isAdmin } = useAuth();
+  const { isAdmin, setAdminPin } = useAuth();
   const { products } = useProducts();
   const { categories } = useCategories();
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Security Form State
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPin, setNewPin] = useState('');
+  const [secSuccess, setSecSuccess] = useState('');
+  const [secError, setSecError] = useState('');
+  const [secLoading, setSecLoading] = useState(false);
 
   // Route Guard
   useEffect(() => {
@@ -240,7 +249,51 @@ export default function Admin() {
     }
   };
 
-  // Legacy login removed, route guard handles security
+  const handleSecurityUpdate = async (e) => {
+    e.preventDefault();
+    setSecSuccess('');
+    setSecError('');
+    setSecLoading(true);
+
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("No authenticated user.");
+
+      if (!currentPassword) {
+         throw new Error("Current Password is required to make security changes.");
+      }
+
+      // Re-authenticate
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      await reauthenticateWithCredential(user, credential);
+
+      // Update Email
+      if (newEmail && newEmail !== user.email) {
+        await updateEmail(user, newEmail);
+      }
+
+      // Update Password
+      if (newPassword) {
+        if (newPassword.length < 6) throw new Error("Password must be at least 6 characters.");
+        await updatePassword(user, newPassword);
+      }
+
+      // Update PIN
+      if (newPin) {
+        if (newPin.length !== 4 || isNaN(Number(newPin))) throw new Error("PIN must be exactly 4 digits.");
+        await updateDoc(doc(db, "users", user.uid), { adminPin: newPin });
+        if (setAdminPin) setAdminPin(newPin);
+      }
+
+      setSecSuccess("Security credentials updated successfully!");
+      setCurrentPassword('');
+      setNewPassword('');
+      setNewPin('');
+    } catch (err) {
+      setSecError(err.message);
+    }
+    setSecLoading(false);
+  };
 
   const handleCreateOrUpdateProduct = async (e) => {
     e.preventDefault();
@@ -475,6 +528,14 @@ export default function Admin() {
           >
              <Settings className="w-5 h-5 mr-3" />
              {t('settingsTab')}
+          </button>
+
+          <button 
+             onClick={() => setActiveTab('security')}
+             className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'security' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
+          >
+             <Shield className="w-5 h-5 mr-3" />
+             Security Settings
           </button>
 
           <button 
@@ -800,7 +861,78 @@ export default function Admin() {
              <div>
                <h2 className="text-2xl font-display text-luna-black dark:text-luna-white mb-6 uppercase tracking-wider">{t('settingsTitle')}</h2>
                {/* Setting blocks... */}
-               <p className="text-gray-500">Security preferences are managed via Firebase.</p>
+               <p className="text-gray-500">Store preferences are managed via Firebase.</p>
+             </div>
+          )}
+
+          {activeTab === 'security' && (
+             <div>
+               <h2 className="text-2xl font-display text-luna-black dark:text-luna-white mb-6 uppercase tracking-wider">Security Settings</h2>
+               
+               <div className="bg-gray-50 dark:bg-[#151515] p-6 rounded border border-gray-200 dark:border-gray-800 max-w-2xl">
+                 {secSuccess && <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 font-medium">{secSuccess}</div>}
+                 {secError && <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 font-medium">{secError}</div>}
+                 
+                 <form onSubmit={handleSecurityUpdate} className="space-y-6">
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 p-4 rounded mb-6">
+                       <p className="text-sm text-yellow-800 dark:text-yellow-500 font-bold uppercase tracking-wider mb-2">Re-Authentication Required</p>
+                       <p className="text-xs text-yellow-700 dark:text-yellow-600 mb-3">To update your security settings, you must provide your current password.</p>
+                       <input 
+                         type="password" 
+                         value={currentPassword} 
+                         onChange={e => setCurrentPassword(e.target.value)} 
+                         required 
+                         placeholder="Current Password" 
+                         className="w-full dark:text-white bg-white dark:bg-black border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none" 
+                       />
+                    </div>
+
+                    <div className="space-y-4">
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Update Email Address</label>
+                         <input 
+                           type="email" 
+                           value={newEmail} 
+                           onChange={e => setNewEmail(e.target.value)} 
+                           placeholder="Enter new email" 
+                           className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none" 
+                         />
+                       </div>
+                       
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Update Password</label>
+                         <input 
+                           type="password" 
+                           value={newPassword} 
+                           onChange={e => setNewPassword(e.target.value)} 
+                           placeholder="Enter new password (min 6 characters)" 
+                           className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none" 
+                         />
+                       </div>
+
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Update Admin PIN</label>
+                         <input 
+                           type="text" 
+                           maxLength={4}
+                           value={newPin} 
+                           onChange={e => setNewPin(e.target.value.replace(/\D/g, ''))} 
+                           placeholder="Enter new 4-digit PIN" 
+                           className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none" 
+                         />
+                         <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Used to access this dashboard from the Settings app page.</p>
+                       </div>
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      disabled={secLoading} 
+                      className="w-full bg-luna-black dark:bg-gold text-white dark:text-black p-3 uppercase tracking-wider font-bold hover:opacity-90 transition-opacity disabled:opacity-50 mt-4"
+                    >
+                      {secLoading ? 'UPDATING SECURITY...' : 'SAVE SECURITY CHANGES'}
+                    </button>
+                 </form>
+               </div>
              </div>
           )}
 

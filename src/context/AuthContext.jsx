@@ -19,6 +19,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [adminPin, setAdminPin] = useState('1234'); // Default PIN
   const [loading, setLoading] = useState(true);
 
   function signup(email, password) {
@@ -44,6 +45,11 @@ export function AuthProvider({ children }) {
       if (user) {
         try {
           const userDoc = await getDoc(doc(db, 'users', user.uid));
+          
+          if (userDoc.exists() && userDoc.data().adminPin) {
+            setAdminPin(userDoc.data().adminPin);
+          }
+
           if (user.email === 'admin@lunafashion.com') {
              setIsAdmin(true);
           } else if (userDoc.exists()) {
@@ -68,6 +74,8 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     isAdmin,
+    adminPin,
+    setAdminPin,
     login,
     signup,
     loginWithGoogle,

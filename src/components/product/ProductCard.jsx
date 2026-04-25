@@ -28,7 +28,7 @@ const ProductCard = memo(function ProductCard({ product }) {
 
   return (
     <div onClick={navigateToProduct} className="relative flex flex-col bg-white dark:bg-[#0a0a0a] overflow-hidden rounded-xl border border-gray-100 dark:border-white/5 shadow cursor-pointer transition-colors duration-300 h-full">
-      <div className="relative w-full aspect-[4/5] overflow-hidden bg-gray-50 dark:bg-[#0f0f0f]">
+      <div className="relative w-full aspect-square overflow-hidden bg-gray-50 dark:bg-[#0f0f0f]">
         <img
           src={product.imageUrl}
           alt={product.name}

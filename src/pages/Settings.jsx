@@ -6,7 +6,7 @@ import { ArrowLeft, User, MapPin, Globe, Bell, ShieldAlert, ChevronRight, Lock, 
 
 export default function Settings() {
   const { language, toggleLanguage, theme, toggleTheme } = useAppContext();
-  const { isAdmin } = useAuth();
+  const { isAdmin, adminPin } = useAuth();
   const navigate = useNavigate();
   
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -21,7 +21,7 @@ export default function Settings() {
   };
 
   const handlePinSubmit = () => {
-    if (pinInput === '1234') {
+    if (pinInput === adminPin) {
       setShowPinModal(false);
       navigate('/admin');
     } else {
