@@ -31,19 +31,13 @@ function AppContent() {
 
   useEffect(() => {
     const onboarded = localStorage.getItem('luna_onboarded');
-    if (!onboarded) {
+    if (!onboarded || onboarded !== 'true') {
       setShowOnboarding(true);
-    } else {
-      const savedRoute = localStorage.getItem('luna_current_route');
-      // Only redirect if they loaded the root path (like from PWA home screen)
-      if (savedRoute && window.location.pathname === '/' && savedRoute !== '/') {
-        navigate(savedRoute, { replace: true });
-      }
     }
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
-    // Save user progress
+    // Keep tracking for debugging but do not enforce redirects
     if (!showSplash && !showOnboarding) {
       localStorage.setItem('luna_current_route', location.pathname + location.search);
     }
