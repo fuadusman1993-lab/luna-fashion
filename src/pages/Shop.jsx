@@ -3,15 +3,30 @@ import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 import ProductGrid from '../components/product/ProductGrid';
 import { useAppContext } from '../context/AppContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, ShoppingCart, ArrowLeft } from 'lucide-react';
+import { useEffect } from 'react';
 
 export default function Shop() {
   const { products, loading, error, retryFetch } = useProducts();
   const { categories, loading: categoriesLoading } = useCategories();
   const { cart } = useAppContext();
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || 'All');
+
+  useEffect(() => {
+     setActiveCategory(searchParams.get('category') || 'All');
+  }, [searchParams]);
+
+  const handleCategoryClick = (catName) => {
+     setActiveCategory(catName);
+     if (catName === 'All') {
+        setSearchParams({});
+     } else {
+        setSearchParams({ category: catName });
+     }
+  };
 
   const filteredProducts = useMemo(() => {
     const safeProducts = products || [];
@@ -53,7 +68,7 @@ export default function Shop() {
          <div className="flex space-x-4 px-2 items-center">
             {/* All Category Circle */}
             <div 
-              onClick={() => setActiveCategory('All')}
+              onClick={() => handleCategoryClick('All')}
               className="flex flex-col items-center cursor-pointer group flex-shrink-0"
             >
                <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm overflow-hidden ${activeCategory === 'All' ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md'}`}>
@@ -68,7 +83,7 @@ export default function Shop() {
                return (
                <div 
                  key={cat.id || idx} 
-                 onClick={() => setActiveCategory(cat.name)}
+                 onClick={() => handleCategoryClick(cat.name)}
                  className="flex flex-col items-center cursor-pointer group flex-shrink-0"
                >
                   <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm overflow-hidden ${isActive ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md'}`}>
