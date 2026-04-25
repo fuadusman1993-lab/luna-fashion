@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { auth, db, storage, isFirebaseConfigured } from '../services/firebase';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
@@ -8,17 +8,22 @@ import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard,
 import { useProducts, addLocalProduct, updateLocalProduct, deleteLocalProduct } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function Admin() {
   const navigate = useNavigate();
   const { t } = useAppContext();
+  const { isAdmin } = useAuth();
   const { products } = useProducts();
   const { categories } = useCategories();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Route Guard
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate('/');
+    }
+  }, [isAdmin, navigate]);
 
   // Category Form State
   const [catEditId, setCatEditId] = useState(null);
@@ -235,36 +240,7 @@ export default function Admin() {
     }
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    
-    if (!isFirebaseConfigured) {
-      if (email === 'admin@lunafashion.com' && password === 'password') {
-        setIsAuthenticated(true);
-      } else {
-        setError('Invalid credentials.');
-      }
-      return;
-    }
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const userEmail = userCredential.user.email;
-      
-      // List of allowed admin emails
-      const ADMIN_EMAILS = ['admin@lunafashion.com']; 
-      
-      if (ADMIN_EMAILS.includes(userEmail)) {
-        setIsAuthenticated(true);
-      } else {
-        await signOut(auth); // Sign them back out
-        setError('Access denied: You do not have admin privileges.');
-      }
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+  // Legacy login removed, route guard handles security
 
   const handleCreateOrUpdateProduct = async (e) => {
     e.preventDefault();
@@ -443,48 +419,8 @@ export default function Admin() {
      setIsBestseller(false); setIsNewIn(false); setIsDeal(false); setUploadProgress(0);
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center bg-gray-50 dark:bg-luna-black transition-colors duration-300 px-4 pt-10">
-        <div className="max-w-md w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xl p-8 rounded-sm">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-display text-luna-black dark:text-luna-white uppercase tracking-widest">{t('adminAccess')}</h2>
-            <div className="w-10 h-0.5 bg-gold mx-auto mt-4"></div>
-          </div>
-          
-          {!isFirebaseConfigured && (
-            <div className="mb-6 p-4 bg-[#111] border border-gold/30 text-gold text-xs leading-relaxed text-center">
-              <strong>Preview DB Active</strong> <br/>
-              Use <strong>admin@lunafashion.com</strong> | <strong>password</strong>
-            </div>
-          )}
-
-          {error && <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-500 dark:text-red-400 text-sm text-center font-medium border border-red-200 dark:border-red-800">{error}</div>}
-          
-          <form onSubmit={handleLogin} className="space-y-6">
-             <input 
-                type="email" 
-                placeholder="Email Address"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                className="w-full border-gray-300 dark:border-gray-700 bg-transparent dark:text-white border p-3 focus:ring-gold focus:border-gold outline-none transition-colors" 
-              />
-              <input 
-                type="password" 
-                placeholder="Password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                className="w-full border-gray-300 dark:border-gray-700 bg-transparent dark:text-white border p-3 focus:ring-gold focus:border-gold outline-none transition-colors" 
-              />
-            <button type="submit" className="w-full bg-luna-black dark:bg-gold text-white dark:text-black p-4 uppercase tracking-wider font-bold hover:opacity-90 transition-opacity">
-              {t('login')}
-            </button>
-          </form>
-        </div>
-      </div>
-    );
+  if (!isAdmin) {
+    return null; // Redirecting...
   }
 
   return (
@@ -543,8 +479,7 @@ export default function Admin() {
 
           <button 
             onClick={() => {
-              if (isFirebaseConfigured) signOut(auth);
-              setIsAuthenticated(false);
+              navigate('/');
             }}
             className="flex items-center px-4 py-3 mt-auto text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
