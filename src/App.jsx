@@ -44,11 +44,7 @@ function AppContent() {
       // Ensure the new flag is set if we used the fallback
       if (oldOnboarded) localStorage.setItem('hasSeenOnboarding', 'true');
 
-      // 3. Fix the Route Memory ONLY ON INITIAL LOAD
-      const lastRoute = localStorage.getItem('lastRoute');
-      if (!initialLoadComplete && lastRoute && window.location.pathname === '/' && lastRoute !== '/') {
-        navigate(lastRoute, { replace: true });
-      }
+      // Removed automatic route memory redirect that was forcing users to /settings
     } else {
       // Show Splash then Onboarding for new users
       setShowSplash(true);
@@ -59,11 +55,8 @@ function AppContent() {
   }, [navigate]);
 
   useEffect(() => {
-    if (!isInitializing && !showSplash && !showOnboarding && location.pathname !== '/login') {
-      // Track last route
-      localStorage.setItem('lastRoute', location.pathname + location.search);
-      
-      // 2. Set the Flag safely if they reached Home
+    if (!isInitializing && !showSplash && !showOnboarding) {
+      // Set the Flag safely if they reached Home
       if (location.pathname === '/') {
         localStorage.setItem('hasSeenOnboarding', 'true');
       }
