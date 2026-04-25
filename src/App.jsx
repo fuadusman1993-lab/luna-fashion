@@ -22,41 +22,70 @@ import { useAppContext } from './context/AppContext';
 import { ShoppingBag } from 'lucide-react';
 
 function AppContent() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const { toastMessage } = useAppContext();
 
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 1. Check 'hasSeenOnboarding' Flag
   useEffect(() => {
-    const onboarded = localStorage.getItem('luna_onboarded');
-    if (!onboarded || onboarded !== 'true') {
+    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding') === 'true';
+    const oldOnboarded = localStorage.getItem('luna_onboarded') === 'true'; // Fallback for existing users
+
+    if (hasSeenOnboarding || oldOnboarded) {
+      // COMPLETELY BYPASS Splash Screen and Onboarding
+      setShowSplash(false);
+      setShowOnboarding(false);
+      // Ensure the new flag is set if we used the fallback
+      if (oldOnboarded) localStorage.setItem('hasSeenOnboarding', 'true');
+
+      // 3. Fix the Route Memory
+      const lastRoute = localStorage.getItem('lastRoute');
+      if (lastRoute && window.location.pathname === '/' && lastRoute !== '/') {
+        navigate(lastRoute, { replace: true });
+      }
+    } else {
+      // Show Splash then Onboarding for new users
+      setShowSplash(true);
       setShowOnboarding(true);
     }
-  }, []);
+    setIsInitializing(false);
+  }, [navigate]);
 
   useEffect(() => {
-    // Keep tracking for debugging but do not enforce redirects
-    if (!showSplash && !showOnboarding) {
-      localStorage.setItem('luna_current_route', location.pathname + location.search);
+    if (!isInitializing && !showSplash && !showOnboarding && location.pathname !== '/login') {
+      // Track last route
+      localStorage.setItem('lastRoute', location.pathname + location.search);
+      
+      // 2. Set the Flag safely if they reached Home
+      if (location.pathname === '/') {
+        localStorage.setItem('hasSeenOnboarding', 'true');
+      }
     }
-  }, [location, showSplash, showOnboarding]);
+  }, [location, isInitializing, showSplash, showOnboarding]);
 
   const handleOnboardingComplete = () => {
-    localStorage.setItem('luna_onboarded', 'true');
+    localStorage.setItem('hasSeenOnboarding', 'true');
     setShowOnboarding(false);
+    navigate('/', { replace: true });
   };
 
-  if (showOnboarding && !showSplash) {
+  if (isInitializing) return null;
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
+
+  if (showOnboarding) {
     return <Onboarding onComplete={handleOnboardingComplete} />;
   }
 
   return (
     <>
-      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
-      {!showSplash && (
-        <Routes>
+      <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
@@ -75,8 +104,7 @@ function AppContent() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/product/:id" element={<ProductDetail />} />
-        </Routes>
-      )}
+      </Routes>
 
       {/* Global Toast Notification Overlay */}
       {toastMessage && (
