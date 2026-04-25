@@ -31,7 +31,7 @@ export default function Shop() {
   const filteredProducts = useMemo(() => {
     const safeProducts = products || [];
     if (activeCategory === 'All') return safeProducts;
-    return safeProducts.filter(p => p.category === activeCategory);
+    return safeProducts.filter(p => p.category && p.category.toLowerCase() === activeCategory.toLowerCase());
   }, [products, activeCategory]);
 
   return (
