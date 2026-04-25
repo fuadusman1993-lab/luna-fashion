@@ -20,6 +20,7 @@ import Orders from './pages/Orders';
 import SplashScreen from './components/ui/SplashScreen';
 import { useAppContext } from './context/AppContext';
 import { ShoppingBag } from 'lucide-react';
+import { logPageView, sendActiveHeartbeat } from './services/analytics';
 
 let initialLoadComplete = false;
 
@@ -57,8 +58,27 @@ function AppContent() {
       if (location.pathname === '/') {
         localStorage.setItem('hasSeenOnboarding', 'true');
       }
+      
+      // Log Analytics Page View (skip admin paths to avoid skewed stats)
+      if (!location.pathname.startsWith('/admin')) {
+        logPageView(location.pathname);
+      }
     }
   }, [location, isInitializing, showSplash, showOnboarding]);
+
+  // Analytics Heartbeat Setup (120 seconds)
+  useEffect(() => {
+    if (isInitializing || showSplash || showOnboarding) return;
+    
+    // Send immediate initial heartbeat
+    sendActiveHeartbeat();
+    
+    const interval = setInterval(() => {
+      sendActiveHeartbeat();
+    }, 120000);
+    
+    return () => clearInterval(interval);
+  }, [isInitializing, showSplash, showOnboarding]);
 
   const handleOnboardingComplete = () => {
     localStorage.setItem('hasSeenOnboarding', 'true');

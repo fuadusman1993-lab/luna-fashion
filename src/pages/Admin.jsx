@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { auth, db, storage, isFirebaseConfigured } from '../services/firebase';
 import { signInWithEmailAndPassword, signOut, EmailAuthProvider, reauthenticateWithCredential, updateEmail, updatePassword } from 'firebase/auth';
-import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useAppContext } from '../context/AppContext';
-import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard, ArrowLeft, Image as ImageIcon, Shield } from 'lucide-react';
+import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard, ArrowLeft, Image as ImageIcon, Shield, BarChart2, Users } from 'lucide-react';
 import { useProducts, addLocalProduct, updateLocalProduct, deleteLocalProduct } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,58 @@ export default function Admin() {
   const { products } = useProducts();
   const { categories } = useCategories();
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Analytics State
+  const [activeUsers, setActiveUsers] = useState(0);
+  const [dailyVisits, setDailyVisits] = useState(0);
+  const [weeklyVisits, setWeeklyVisits] = useState(0);
+  const [topPages, setTopPages] = useState([]);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+
+  const fetchAnalytics = async () => {
+    if (!isFirebaseConfigured) return;
+    setAnalyticsLoading(true);
+    try {
+      const now = new Date();
+      const activeThreshold = new Date(now.getTime() - 150000);
+      const activeQ = query(collection(db, 'active_sessions'), where('lastActive', '>=', Timestamp.fromDate(activeThreshold)));
+      const activeSnap = await getDocs(activeQ);
+      setActiveUsers(activeSnap.size);
+
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      const todayQ = query(collection(db, 'page_visits'), where('timestamp', '>=', Timestamp.fromDate(startOfDay)));
+      const todaySnap = await getDocs(todayQ);
+      setDailyVisits(todaySnap.size);
+
+      const startOfWeek = new Date();
+      startOfWeek.setDate(now.getDate() - 7);
+      const weekQ = query(collection(db, 'page_visits'), where('timestamp', '>=', Timestamp.fromDate(startOfWeek)));
+      const weekSnap = await getDocs(weekQ);
+      setWeeklyVisits(weekSnap.size);
+
+      const pageCounts = {};
+      weekSnap.forEach(doc => {
+        const path = doc.data().path || 'Unknown';
+        pageCounts[path] = (pageCounts[path] || 0) + 1;
+      });
+      const top = Object.keys(pageCounts).map(path => ({ path, count: pageCounts[path] }))
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 5);
+      setTopPages(top);
+    } catch (err) {
+      console.warn("Analytics fetch error:", err);
+    }
+    setAnalyticsLoading(false);
+  };
+
+  useEffect(() => {
+    if (activeTab === 'analytics') {
+      fetchAnalytics();
+      const interval = setInterval(fetchAnalytics, 30000); // refresh every 30s while viewing
+      return () => clearInterval(interval);
+    }
+  }, [activeTab]);
 
   // Security Form State
   const [currentPassword, setCurrentPassword] = useState('');
@@ -522,13 +574,7 @@ export default function Admin() {
              Home Categories
           </button>
           
-          <button 
-             onClick={() => setActiveTab('settings')}
-             className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'settings' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
-          >
-             <Settings className="w-5 h-5 mr-3" />
-             {t('settingsTab')}
-          </button>
+
 
           <button 
              onClick={() => setActiveTab('security')}
@@ -536,6 +582,14 @@ export default function Admin() {
           >
              <Shield className="w-5 h-5 mr-3" />
              Security Settings
+          </button>
+
+          <button 
+             onClick={() => setActiveTab('analytics')}
+             className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'analytics' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
+          >
+             <BarChart2 className="w-5 h-5 mr-3" />
+             App Analytics
           </button>
 
           <button 
@@ -857,13 +911,7 @@ export default function Admin() {
             </div>
           )}
 
-          {activeTab === 'settings' && (
-             <div>
-               <h2 className="text-2xl font-display text-luna-black dark:text-luna-white mb-6 uppercase tracking-wider">{t('settingsTitle')}</h2>
-               {/* Setting blocks... */}
-               <p className="text-gray-500">Store preferences are managed via Firebase.</p>
-             </div>
-          )}
+
 
           {activeTab === 'security' && (
              <div>
@@ -933,6 +981,62 @@ export default function Admin() {
                     </button>
                  </form>
                </div>
+             </div>
+          )}
+
+          {/* App Analytics Tab */}
+          {activeTab === 'analytics' && (
+             <div>
+               <div className="flex justify-between items-center mb-6">
+                 <h2 className="text-2xl font-display text-luna-black dark:text-luna-white uppercase tracking-wider">Live Analytics</h2>
+                 <button onClick={fetchAnalytics} className="text-xs font-bold uppercase border border-gray-300 dark:border-gray-700 px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                   Refresh
+                 </button>
+               </div>
+               
+               {analyticsLoading ? (
+                  <p className="text-sm text-gray-500">Loading live data...</p>
+               ) : (
+                 <div className="space-y-6">
+                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                     <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-900/10 p-6 rounded-lg border border-green-200 dark:border-green-800/50 flex flex-col justify-center items-center text-center relative overflow-hidden shadow-sm">
+                        <Users className="w-12 h-12 text-green-500 mb-2 opacity-10 absolute -bottom-2 -right-2" />
+                        <h3 className="text-xs font-bold text-green-700 dark:text-green-500 uppercase tracking-widest mb-1">Active Users Now</h3>
+                        <p className="text-5xl font-display text-green-600 dark:text-green-400 font-bold flex items-center justify-center gap-3">
+                           {activeUsers > 0 && <span className="w-4 h-4 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]"></span>}
+                           {activeUsers}
+                        </p>
+                     </div>
+                     <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center shadow-sm">
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Visits Today</h3>
+                        <p className="text-4xl font-display text-black dark:text-white">{dailyVisits}</p>
+                     </div>
+                     <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center shadow-sm">
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Visits This Week</h3>
+                        <p className="text-4xl font-display text-black dark:text-white">{weeklyVisits}</p>
+                     </div>
+                   </div>
+
+                   <div className="bg-gray-50 dark:bg-[#151515] p-6 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+                     <h3 className="text-lg font-bold text-black dark:text-white mb-4 flex items-center">
+                       <BarChart2 className="w-5 h-5 mr-2 text-gold" />
+                       Top Visited Pages (Last 7 Days)
+                     </h3>
+                     {topPages.length > 0 ? (
+                       <ul className="space-y-3">
+                         {topPages.map((page, idx) => (
+                           <li key={idx} className="flex justify-between items-center p-4 bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-lg shadow-sm hover:border-gold/50 transition-colors">
+                             <span className="font-medium text-gray-800 dark:text-gray-200">{page.path === '/' ? '/ (Home)' : page.path}</span>
+                             <span className="bg-gold/20 border border-gold/30 text-gold font-bold px-3 py-1 rounded text-xs tracking-wider">{page.count} visits</span>
+                           </li>
+                         ))}
+                       </ul>
+                     ) : (
+                       <p className="text-sm text-gray-500 p-4 border border-dashed border-gray-300 dark:border-gray-700 rounded text-center">No page visit data available yet. Data will populate as users browse the app.</p>
+                     )}
+                   </div>
+                 </div>
+               )}
              </div>
           )}
 
