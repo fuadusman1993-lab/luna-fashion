@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, User, MapPin, Globe, Bell, Info, ShieldAlert, ChevronRight, Check } from 'lucide-react';
+import { ArrowLeft, User, MapPin, Globe, Bell, Info, ShieldAlert, ChevronRight, Lock } from 'lucide-react';
 
 // Custom Icons for Socials
 const TikTokIcon = () => (
@@ -59,40 +59,53 @@ export default function Settings() {
   return (
     <div className="fixed inset-0 z-[10000] bg-[#0a0a0a] text-white flex flex-col font-sans overflow-y-auto no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
       
-      {/* Header - Back Arrow on Right */}
-      <div className="sticky top-0 left-0 right-0 w-full z-50 bg-[#111111]/95 backdrop-blur-md border-b border-white/5 px-4 py-4 flex items-center justify-between shadow-sm md:max-w-2xl mx-auto">
-        <h1 className="text-[17px] font-bold tracking-widest uppercase text-white">Settings</h1>
+      {/* Header - Back Arrow on Right (No Title) */}
+      <div className="sticky top-0 left-0 right-0 w-full z-50 bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-4 flex items-center justify-end md:max-w-2xl mx-auto">
         <button onClick={() => navigate(-1)} className="text-white hover:text-[#D4AF37] transition-colors active:scale-95 shrink-0">
-          <ArrowLeft strokeWidth={1.5} className="w-[22px] h-[22px]" />
+          <ArrowLeft strokeWidth={1.5} className="w-[22px] h-[22px] rotate-180" /> {/* Rotating 180 to point right if that's what they mean by "on the right side", or just leaving it as a button on the right */}
         </button>
       </div>
 
-      <div className="px-4 pt-6 pb-10 flex-1 flex flex-col md:max-w-2xl mx-auto w-full space-y-6">
+      <div className="flex-1 flex flex-col md:max-w-2xl mx-auto w-full">
         
-        {/* Menu Items */}
-        <div className="bg-[#111111] rounded-xl shadow-lg border border-white/5 overflow-hidden">
+        {/* GROUP 1: Admin, Profile, Shipping */}
+        <div className="bg-[#111111] flex flex-col border-y border-white/5">
+          {/* Admin Panel - ONLY VISIBLE IF ADMIN */}
+          {isAdmin && (
+            <button onClick={handleAdminClick} className="w-full flex items-center justify-between py-4 px-4 border-b border-white/5 hover:bg-white/5 transition">
+               <div className="flex items-center">
+                 <Lock className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
+                 <span className="font-semibold text-[14px] text-white tracking-wide">Admin Panel</span>
+               </div>
+               <ChevronRight className="w-4 h-4 text-gray-500" />
+            </button>
+          )}
+
           {/* Profile */}
           <Link to="/me" className="w-full flex items-center justify-between py-4 px-4 border-b border-white/5 hover:bg-white/5 transition">
              <div className="flex items-center">
-               <User className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
                <span className="font-semibold text-[14px] text-white tracking-wide">Profile</span>
              </div>
              <ChevronRight className="w-4 h-4 text-gray-500" />
           </Link>
 
           {/* Shipping Address */}
-          <button className="w-full flex items-center justify-between py-4 px-4 border-b border-white/5 hover:bg-white/5 transition">
+          <button className="w-full flex items-center justify-between py-4 px-4 hover:bg-white/5 transition">
              <div className="flex items-center">
-               <MapPin className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
-               <span className="font-semibold text-[14px] text-white tracking-wide">Shipping Address</span>
+               <span className="font-semibold text-[14px] text-white tracking-wide">Shipping address</span>
              </div>
              <ChevronRight className="w-4 h-4 text-gray-500" />
           </button>
+        </div>
 
-          {/* Language Toggle */}
+        {/* Thick Divider */}
+        <div className="h-[10px] bg-[#0a0a0a] w-full"></div>
+
+        {/* GROUP 2: Settings */}
+        <div className="bg-[#111111] flex flex-col border-y border-white/5">
+          {/* Language Options */}
           <button onClick={toggleLanguage} className="w-full flex items-center justify-between py-4 px-4 border-b border-white/5 hover:bg-white/5 transition">
              <div className="flex items-center">
-               <Globe className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
                <span className="font-semibold text-[14px] text-white tracking-wide">Language Options</span>
              </div>
              <div className="flex items-center bg-[#1a1a1a] rounded-full p-1 border border-white/10">
@@ -104,7 +117,6 @@ export default function Settings() {
           {/* Notifications Toggle */}
           <button onClick={() => setNotificationsEnabled(!notificationsEnabled)} className="w-full flex items-center justify-between py-4 px-4 hover:bg-white/5 transition">
              <div className="flex items-center">
-               <Bell className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
                <span className="font-semibold text-[14px] text-white tracking-wide">Push Notifications</span>
              </div>
              <div className={`w-11 h-6 rounded-full relative transition-colors duration-300 ${notificationsEnabled ? 'bg-[#22c55e]' : 'bg-gray-700'}`}>
@@ -113,47 +125,40 @@ export default function Settings() {
           </button>
         </div>
 
-        {/* About Us Section */}
-        <div className="bg-[#111111] rounded-xl shadow-lg border border-white/5 overflow-hidden p-5">
+        {/* Thick Divider */}
+        <div className="h-[10px] bg-[#0a0a0a] w-full"></div>
+
+        {/* GROUP 3: About Us */}
+        <div className="bg-[#111111] flex flex-col border-y border-white/5 p-5">
            <div className="flex items-center mb-3">
-              <Info className="w-[18px] h-[18px] mr-2 text-[#D4AF37]" strokeWidth={1.5} />
-              <h2 className="font-bold text-[14px] tracking-wide text-white">About Luna Fashion</h2>
+              <span className="font-semibold text-[14px] text-white tracking-wide">About Luna Fashion</span>
            </div>
            <p className="text-[12px] text-gray-400 leading-relaxed font-medium mb-5">
-             Welcome to the pinnacle of modest elegance. Luna Fashion redefines contemporary style by blending rich traditions with modern, premium aesthetics. Designed to empower, crafted to perfection.
+             Welcome to the pinnacle of modest elegance. Luna Fashion redefines contemporary style by blending rich traditions with modern, premium aesthetics.
            </p>
            
-           <div className="flex items-center justify-center space-x-4">
-              <a href="https://t.me/luna_market11" target="_blank" rel="noopener noreferrer" className="w-[42px] h-[42px] rounded-full bg-white text-[#0088cc] flex items-center justify-center hover:scale-105 transition-transform shadow-md">
+           <div className="flex items-center space-x-4">
+              <a href="https://t.me/luna_market11" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-white text-[#0088cc] flex items-center justify-center hover:scale-105 transition-transform shadow-md">
                  <TelegramIcon />
               </a>
-              <a href="https://www.instagram.com/luna_market2" target="_blank" rel="noopener noreferrer" className="w-[42px] h-[42px] rounded-full bg-white text-pink-600 flex items-center justify-center hover:scale-105 transition-transform shadow-md">
+              <a href="https://www.instagram.com/luna_market2" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-white text-pink-600 flex items-center justify-center hover:scale-105 transition-transform shadow-md">
                  <InstagramIcon />
               </a>
-              <a href="https://www.tiktok.com/@lunamarket2" target="_blank" rel="noopener noreferrer" className="w-[42px] h-[42px] rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-md">
+              <a href="https://www.tiktok.com/@lunamarket2" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-md">
                  <TikTokIcon />
               </a>
            </div>
         </div>
 
-        {/* Admin Access - ONLY VISIBLE IF ADMIN */}
-        {isAdmin && (
-          <div className="bg-[#111111] rounded-xl shadow-lg border border-red-500/20 overflow-hidden">
-            <button onClick={handleAdminClick} className="w-full flex items-center justify-between py-4 px-4 hover:bg-white/5 transition">
-               <div className="flex items-center">
-                 <ShieldAlert className="w-[18px] h-[18px] mr-3 text-red-500" strokeWidth={1.5} />
-                 <span className="font-semibold text-[14px] text-red-500 tracking-wide">Admin Dashboard</span>
-               </div>
-               <ChevronRight className="w-4 h-4 text-red-500/50" />
-            </button>
-          </div>
-        )}
+        {/* Spacer before footer */}
+        <div className="flex-1 bg-[#0a0a0a] min-h-[40px]"></div>
 
         {/* Footer */}
-        <div className="pt-8 pb-4 flex flex-col items-center justify-center opacity-40">
-           <h3 className="font-display font-black tracking-[0.3em] text-[16px] text-white mb-1">LUNA</h3>
-           <p className="text-[9px] font-bold tracking-widest uppercase text-white mb-1">Version 1.0.0</p>
-           <p className="text-[9px] text-white">© {new Date().getFullYear()} Luna Fashion. All Rights Reserved.</p>
+        <div className="py-8 flex flex-col items-center justify-center bg-[#111111] border-t border-white/5">
+           <h3 className="font-display font-black tracking-[0.3em] text-[16px] text-gray-500 mb-1">LUNA</h3>
+           <p className="text-[9px] font-bold tracking-widest uppercase text-gray-500 mb-1">Version 1.0.0</p>
+           <p className="text-[9px] text-gray-500">© 2010-{new Date().getFullYear()} Luna Fashion.</p>
+           <p className="text-[9px] text-gray-500">All rights reserved.</p>
         </div>
 
       </div>
