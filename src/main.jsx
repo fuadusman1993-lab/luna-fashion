@@ -18,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 // Register Vite PWA Service Worker natively
 const updateSW = registerSW({
+  immediate: true,
   onNeedRefresh() {
     console.log('App update available. Refreshing...');
   },
