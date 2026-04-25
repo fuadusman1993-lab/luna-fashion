@@ -10,22 +10,24 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'LUNA',
-        short_name: 'LUNA',
+        name: 'Luna Fashion',
+        short_name: 'Luna',
         description: 'Luna Fashion - High-End Luxury Clothing',
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
         display: "standalone",
+        start_url: "/",
+        scope: "/",
         icons: [
           {
-            src: 'pwa-192x192.png',
+            src: '/logo.jpg',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/jpeg'
           },
           {
-            src: 'pwa-512x512.png',
+            src: '/logo.jpg',
             sizes: '512x512',
-            type: 'image/png',
+            type: 'image/jpeg',
             purpose: 'any maskable'
           }
         ]
