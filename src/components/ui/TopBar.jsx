@@ -16,7 +16,7 @@ export default function TopBar() {
 
   const topCategories = [t('allNav'), 'Makhawar (ቶብ)', 'Abaya', 'Dria', 'Dresses (ቀሚስ)', 'Makeup', 'Shoes'];
 
-  const placeholders = ['Search Occasion Bags...', 'Search LUNA Specials...', 'Search Signature Coats...', 'Search Trending Styles...'];
+  const placeholders = ['Search Occasion Bags...', 'Search Luna Market...', 'Search Signature Coats...', 'Search Trending Styles...'];
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const fileInputRef = useRef(null);
 

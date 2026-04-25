@@ -102,14 +102,17 @@ const CustomIcons = {
       </div>
 
       {/* Premium Full-Width Showcase Banner with Rounded Corners */}
-      <div className="w-[calc(100%-16px)] mx-auto h-[160px] relative flex flex-col items-center justify-center rounded-xl overflow-hidden mb-3 shadow-md mt-1">
-         {/* Background Image */}
-         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center"></div>
+      <div className="w-[calc(100%-16px)] mx-auto h-[160px] relative flex flex-col items-center justify-center rounded-xl overflow-hidden mb-3 shadow-2xl mt-1 border border-[#D4AF37]/20">
+         {/* Background Image - Reliable luxury texture */}
+         <div className="absolute inset-0 bg-[#0a0a0a] bg-[url('https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-40 mix-blend-overlay"></div>
          {/* Deep Layering Overlay for Contrast */}
-         <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
+         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/80 backdrop-blur-[0.5px]"></div>
          
-         <img src="/logo.jpg" alt="Luna Fashion" className="relative z-10 h-[70px] w-auto object-contain drop-shadow-2xl mb-1" />
-         <span className="relative z-10 bg-white/20 text-white text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-md mt-1 border border-white/40 shadow-sm select-none">
+         <h2 className="relative z-10 font-display text-[2.5rem] leading-none uppercase tracking-[0.1em] font-black text-center mb-3 drop-shadow-[0_4px_15px_rgba(0,0,0,1)] bg-clip-text text-transparent bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728]">
+            LUNA <span className="font-light tracking-[0.15em] opacity-90">MARKET</span>
+         </h2>
+         
+         <span className="relative z-10 bg-black/40 text-[#D4AF37] text-[9px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-md border border-[#D4AF37]/30 shadow-sm select-none">
             Official Showcase
          </span>
       </div>

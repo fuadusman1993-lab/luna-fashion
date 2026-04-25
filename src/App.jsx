@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Layout from './components/ui/Layout';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
@@ -26,12 +26,28 @@ function AppContent() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const { toastMessage } = useAppContext();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => {
     const onboarded = localStorage.getItem('luna_onboarded');
     if (!onboarded) {
       setShowOnboarding(true);
+    } else {
+      const savedRoute = localStorage.getItem('luna_current_route');
+      // Only redirect if they loaded the root path (like from PWA home screen)
+      if (savedRoute && window.location.pathname === '/' && savedRoute !== '/') {
+        navigate(savedRoute, { replace: true });
+      }
     }
-  }, []);
+  }, [navigate]);
+
+  useEffect(() => {
+    // Save user progress
+    if (!showSplash && !showOnboarding) {
+      localStorage.setItem('luna_current_route', location.pathname + location.search);
+    }
+  }, [location, showSplash, showOnboarding]);
 
   const handleOnboardingComplete = () => {
     localStorage.setItem('luna_onboarded', 'true');
@@ -46,8 +62,7 @@ function AppContent() {
     <>
       {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
       {!showSplash && (
-        <BrowserRouter>
-          <Routes>
+        <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
@@ -67,7 +82,6 @@ function AppContent() {
           <Route path="/orders" element={<Orders />} />
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
-      </BrowserRouter>
       )}
 
       {/* Global Toast Notification Overlay */}
@@ -83,7 +97,9 @@ function AppContent() {
 
 function App() {
   return (
-    <AppContent />
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 

@@ -41,8 +41,8 @@ export default function InstallBanner() {
     <div className="fixed bottom-[80px] left-0 right-0 z-40 px-4 sm:max-w-md sm:mx-auto">
       <div className="bg-luna-black text-luna-white p-4 rounded-lg shadow-2xl flex items-center justify-between border border-gold/30">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gold rounded flex items-center justify-center font-display font-bold text-black border border-white/20">
-            L
+          <div className="w-10 h-10 flex items-center justify-center rounded overflow-hidden shadow-sm bg-black border border-white/20">
+             <img src="/logo.jpg" alt="Luna Fashion" className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">
              <span className="font-medium text-sm">Luna Fashion</span>
