@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
+import { useCategories } from '../hooks/useCategories';
 import ProductGrid from '../components/product/ProductGrid';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Flame, Star } from 'lucide-react';
@@ -49,21 +50,12 @@ const CustomIcons = {
   )
 };export default function Home() {
   const { products, loading, error, retryFetch } = useProducts();
+  const { categories, loading: categoriesLoading } = useCategories();
   const [activeFilter, setActiveFilter] = useState('For You');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   
   const activeCategory = searchParams.get('category');
-
-  // Minimalist SVGs mapped conceptually to the exact inventory categories
-  const circleCategories = [
-    { id: 'Makhawar (ቶብ)', name: 'Makhawar', icon: CustomIcons.Makhawar },
-    { id: 'Abaya', name: 'Abaya', icon: CustomIcons.Abaya },
-    { id: 'Dria', name: 'Dria', icon: CustomIcons.Dria },
-    { id: 'Dresses (ቀሚስ)', name: 'Dresses', icon: CustomIcons.Dresses },
-    { id: 'Makeup', name: 'Makeup', icon: CustomIcons.Makeup },
-    { id: 'Shoes', name: 'Shoes', icon: CustomIcons.Shoes },
-  ];
 
   const filterTabs = [
     { name: 'For You', icon: null },
@@ -78,20 +70,45 @@ const CustomIcons = {
       {/* Circle Categories Horizontal Scroller (Line Icons Edition) */}
       <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
          <div className="flex space-x-4 px-2 items-center">
-            {circleCategories.map((cat, idx) => {
-               const Icon = cat.icon;
+            {/* All Category Circle */}
+            <div 
+              onClick={() => navigate('/')}
+              className="flex flex-col items-center cursor-pointer group flex-shrink-0"
+            >
+               <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm overflow-hidden ${!activeCategory ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md'}`}>
+                  <span className={`font-bold text-lg uppercase ${!activeCategory ? 'text-gold' : 'text-gray-400 dark:text-gray-500'}`}>ALL</span>
+               </div>
+               <span className={`text-[11px] font-sans tracking-wide transition-colors ${!activeCategory ? 'text-gold font-bold drop-shadow-sm' : 'text-green-600 dark:text-green-500 font-medium'}`}>All</span>
+            </div>
+
+            {categories.map((cat, idx) => {
+               // We map dynamic database categories
+               const cleanName = cat.name.split('(')[0].trim();
+               const isActive = activeCategory === cat.name;
                return (
                <div 
-                 key={idx} 
-                 onClick={() => navigate(`/?category=${encodeURIComponent(cat.id)}`)}
+                 key={cat.id || idx} 
+                 onClick={() => navigate(`/?category=${encodeURIComponent(cat.name)}`)}
                  className="flex flex-col items-center cursor-pointer group flex-shrink-0"
                >
-                  <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm ${activeCategory === cat.id ? 'border-black dark:border-gold bg-black text-white dark:bg-gold dark:text-black scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] text-gray-800 dark:text-gray-300 hover:shadow-md'}`}>
-                     <Icon className="w-[20px] h-[20px]" strokeWidth={1.25} />
+                  <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm overflow-hidden ${isActive ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md'}`}>
+                     {cat.imageUrl ? (
+                        <img src={cat.imageUrl} alt={cleanName} className="w-full h-full object-cover" />
+                     ) : (
+                        <span className="font-bold text-gray-400 dark:text-gray-500 text-lg uppercase">{cleanName.charAt(0)}</span>
+                     )}
                   </div>
-                  <span className={`text-[11px] font-bold tracking-wide ${activeCategory === cat.id ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>{cat.name}</span>
+                  <span className={`text-[11px] font-sans tracking-wide transition-colors ${isActive ? 'text-gold font-bold drop-shadow-sm' : 'text-green-600 dark:text-green-500 font-medium'}`}>{cleanName}</span>
                </div>
             )})}
+            {categoriesLoading && categories.length === 0 && (
+               [1, 2, 3, 4, 5].map((skeleton) => (
+                  <div key={`sk-${skeleton}`} className="flex flex-col items-center flex-shrink-0 space-y-1.5">
+                     <div className="w-[54px] h-[54px] rounded-full bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
+                     <div className="w-12 h-3 rounded bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
+                  </div>
+               ))
+            )}
          </div>
       </div>
 

@@ -1,7 +1,8 @@
 import ProductCard from './ProductCard';
 import { PackageOpen } from 'lucide-react';
+import { memo } from 'react';
 
-export default function ProductGrid({ products }) {
+export default memo(function ProductGrid({ products }) {
   if (!products || products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4 w-full">
@@ -19,4 +20,4 @@ export default function ProductGrid({ products }) {
       ))}
     </div>
   );
-}
+});

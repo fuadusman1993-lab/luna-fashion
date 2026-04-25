@@ -1,8 +1,9 @@
 import { useAppContext } from '../../context/AppContext';
 import { ShoppingBag, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { memo } from 'react';
 
-export default function ProductCard({ product }) {
+const ProductCard = memo(function ProductCard({ product }) {
   const { t, isInWishlist, toggleWishlist, addToCart } = useAppContext();
   const navigate = useNavigate();
 
@@ -67,7 +68,7 @@ export default function ProductCard({ product }) {
       </div>
 
       <div className="p-2 flex flex-col bg-white dark:bg-[#0a0a0a]">
-        <h3 className="text-[13px] text-gray-800 dark:text-gray-200 line-clamp-2 leading-tight font-medium mb-1">{product.name}</h3>
+        <h3 className="text-[13px] text-green-600 dark:text-green-500 line-clamp-2 leading-tight font-medium mb-1">{product.name}</h3>
 
         <div className="flex justify-between items-center mt-auto">
           <p className="font-bold text-[14px] tracking-tight text-red-600 dark:text-red-500">
@@ -89,4 +90,6 @@ export default function ProductCard({ product }) {
       </div>
     </div>
   );
-}
+});
+
+export default ProductCard;

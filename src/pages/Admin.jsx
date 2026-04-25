@@ -4,19 +4,31 @@ import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useAppContext } from '../context/AppContext';
-import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard, ArrowLeft } from 'lucide-react';
+import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { useProducts, addLocalProduct, updateLocalProduct, deleteLocalProduct } from '../hooks/useProducts';
+import { useCategories } from '../hooks/useCategories';
 import { useNavigate } from 'react-router-dom';
 
 export default function Admin() {
   const navigate = useNavigate();
   const { t } = useAppContext();
   const { products } = useProducts();
+  const { categories } = useCategories();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Category Form State
+  const [catEditId, setCatEditId] = useState(null);
+  const [catName, setCatName] = useState('');
+  const [catOrder, setCatOrder] = useState('');
+  const [catImageFile, setCatImageFile] = useState(null);
+  const [catUploading, setCatUploading] = useState(false);
+  const [catUploadProgress, setCatUploadProgress] = useState(0);
+  const [catSuccessMsg, setCatSuccessMsg] = useState('');
+  const [catErrorMsg, setCatErrorMsg] = useState('');
 
   // Product Form State
   const [editId, setEditId] = useState(null);
@@ -124,6 +136,103 @@ export default function Admin() {
       };
       reader.onerror = (error) => reject(error);
     });
+  };
+
+  const resetCatForm = () => {
+    setCatEditId(null);
+    setCatName('');
+    setCatOrder('');
+    setCatImageFile(null);
+    setCatUploadProgress(0);
+  };
+
+  const handleEditCategoryPrep = (cat) => {
+    setCatEditId(cat.id);
+    setCatName(cat.name);
+    setCatOrder(cat.order);
+    setCatImageFile(null);
+    window.scrollTo(0, 0);
+  };
+
+  const handleDeleteCategory = async (id) => {
+    if (window.confirm("Delete this category permanently?")) {
+      if (isFirebaseConfigured) {
+        await deleteDoc(doc(db, "categories", id));
+      }
+    }
+  };
+
+  const handleCreateOrUpdateCategory = async (e) => {
+    e.preventDefault();
+    setCatUploading(true);
+    setCatSuccessMsg('');
+    setCatErrorMsg('');
+
+    if (!isFirebaseConfigured) {
+      setCatErrorMsg('Database not configured.');
+      setCatUploading(false);
+      return;
+    }
+
+    if (!catImageFile && !catEditId) {
+      setCatErrorMsg('Please select an image file first.');
+      setCatUploading(false);
+      return;
+    }
+
+    try {
+      let imageUrl = null;
+      if (catImageFile) {
+        let file = catImageFile;
+        try {
+          if (catImageFile.type.startsWith('image/')) {
+            file = await compressImage(catImageFile);
+          }
+        } catch (err) {
+          console.warn("Image compression failed, using original", err);
+        }
+
+        const storageRef = ref(storage, `categories/${Date.now()}_${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        
+        await new Promise((resolve, reject) => {
+          uploadTask.on('state_changed', 
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setCatUploadProgress(Math.round(progress));
+            },
+            reject, 
+            async () => {
+              imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve();
+            }
+          );
+        });
+      }
+
+      const payload = {
+        name: catName,
+        order: Number(catOrder)
+      };
+
+      if (imageUrl) {
+        payload.imageUrl = imageUrl;
+      }
+
+      if (catEditId) {
+        await updateDoc(doc(db, "categories", catEditId), payload);
+        setCatSuccessMsg('Category updated successfully!');
+      } else {
+        await addDoc(collection(db, "categories"), payload);
+        setCatSuccessMsg('Category added successfully!');
+      }
+
+      setCatUploading(false);
+      resetCatForm();
+    } catch (err) {
+      setCatErrorMsg(err.message);
+      setCatUploading(false);
+    }
   };
 
   const handleLogin = async (e) => {
@@ -417,6 +526,14 @@ export default function Admin() {
           </button>
           
           <button 
+             onClick={() => { setActiveTab('categories'); resetCatForm(); }}
+             className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'categories' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
+          >
+             <ImageIcon className="w-5 h-5 mr-3" />
+             Home Categories
+          </button>
+          
+          <button 
              onClick={() => setActiveTab('settings')}
              className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'settings' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
           >
@@ -658,6 +775,88 @@ export default function Admin() {
                     </tbody>
                  </table>
                  {products.length === 0 && <p className="text-center py-10 text-gray-500">No products found.</p>}
+               </div>
+            </div>
+          )}
+
+          {activeTab === 'categories' && (
+            <div className="flex flex-col">
+               <h2 className="text-2xl font-display text-luna-black dark:text-luna-white uppercase tracking-wider mb-6">Home Categories</h2>
+               
+               {/* Category Form */}
+               <div className="bg-gray-50 dark:bg-[#151515] p-6 rounded border border-gray-200 dark:border-gray-800 mb-8">
+                 <h3 className="text-lg font-bold text-black dark:text-white mb-4">{catEditId ? 'Edit Category' : 'Add New Category'}</h3>
+                 {catSuccessMsg && <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 text-sm">{catSuccessMsg}</div>}
+                 {catErrorMsg && <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 text-sm">{catErrorMsg}</div>}
+                 
+                 <form onSubmit={handleCreateOrUpdateCategory} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category Name</label>
+                         <input type="text" value={catName} onChange={e => setCatName(e.target.value)} required className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none" placeholder="e.g. Makhawar" />
+                       </div>
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Display Order</label>
+                         <input type="number" value={catOrder} onChange={e => setCatOrder(e.target.value)} required className="w-full dark:text-white bg-transparent border-gray-300 dark:border-gray-700 border p-2 focus:ring-gold focus:border-gold outline-none" placeholder="e.g. 1" />
+                       </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{catEditId ? 'Update Image (Optional)' : 'Category Image'}</label>
+                      <input type="file" accept="image/*" onChange={e => setCatImageFile(e.target.files[0])} required={!catEditId} className="w-full dark:text-white bg-transparent border border-dashed border-gray-300 dark:border-gray-700 p-2 cursor-pointer focus:border-gold" />
+                    </div>
+                    
+                    <div className="flex gap-3">
+                       <button type="submit" disabled={catUploading} className="flex-1 bg-luna-black dark:bg-gold text-white dark:text-black p-3 uppercase tracking-wider font-bold hover:opacity-90 transition-opacity disabled:opacity-50 relative overflow-hidden">
+                         {catUploading && catUploadProgress > 0 && catUploadProgress < 100 && (
+                           <div className="absolute top-0 left-0 h-full bg-white/20 dark:bg-black/20 transition-all duration-300" style={{ width: `${catUploadProgress}%` }}></div>
+                         )}
+                         <span className="relative z-10">
+                           {catUploading ? (catUploadProgress > 0 ? `UPLOADING (${catUploadProgress}%)` : 'PUBLISHING...') : (catEditId ? 'UPDATE CATEGORY' : 'ADD CATEGORY')}
+                         </span>
+                       </button>
+                       {catEditId && (
+                          <button type="button" onClick={resetCatForm} className="px-4 border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400 font-bold uppercase tracking-wider hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Cancel</button>
+                       )}
+                    </div>
+                 </form>
+               </div>
+
+               <h3 className="text-lg font-bold text-black dark:text-white mb-4">Existing Categories</h3>
+               <div className="overflow-x-auto">
+                 <table className="w-full text-left text-sm text-gray-700 dark:text-gray-300 border-collapse">
+                    <thead className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white uppercase font-bold text-xs">
+                       <tr>
+                         <th className="px-4 py-3">Order</th>
+                         <th className="px-4 py-3">Image</th>
+                         <th className="px-4 py-3">Name</th>
+                         <th className="px-4 py-3 text-right">Actions</th>
+                       </tr>
+                    </thead>
+                    <tbody>
+                       {categories.map(cat => (
+                          <tr key={cat.id} className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                             <td className="px-4 py-3 font-bold">{cat.order}</td>
+                             <td className="px-4 py-3">
+                                <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-300 dark:border-gray-700 shadow-sm flex-shrink-0">
+                                   {cat.imageUrl ? <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs">No Img</div>}
+                                </div>
+                             </td>
+                             <td className="px-4 py-3 font-medium">{cat.name}</td>
+                             <td className="px-4 py-3 text-right">
+                                <button onClick={() => handleEditCategoryPrep(cat)} className="text-gold p-1 hover:bg-gold/20 mr-2 rounded">
+                                   <Pencil className="w-4 h-4" />
+                                </button>
+                                <button onClick={() => handleDeleteCategory(cat.id)} className="text-red-500 p-1 hover:bg-red-500/20 rounded">
+                                   <Trash2 className="w-4 h-4" />
+                                </button>
+                             </td>
+                          </tr>
+                       ))}
+                       {categories.length === 0 && (
+                          <tr><td colSpan="4" className="px-4 py-8 text-center text-gray-500">No home categories found.</td></tr>
+                       )}
+                    </tbody>
+                 </table>
                </div>
             </div>
           )}
