@@ -68,7 +68,7 @@ const CustomIcons = {
     <div className="flex flex-col bg-white dark:bg-[#0a0a0a] min-h-[90vh]">
       
       {/* Circle Categories Horizontal Scroller (Line Icons Edition) */}
-      <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+      <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
          <div className="flex space-x-4 px-2 items-center">
             {categories.map((cat, idx) => {
                // We map dynamic database categories
@@ -117,7 +117,7 @@ const CustomIcons = {
       </div>
 
       {/* Dynamic Filter Tabs - Clean AliExpress Style */}
-      <div className="sticky top-[90px] z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md flex justify-start items-center px-4 py-2 border-b-0 overflow-x-auto scrollbar-hide space-x-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+      <div className="sticky top-[90px] z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md flex justify-start items-center px-4 py-2 border-b-0 overflow-x-auto scrollbar-hide space-x-2 [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
          {filterTabs.map((tab, idx) => {
             const Icon = tab.icon;
             const isSelected = activeFilter === tab.name;

@@ -127,19 +127,20 @@ export default function TopBar() {
 
       {/* Scroller Row (Tabs) */}
       {!hideScroller && (
-        <div className="overflow-x-auto whitespace-nowrap px-3 scrollbar-hide mt-1" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+        <div className="overflow-x-auto whitespace-nowrap px-3 scrollbar-hide mt-1 [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
           <div className="flex space-x-6 items-center">
             {topCategories.map((cat, idx) => {
               const isActive = cat === activeCategory;
+              const cleanCat = cat.split('(')[0].trim();
               return (
                 <button
                   key={idx}
                   onClick={() => handleCategoryClick(cat)}
-                  className={`text-[14px] pb-2 px-1 relative transition-colors ${isActive ? 'text-white font-bold' : 'text-gray-400 font-medium hover:text-gray-300'}`}
+                  className={`text-[14px] pb-2 px-1 relative transition-colors duration-300 ${isActive ? 'text-gold font-bold' : 'text-gray-400 font-medium hover:text-gray-300'}`}
                 >
-                  {cat}
+                  {cleanCat}
                   {isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-white rounded-t-full"></span>
+                    <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-gold rounded-t-full shadow-[0_0_8px_rgba(212,175,55,0.8)]"></span>
                   )}
                 </button>
               )

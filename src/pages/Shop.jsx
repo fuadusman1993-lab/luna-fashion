@@ -24,7 +24,17 @@ export default function Shop() {
       
       {/* Custom Shop Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-gray-900 sticky top-0 z-50">
-        {/* Left: Search & Cart */}
+        {/* Left: Back Button */}
+        <button onClick={() => navigate(-1)} className="text-black dark:text-white shrink-0">
+           <ArrowLeft className="w-[22px] h-[22px]" strokeWidth={1.5} />
+        </button>
+        
+        {/* Center: Title */}
+        <h1 className="text-[15px] font-display tracking-widest uppercase font-bold text-black dark:text-white absolute left-1/2 -translate-x-1/2">
+           SHOP
+        </h1>
+        
+        {/* Right: Search & Cart */}
         <div className="flex items-center gap-4 text-black dark:text-white shrink-0">
           <button onClick={() => navigate('/search')}><Search className="w-[20px] h-[20px]" strokeWidth={1.5} /></button>
           <button onClick={() => navigate('/cart')} className="relative">
@@ -36,20 +46,10 @@ export default function Shop() {
              )}
           </button>
         </div>
-        
-        {/* Center: Title */}
-        <h1 className="text-[15px] font-display tracking-widest uppercase font-bold text-black dark:text-white absolute left-1/2 -translate-x-1/2">
-           SHOP
-        </h1>
-        
-        {/* Right: Back Button */}
-        <button onClick={() => navigate(-1)} className="text-black dark:text-white shrink-0">
-           <ArrowLeft className="w-[22px] h-[22px]" strokeWidth={1.5} />
-        </button>
       </div>
 
       {/* Dynamic Category Navigation */}
-      <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide bg-white dark:bg-[#111111] shrink-0" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+      <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide bg-white dark:bg-[#111111] shrink-0 [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
          <div className="flex space-x-4 px-2 items-center">
             {/* All Category Circle */}
             <div 
@@ -93,12 +93,12 @@ export default function Shop() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 bg-[#f5f5f5] dark:bg-[#050505] overflow-y-auto px-2 md:px-6 pt-4 pb-[100px] no-scrollbar" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+      <div className="flex-1 bg-[#f5f5f5] dark:bg-[#050505] overflow-y-auto px-2 md:px-6 pt-4 pb-[100px] no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
          <div className="flex justify-between items-center mb-4 px-2">
              <h2 className="text-[13px] font-bold text-black dark:text-white uppercase tracking-wide">
-                {activeCategory === 'All' ? 'The Collection' : activeCategory}
+                {activeCategory === 'All' ? 'The Collection' : activeCategory.split('(')[0].trim()}
              </h2>
-             <span className="text-[10px] text-gray-400 font-medium">{filteredProducts.length} items</span>
+             <span className="text-[10px] text-green-600 dark:text-green-500 font-bold">{filteredProducts.length} items</span>
          </div>
          
          {error ? (
