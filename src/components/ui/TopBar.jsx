@@ -63,7 +63,7 @@ export default function TopBar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-[#000000]/90 backdrop-blur-md transition-colors duration-300 shadow-sm max-w-7xl mx-auto pb-0 border-b border-white/10">
+    <header className="fixed top-0 left-0 right-0 m-0 p-0 w-full z-50 bg-[#000000]/90 backdrop-blur-md transition-colors duration-300 shadow-sm max-w-7xl mx-auto pb-0 border-b border-white/10">
       {/* Hidden file input for camera/file upload mockup */}
       <input
         type="file"

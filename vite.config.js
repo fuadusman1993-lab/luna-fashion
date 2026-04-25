@@ -16,16 +16,22 @@ export default defineConfig({
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
         display: "standalone",
+        display_override: ["standalone", "window-controls-overlay"],
         start_url: "/",
         scope: "/",
         icons: [
           {
-            src: '/logo.jpg',
+            src: '/logo.jpg?v=2',
+            sizes: '64x64',
+            type: 'image/jpeg'
+          },
+          {
+            src: '/logo.jpg?v=2',
             sizes: '192x192',
             type: 'image/jpeg'
           },
           {
-            src: '/logo.jpg',
+            src: '/logo.jpg?v=2',
             sizes: '512x512',
             type: 'image/jpeg',
             purpose: 'any maskable'
