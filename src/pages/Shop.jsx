@@ -30,8 +30,15 @@ export default function Shop() {
 
   const filteredProducts = useMemo(() => {
     const safeProducts = products || [];
-    if (activeCategory === 'All') return safeProducts;
-    return safeProducts.filter(p => p.category && p.category.toLowerCase() === activeCategory.toLowerCase());
+    if (!activeCategory || activeCategory === 'All') return safeProducts;
+    
+    const target = activeCategory.split('(')[0].toLowerCase().trim();
+
+    return safeProducts.filter(p => {
+      if (!p.category) return false;
+      const pCat = p.category.split('(')[0].toLowerCase().trim();
+      return pCat === target || pCat.includes(target) || target.includes(pCat);
+    });
   }, [products, activeCategory]);
 
   return (
