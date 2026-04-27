@@ -27,8 +27,8 @@ export default function Onboarding({ onComplete }) {
            transition={{ duration: 0.8 }}
            className="relative z-10 flex flex-col items-center"
          >
-           <span className="text-gray-400 font-medium tracking-widest uppercase text-xs mb-4">Welcome to</span>
-           <img src="/logo.jpg" alt="Luna Fashion" className="h-[100px] w-auto object-contain drop-shadow-2xl" />
+           <span className="text-gray-400 font-medium tracking-widest uppercase text-xs mb-4">WELCOME TO LUNA FASHION</span>
+           <img src="/logo.png" alt="Luna Fashion" className="h-[100px] w-auto object-contain drop-shadow-2xl" />
          </motion.div>
       </div>
 
