@@ -20,16 +20,24 @@ export default function Onboarding({ onComplete }) {
       
       {/* Top Map Section */}
       <div className="relative h-[30vh] flex items-center justify-center p-6 mt-10">
-         <div className="absolute inset-0 opacity-40 dark:opacity-20" style={mapStyle}></div>
-         <motion.div 
-           initial={{ opacity: 0, scale: 0.9 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ duration: 0.8 }}
-           className="relative z-10 flex flex-col items-center"
-         >
-           <span className="text-gray-400 font-medium tracking-widest uppercase text-xs mb-4">WELCOME TO LUNA FASHION</span>
-           <img src="/logo.png" alt="Luna Fashion" className="h-[100px] w-auto object-contain drop-shadow-2xl" />
-         </motion.div>
+          {/* Map Image Background */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-80"
+            style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2074&auto=format&fit=crop")' }}
+          >
+             <div className="absolute inset-0 bg-black/60"></div>
+          </div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-10 flex flex-col items-center justify-center h-full w-full px-4"
+          >
+            <h1 className="text-3xl md:text-4xl font-serif text-center tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] drop-shadow-[0_0_15px_rgba(212,175,55,0.4)] leading-snug">
+              WELCOME TO<br/>LUNA FASHION
+            </h1>
+          </motion.div>
       </div>
 
       {/* Middle Settings Panel */}
