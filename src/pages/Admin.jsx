@@ -136,6 +136,7 @@ export default function Admin() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [successMsg, setSuccessMsg] = useState('');
+  const [error, setError] = useState('');
 
   const PREDEFINED_COLORS = [
     { name: 'Original (As Shown)', hex: '#f5f5f5' },
