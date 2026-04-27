@@ -5,13 +5,19 @@ import { useAppContext } from '../../context/AppContext';
 export default function Onboarding({ onComplete }) {
   const { language, toggleLanguage } = useAppContext();
 
-  // Faint dotted map placeholder using CSS background pattern for luxury feel
-  const mapStyle = {
+  // Dot Matrix World Map using CSS Mask over a dotted gradient
+  const dotMatrixMapStyle = {
     backgroundImage: `radial-gradient(#d4af37 1px, transparent 1px)`,
-    backgroundSize: '15px 15px',
+    backgroundSize: '12px 12px',
     backgroundPosition: 'center',
-    maskImage: 'radial-gradient(ellipse at center, black, transparent 70%)',
-    WebkitMaskImage: 'radial-gradient(ellipse at center, black, transparent 70%)'
+    maskImage: `url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')`,
+    WebkitMaskImage: `url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')`,
+    maskSize: '80% auto',
+    WebkitMaskSize: '80% auto',
+    maskPosition: 'center',
+    WebkitMaskPosition: 'center',
+    maskRepeat: 'no-repeat',
+    WebkitMaskRepeat: 'no-repeat',
   };
 
   return (
@@ -20,8 +26,8 @@ export default function Onboarding({ onComplete }) {
 
         {/* Top Map Section */}
         <div className="relative h-[30vh] flex items-center justify-center p-6 bg-black rounded-t-none sm:rounded-t-3xl mt-0">
-          {/* Map Dots Background */}
-          <div className="absolute inset-0 opacity-80" style={mapStyle}></div>
+          {/* Dot Matrix Map Background */}
+          <div className="absolute inset-0 opacity-40" style={dotMatrixMapStyle}></div>
           
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
