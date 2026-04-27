@@ -30,7 +30,7 @@ function AppContent() {
   const [showSplash, setShowSplash] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const { toastMessage } = useAppContext();
-  
+
   useMessaging(); // Initialize messaging and request token
 
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ function AppContent() {
       // Show Onboarding after splash for new users
       setShowOnboarding(true);
     }
-    
+
     initialLoadComplete = true;
     setIsInitializing(false);
   }, []);
@@ -61,7 +61,7 @@ function AppContent() {
       if (location.pathname === '/') {
         localStorage.setItem('hasSeenOnboarding', 'true');
       }
-      
+
       // Log Analytics Page View (skip admin paths to avoid skewed stats)
       if (!location.pathname.startsWith('/admin')) {
         logPageView(location.pathname);
@@ -72,14 +72,14 @@ function AppContent() {
   // Analytics Heartbeat Setup (120 seconds)
   useEffect(() => {
     if (isInitializing || showSplash || showOnboarding) return;
-    
+
     // Send immediate initial heartbeat
     sendActiveHeartbeat();
-    
+
     const interval = setInterval(() => {
       sendActiveHeartbeat();
     }, 120000);
-    
+
     return () => clearInterval(interval);
   }, [isInitializing, showSplash, showOnboarding]);
 
@@ -117,7 +117,7 @@ function AppContent() {
       )}
 
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
-      
+
       {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
 
       {/* Global Toast Notification Overlay */}
