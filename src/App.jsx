@@ -21,6 +21,7 @@ import SplashScreen from './components/ui/SplashScreen';
 import { useAppContext } from './context/AppContext';
 import { ShoppingBag } from 'lucide-react';
 import { logPageView, sendActiveHeartbeat } from './services/analytics';
+import { useMessaging } from './hooks/useMessaging';
 
 let initialLoadComplete = false;
 
@@ -29,6 +30,8 @@ function AppContent() {
   const [showSplash, setShowSplash] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const { toastMessage } = useAppContext();
+  
+  useMessaging(); // Initialize messaging and request token
 
   const navigate = useNavigate();
   const location = useLocation();

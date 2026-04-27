@@ -508,6 +508,26 @@ export default function Admin() {
          payload.createdAt = serverTimestamp();
          await addDoc(collection(db, "products"), payload);
          setSuccessMsg('Product added successfully!');
+         
+         // Trigger push notification to all users
+         try {
+           const notifyRes = await fetch('/api/notify', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ category, productName: name })
+           });
+           
+           if (!notifyRes.ok) {
+             const errorData = await notifyRes.text();
+             console.error('Notification API Error:', notifyRes.status, errorData);
+             alert(`Warning: Product saved, but failed to send push notification. API returned ${notifyRes.status}. Make sure you are testing on Vercel, not localhost.`);
+           } else {
+             console.log('Push notification triggered successfully!');
+           }
+         } catch (notifyErr) {
+           console.warn('Failed to send push notification:', notifyErr);
+           alert('Warning: Product saved, but failed to reach notification server. Are you testing locally?');
+         }
       }
 
       setUploading(false);
