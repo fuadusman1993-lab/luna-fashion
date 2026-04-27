@@ -88,17 +88,10 @@ function AppContent() {
 
   if (isInitializing) return null;
 
-  if (showSplash) {
-    return <SplashScreen onComplete={() => setShowSplash(false)} />;
-  }
-
-  if (showOnboarding) {
-    return <Onboarding onComplete={handleOnboardingComplete} />;
-  }
-
   return (
     <>
-      <Routes>
+      {!showOnboarding && (
+        <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
@@ -117,7 +110,12 @@ function AppContent() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/product/:id" element={<ProductDetail />} />
-      </Routes>
+        </Routes>
+      )}
+
+      {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
+      
+      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
 
       {/* Global Toast Notification Overlay */}
       {toastMessage && (

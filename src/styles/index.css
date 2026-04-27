@@ -1,16 +1,25 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 @layer base {
   html, body {
     overscroll-behavior-y: contain;
   }
   body {
-    @apply bg-gray-100 dark:bg-[#070707] text-luna-black font-body transition-colors duration-300 ease-in-out;
+    background-color: theme('colors.gray.100');
+    color: theme('colors.luna.black');
+    font-family: theme('fontFamily.body');
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+  .dark body {
+    background-color: #070707;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display text-luna-black;
+    font-family: theme('fontFamily.display');
+    color: theme('colors.luna.black');
   }
   
   /* Hide scrollbar for Chrome, Safari and Opera */

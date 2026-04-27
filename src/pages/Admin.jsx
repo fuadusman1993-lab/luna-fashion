@@ -574,11 +574,11 @@ export default function Admin() {
           </button>
 
           <button 
-             onClick={() => setActiveTab('products')}
+             onClick={() => { setActiveTab('products'); resetForm(); }}
              className={`flex items-center px-4 py-3 text-left transition-colors ${activeTab === 'products' ? 'bg-gold text-black font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'}`}
           >
              <PackagePlus className="w-5 h-5 mr-3" />
-             {editId ? 'Edit Product' : t('addNewProduct')}
+             {t('addNewProduct')}
           </button>
 
           <button 
