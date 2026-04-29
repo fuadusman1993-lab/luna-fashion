@@ -65,7 +65,14 @@ export default function ProductDetail() {
     const text = `${imageLink}\nI want to buy: ${product.name} - ${product.price} ETB\nSize: ${selectedSize}\nColor: ${selectedColor}`;
     const encodedText = encodeURIComponent(text);
     const telegramUrl = `https://t.me/Luna_market1?text=${encodedText}`;
-    window.open(telegramUrl, '_blank');
+    
+    // Using anchor click for better PWA compatibility and to prevent popup blockers
+    const link = document.createElement('a');
+    link.href = telegramUrl;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const isConfigIncomplete = (availableSizes.length > 0 && !selectedSize) || !selectedColor;

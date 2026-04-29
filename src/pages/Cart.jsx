@@ -67,56 +67,66 @@ export default function Cart() {
 
   const { createOrder, loading: orderLoading } = useOrders();
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (selectedItems.length === 0) return;
     
+    // Generate a quick tracking ID so we don't have to wait for Firestore
+    const trackingId = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    // 1. Format Telegram Message
+    let text = "";
+    
+    // Add first item's image to trigger preview
+    if (selectedCartItems.length > 0) {
+      const firstItem = selectedCartItems[0];
+      const firstImage = firstItem.image || firstItem.imageUrl || (firstItem.images && firstItem.images[0]) || '';
+      if (firstImage) {
+        text += `${firstImage}\n\n`;
+      }
+    }
+
+    text += "✨ *Luna Fashion Order Request* ✨\n\n";
+    text += `*Order ID:* ${trackingId}\n\n`; // Add Tracking ID
+    selectedCartItems.forEach(item => {
+      const qty = item.qty || 1;
+      text += `🛍️ *${item.name}*\n`;
+      text += `   ↳ Variant: ${item.size} / ${item.color}\n`;
+      text += `   ↳ Qty: ${qty} x ${Number(item.price).toLocaleString()} ETB\n`;
+      text += `   ↳ Subtotal: ${(Number(item.price) * qty).toLocaleString()} ETB\n\n`;
+    });
+    text += `💳 *Final Total: ${total.toLocaleString()} ETB*\n`;
+    text += "📍 Shipping to: Ethiopia\n\n";
+    text += "Is this available to order?";
+    
+    // 2. Open Telegram Immediately (Fixes slowness and popup blocker issues)
+    const encodedText = encodeURIComponent(text);
+    const telegramUrl = `https://t.me/Luna_market1?text=${encodedText}`;
+    
+    // Using anchor click for better PWA compatibility
+    const link = document.createElement('a');
+    link.href = telegramUrl;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // 3. Create Order in Firestore in the background
     try {
-      // 1. Create Order in Firestore
       const orderPayload = {
         items: selectedCartItems,
         totalAmount: total,
         totalItemsCount,
-        contactPhone: 'guest-no-phone', // This can be updated later if a phone form is added
-        shippingDestination: 'Ethiopia'
+        contactPhone: 'guest-no-phone',
+        shippingDestination: 'Ethiopia',
+        trackingId
       };
       
-      const orderId = await createOrder(orderPayload);
-      console.log('Order created with ID: ', orderId);
-      
-      // 2. Format Telegram Message
-      let text = "";
-      
-      // Add first item's image to trigger preview
-      if (selectedCartItems.length > 0) {
-        const firstItem = selectedCartItems[0];
-        const firstImage = firstItem.image || firstItem.imageUrl || (firstItem.images && firstItem.images[0]) || '';
-        if (firstImage) {
-          text += `${firstImage}\n\n`;
-        }
-      }
-
-      text += "✨ *Luna Fashion Order Request* ✨\n\n";
-      text += `*Order ID:* ${orderId}\n\n`; // Add Order ID for tracking
-      selectedCartItems.forEach(item => {
-        const qty = item.qty || 1;
-        text += `🛍️ *${item.name}*\n`;
-        text += `   ↳ Variant: ${item.size} / ${item.color}\n`;
-        text += `   ↳ Qty: ${qty} x ${Number(item.price).toLocaleString()} ETB\n`;
-        text += `   ↳ Subtotal: ${(Number(item.price) * qty).toLocaleString()} ETB\n\n`;
+      createOrder(orderPayload).catch(err => {
+        console.error('Failed to create background order', err);
       });
-      text += `💳 *Final Total: ${total.toLocaleString()} ETB*\n`;
-      text += "📍 Shipping to: Ethiopia\n\n";
-      text += "Is this available to order?";
       
-      // 3. Open Telegram
-      const encodedText = encodeURIComponent(text);
-      const telegramUrl = `https://t.me/Luna_market1?text=${encodedText}`;
-      window.open(telegramUrl, '_blank');
-      
-      // Optionally clear the cart of selected items here
     } catch (err) {
-      console.error('Failed to create order in Firestore', err);
-      alert('There was an issue processing your order. Please try again.');
+      console.error('Checkout error', err);
     }
   };
 
