@@ -84,7 +84,18 @@ export default function Cart() {
       console.log('Order created with ID: ', orderId);
       
       // 2. Format Telegram Message
-      let text = "✨ *Luna Fashion Order Request* ✨\n\n";
+      let text = "";
+      
+      // Add first item's image to trigger preview
+      if (selectedCartItems.length > 0) {
+        const firstItem = selectedCartItems[0];
+        const firstImage = firstItem.image || firstItem.imageUrl || (firstItem.images && firstItem.images[0]) || '';
+        if (firstImage) {
+          text += `${firstImage}\n\n`;
+        }
+      }
+
+      text += "✨ *Luna Fashion Order Request* ✨\n\n";
       text += `*Order ID:* ${orderId}\n\n`; // Add Order ID for tracking
       selectedCartItems.forEach(item => {
         const qty = item.qty || 1;

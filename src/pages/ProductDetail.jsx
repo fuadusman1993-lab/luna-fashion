@@ -60,7 +60,9 @@ export default function ProductDetail() {
   const WHATSAPP_NUMBER = "+251977799797"; 
 
   const handleBuyNowOrder = () => {
-    const text = `Hello Luna Fashion! I would like to order the *${product.name}*.\nPrice: ${product.price} ETB\nSize: ${selectedSize}\nColor: ${selectedColor}\nIs it still available?`;
+    const activeColorObj = colors.find(c => c.name === selectedColor);
+    const imageLink = activeColorObj?.imageUrl || product.imageUrl || (product.images && product.images[0]) || '';
+    const text = `${imageLink}\nI want to buy: ${product.name} - ${product.price} ETB\nSize: ${selectedSize}\nColor: ${selectedColor}`;
     const encodedText = encodeURIComponent(text);
     const telegramUrl = `https://t.me/Luna_market1?text=${encodedText}`;
     window.open(telegramUrl, '_blank');
