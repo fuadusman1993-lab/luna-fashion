@@ -23,7 +23,7 @@ export default function Orders() {
     }
   };
 
-  const handleSendItemThanks = (order, item) => {
+  const handleSendItemThanks = async (order, item) => {
     const itemImage = item.imageUrl || item.images?.[0] || '';
     const text = `${itemImage ? itemImage + '\n\n' : ''}✨ *Thank You!* ✨\n\nI received the *${item.name}* (Order ID: ${order.id.slice(-6)}) and I love it! Thank you for the great service.`;
     const telegramUrl = `https://t.me/Luna_market1?text=${encodeURIComponent(text)}`;
@@ -31,6 +31,16 @@ export default function Orders() {
     link.href = telegramUrl; link.target = '_blank';
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
     setActiveItemKey(null);
+    
+    // Update order status to indicate it was received/thanked
+    if (order.status === 'pending') {
+      try {
+        await updateOrder(order.id, { status: 'Received' });
+        setOrders(prev => prev.map(o => o.id === order.id ? { ...o, status: 'Received' } : o));
+      } catch (err) {
+        console.error('Failed to update order status:', err);
+      }
+    }
   };
 
   const handleSendItemFeedback = (order, item) => {
