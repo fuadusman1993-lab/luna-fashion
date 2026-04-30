@@ -2,12 +2,15 @@ import { useAppContext } from '../context/AppContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Share2, ShoppingBag, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
+import { useProducts } from '../hooks/useProducts';
+import ProductGrid from '../components/product/ProductGrid';
 
 export default function ProductDetail() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
   const { toggleWishlist, isInWishlist, addToCart, cart } = useAppContext();
+  const { products } = useProducts();
   
   // Route fallback state parameter fetching
   const product = state?.product;
@@ -16,6 +19,10 @@ export default function ProductDetail() {
   let availableSizes = ['S', 'M', 'L', 'XL', 'XXL'];
   if (category.toLowerCase().includes('shoe')) availableSizes = ['36', '37', '38', '39', '40', '41'];
   else if (category.toLowerCase().includes('makeup') || category.toLowerCase().includes('bag')) availableSizes = [];
+
+  const recommendations = products 
+    ? products.filter(p => p.category === category && p.id !== product.id).slice(0, 4)
+    : [];
 
   const colors = product?.colors && product.colors.length > 0 
     ? product.colors 
@@ -210,6 +217,22 @@ export default function ProductDetail() {
          </div>
       </div>
       </div>
+
+      {/* Recommendations Section */}
+      {recommendations.length > 0 && (
+        <div className="mt-8 mb-6 md:mb-10 w-full">
+          <div className="flex items-center justify-center mb-5 gap-3">
+            <div className="w-1.5 h-1.5 rotate-45 bg-[#D4AF37]"></div>
+            <h3 className="text-[14px] md:text-[16px] font-bold text-black dark:text-white uppercase tracking-widest font-serif">
+              You May Also Like
+            </h3>
+            <div className="w-1.5 h-1.5 rotate-45 bg-[#D4AF37]"></div>
+          </div>
+          <div className="px-3 md:px-0">
+             <ProductGrid products={recommendations} />
+          </div>
+        </div>
+      )}
 
       {/* Fixed Sticky Action Bar Base */}
       <div className="fixed bottom-0 md:bottom-0 left-0 right-0 mx-auto z-50 bg-white dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-white/10 px-4 py-3 md:max-w-7xl pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] dark:shadow-none flex items-center gap-3">
