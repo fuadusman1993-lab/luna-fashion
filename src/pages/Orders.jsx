@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Package, Clock, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Package, Clock, CheckCircle2, MessageSquare, ThumbsUp, X, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useOrders } from '../hooks/useOrders';
 
@@ -7,6 +7,27 @@ export default function Orders() {
   const navigate = useNavigate();
   const { getUserOrders, loading } = useOrders();
   const [orders, setOrders] = useState([]);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackText, setFeedbackText] = useState('');
+
+  const handleSendThanks = () => {
+    const text = `✨ *Thank You!* ✨\n\nI just wanted to express my appreciation for your service. Everything was great!`;
+    const telegramUrl = `https://t.me/Luna_market1?text=${encodeURIComponent(text)}`;
+    const link = document.createElement('a');
+    link.href = telegramUrl; link.target = '_blank';
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  };
+
+  const handleSendFeedback = () => {
+    if (!feedbackText.trim()) return;
+    const text = `📝 *Customer Feedback* 📝\n\n${feedbackText}`;
+    const telegramUrl = `https://t.me/Luna_market1?text=${encodeURIComponent(text)}`;
+    const link = document.createElement('a');
+    link.href = telegramUrl; link.target = '_blank';
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    setShowFeedback(false);
+    setFeedbackText('');
+  };
 
   useEffect(() => {
     async function fetchOrders() {
@@ -78,6 +99,58 @@ export default function Orders() {
                   </div>
                </div>
              ))}
+             
+             {/* Global Feedback & Thanks Section */}
+             <div className="mt-6 bg-white dark:bg-[#111] p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm relative">
+                <h3 className="font-bold text-[14px] text-black dark:text-white tracking-wide mb-1">How was your experience?</h3>
+                <p className="text-[11px] text-gray-500 mb-4">Let us know or simply send a quick thanks!</p>
+                
+                {showFeedback ? (
+                  <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="relative">
+                      <textarea 
+                        value={feedbackText}
+                        onChange={(e) => setFeedbackText(e.target.value)}
+                        placeholder="Type your feedback here..."
+                        className="w-full bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-xl p-3 pr-10 text-[13px] text-black dark:text-white outline-none focus:border-gold transition-colors min-h-[100px] resize-none"
+                      />
+                      <button 
+                        onClick={() => setShowFeedback(false)}
+                        className="absolute top-3 right-3 text-gray-400 hover:text-black dark:hover:text-white transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="flex gap-2 mt-3">
+                      <button 
+                        onClick={handleSendFeedback}
+                        disabled={!feedbackText.trim()}
+                        className="flex-1 bg-black dark:bg-white text-white dark:text-black rounded-xl py-3 font-bold uppercase tracking-widest text-[11px] flex items-center justify-center disabled:opacity-50 transition-all hover:scale-[1.02] active:scale-95 shadow-sm"
+                      >
+                        <Send className="w-3.5 h-3.5 mr-2" />
+                        Send via Telegram
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => setShowFeedback(true)}
+                      className="flex-1 bg-gray-50 dark:bg-[#1a1a1a] hover:bg-gray-100 dark:hover:bg-[#222] border border-gray-200 dark:border-gray-800 text-black dark:text-white rounded-xl py-3 font-bold uppercase tracking-widest text-[11px] flex items-center justify-center transition-all hover:scale-[1.02] active:scale-95"
+                    >
+                      <MessageSquare className="w-4 h-4 mr-2" />
+                      Feedback
+                    </button>
+                    <button 
+                      onClick={handleSendThanks}
+                      className="flex-1 bg-gold text-black rounded-xl py-3 font-bold uppercase tracking-widest text-[11px] flex items-center justify-center transition-all hover:scale-[1.02] active:scale-95 shadow-[0_4px_10px_rgba(212,175,55,0.3)]"
+                    >
+                      <ThumbsUp className="w-4 h-4 mr-2" />
+                      Thanks
+                    </button>
+                  </div>
+                )}
+             </div>
           </div>
         )}
       </div>
