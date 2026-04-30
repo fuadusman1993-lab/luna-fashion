@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { db } from '../services/firebase';
-import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 
 export function useOrders() {
@@ -45,7 +45,6 @@ export function useOrders() {
         ...doc.data()
       }));
       setLoading(false);
-      // Sort in JS instead of compound index to avoid missing index errors
       return ordersList.sort((a, b) => {
          const timeA = a.createdAt?.seconds || 0;
          const timeB = b.createdAt?.seconds || 0;
@@ -59,5 +58,23 @@ export function useOrders() {
     }
   };
 
-  return { createOrder, getUserOrders, loading, error };
+  const deleteOrder = async (orderId) => {
+    try {
+      await deleteDoc(doc(db, 'orders', orderId));
+    } catch (err) {
+      console.error('Error deleting order:', err);
+      throw err;
+    }
+  };
+
+  const updateOrder = async (orderId, data) => {
+    try {
+      await updateDoc(doc(db, 'orders', orderId), data);
+    } catch (err) {
+      console.error('Error updating order:', err);
+      throw err;
+    }
+  };
+
+  return { createOrder, getUserOrders, deleteOrder, updateOrder, loading, error };
 }
