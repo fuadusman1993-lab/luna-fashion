@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, Package, Clock, CheckCircle2, MessageSquare, ThumbsUp, X, Send, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useOrders } from '../hooks/useOrders';
+import { checkRateLimit, sanitizeInput } from '../utils/security';
 
 export default function Orders() {
   const navigate = useNavigate();
@@ -24,6 +25,11 @@ export default function Orders() {
   };
 
   const handleSendItemThanks = async (order, item) => {
+    if (checkRateLimit('sendThanks', 5, 60000)) {
+       alert("You are sending messages too quickly. Please wait a moment.");
+       return;
+    }
+
     const itemImage = item.imageUrl || item.images?.[0] || '';
     const text = `${itemImage ? itemImage + '\n\n' : ''}✨ *Thank You!* ✨\n\nI received the *${item.name}* (Order ID: ${order.id.slice(-6)}) and I love it! Thank you for the great service.`;
     const telegramUrl = `https://t.me/Luna_market1?text=${encodeURIComponent(text)}`;
@@ -45,8 +51,15 @@ export default function Orders() {
 
   const handleSendItemFeedback = (order, item) => {
     if (!feedbackText.trim()) return;
+    
+    if (checkRateLimit('sendFeedback', 5, 60000)) {
+       alert("You are sending feedback too quickly. Please wait a moment.");
+       return;
+    }
+
+    const cleanFeedback = sanitizeInput(feedbackText);
     const itemImage = item.imageUrl || item.images?.[0] || '';
-    const text = `${itemImage ? itemImage + '\n\n' : ''}📝 *Customer Feedback* 📝\n\n*Item:* ${item.name}\n*Order ID:* ${order.id.slice(-6)}\n\n*Feedback:* ${feedbackText}`;
+    const text = `${itemImage ? itemImage + '\n\n' : ''}📝 *Customer Feedback* 📝\n\n*Item:* ${item.name}\n*Order ID:* ${order.id.slice(-6)}\n\n*Feedback:* ${cleanFeedback}`;
     const telegramUrl = `https://t.me/Luna_market1?text=${encodeURIComponent(text)}`;
     const link = document.createElement('a');
     link.href = telegramUrl; link.target = '_blank';

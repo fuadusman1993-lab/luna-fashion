@@ -6,6 +6,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useAppContext } from '../context/AppContext';
 import { User, Settings, PackagePlus, ListTree, Pencil, Trash2, LayoutDashboard, ArrowLeft, Image as ImageIcon, Shield, BarChart2, Users } from 'lucide-react';
 import { useProducts, addLocalProduct, updateLocalProduct, deleteLocalProduct } from '../hooks/useProducts';
+import { checkRateLimit, sanitizeInput } from '../utils/security';
 import { useCategories } from '../hooks/useCategories';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -254,6 +255,12 @@ export default function Admin() {
 
   const handleCreateOrUpdateCategory = async (e) => {
     e.preventDefault();
+    
+    if (checkRateLimit('adminCategory', 10, 60000)) {
+       setCatErrorMsg("Rate limit exceeded. Please slow down.");
+       return;
+    }
+
     setCatUploading(true);
     setCatSuccessMsg('');
     setCatErrorMsg('');
@@ -301,8 +308,8 @@ export default function Admin() {
       }
 
       const payload = {
-        name: catName,
-        order: Number(catOrder)
+        name: sanitizeInput(catName),
+        order: Number(sanitizeInput(catOrder.toString()))
       };
 
       if (imageUrl) {
@@ -373,6 +380,12 @@ export default function Admin() {
 
   const handleCreateOrUpdateProduct = async (e) => {
     e.preventDefault();
+    
+    if (checkRateLimit('adminProduct', 10, 60000)) {
+       setError("Rate limit exceeded. Please slow down.");
+       return;
+    }
+
     setUploading(true);
     setSuccessMsg('');
     setError('');
@@ -381,12 +394,12 @@ export default function Admin() {
       setTimeout(() => {
         const localUrls = imageFiles.map(file => URL.createObjectURL(file));
         const payload = {
-           name,
-           category,
-           price: Number(price),
+           name: sanitizeInput(name),
+           category: sanitizeInput(category),
+           price: Number(sanitizeInput(price.toString())),
            currency: "ETB",
-           description,
-           shippingTime,
+           description: sanitizeInput(description),
+           shippingTime: sanitizeInput(shippingTime),
            inStock,
            isBestseller,
            isNewIn,
@@ -480,12 +493,12 @@ export default function Admin() {
       }
 
       const payload = {
-        name,
-        category,
-        price: Number(price),
+        name: sanitizeInput(name),
+        category: sanitizeInput(category),
+        price: Number(sanitizeInput(price.toString())),
         currency: "ETB",
-        description,
-        shippingTime,
+        description: sanitizeInput(description),
+        shippingTime: sanitizeInput(shippingTime),
         inStock,
         isBestseller,
         isNewIn,

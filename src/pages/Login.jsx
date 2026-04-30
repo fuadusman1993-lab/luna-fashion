@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Phone, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAppContext } from '../context/AppContext';
+import { checkRateLimit } from '../utils/security';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,6 +19,11 @@ export default function Login() {
     e.preventDefault();
     if (loginMethod === 'phone') {
       showToast('Phone auth requires Recaptcha. Please use Email.');
+      return;
+    }
+
+    if (checkRateLimit('loginAttempt', 5, 300000)) { // 5 attempts per 5 mins
+      showToast('Too many login attempts. Please try again later.');
       return;
     }
 
@@ -45,6 +51,11 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async () => {
+    if (checkRateLimit('loginAttempt', 5, 300000)) {
+      showToast('Too many login attempts. Please try again later.');
+      return;
+    }
+
     try {
       setLoading(true);
       await loginWithGoogle();

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { db } from '../services/firebase';
 import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
+import { checkRateLimit, sanitizeObject } from '../utils/security';
 
 export function useOrders() {
   const [loading, setLoading] = useState(false);
@@ -9,13 +10,19 @@ export function useOrders() {
   const { currentUser } = useAuth();
 
   const createOrder = async (orderData) => {
+    if (checkRateLimit('createOrder', 3, 60000)) {
+      alert("You are creating orders too quickly. Please wait a moment.");
+      throw new Error("Rate limit exceeded");
+    }
+
     setLoading(true);
     setError(null);
     try {
+      const sanitizedData = sanitizeObject(orderData);
       const payload = {
-        ...orderData,
+        ...sanitizedData,
         userId: currentUser ? currentUser.uid : 'guest',
-        userEmail: currentUser ? currentUser.email : orderData.contactPhone,
+        userEmail: currentUser ? currentUser.email : sanitizedData.contactPhone,
         status: 'pending',
         createdAt: serverTimestamp(),
       };

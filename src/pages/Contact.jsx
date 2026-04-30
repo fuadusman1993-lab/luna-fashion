@@ -1,9 +1,44 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 import { Phone, Navigation, Instagram, MessageCircle } from 'lucide-react';
+import { checkRateLimit, sanitizeInput } from '../utils/security';
 
 export default function Contact() {
   const { t } = useAppContext();
+  
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!name.trim() || !message.trim()) return;
+
+    if (checkRateLimit('contactForm', 3, 60000)) {
+       alert("You are sending messages too quickly. Please wait a moment.");
+       return;
+    }
+
+    const cleanName = sanitizeInput(name);
+    const cleanEmail = sanitizeInput(email);
+    const cleanMessage = sanitizeInput(message);
+
+    const text = `📬 *New Contact Message* 📬\n\n*Name:* ${cleanName}\n*Email:* ${cleanEmail || 'N/A'}\n\n*Message:* ${cleanMessage}`;
+    const telegramUrl = `https://t.me/Luna_market1?text=${encodeURIComponent(text)}`;
+    
+    const link = document.createElement('a');
+    link.href = telegramUrl; 
+    link.target = '_blank';
+    document.body.appendChild(link); 
+    link.click(); 
+    document.body.removeChild(link);
+
+    setName('');
+    setEmail('');
+    setMessage('');
+  };
 
   return (
     <div className="bg-luna-white dark:bg-luna-black text-luna-black dark:text-luna-white min-h-screen py-16 transition-colors duration-300">
@@ -69,21 +104,21 @@ export default function Contact() {
           {/* Contact Form */}
           <div className="bg-white dark:bg-luna-black border border-gray-200 dark:border-gray-800 p-8 shadow-sm">
              <h3 className="font-display text-2xl uppercase tracking-widest mb-6">Send a Message</h3>
-             <form className="space-y-6">
+             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                    <label className="block text-sm font-medium mb-1">Full Name</label>
-                   <input type="text" className="w-full border-gray-300 border dark:border-gray-700 bg-transparent p-3 focus:ring-gold focus:border-gold outline-none transition-colors" />
+                   <input type="text" required value={name} onChange={e => setName(e.target.value)} className="w-full border-gray-300 border dark:border-gray-700 bg-transparent p-3 focus:ring-gold focus:border-gold outline-none transition-colors" />
                 </div>
                 <div>
-                   <label className="block text-sm font-medium mb-1">Email Address</label>
-                   <input type="email" className="w-full border-gray-300 border dark:border-gray-700 bg-transparent p-3 focus:ring-gold focus:border-gold outline-none transition-colors" />
+                   <label className="block text-sm font-medium mb-1">Email Address (Optional)</label>
+                   <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full border-gray-300 border dark:border-gray-700 bg-transparent p-3 focus:ring-gold focus:border-gold outline-none transition-colors" />
                 </div>
                 <div>
                    <label className="block text-sm font-medium mb-1">Message</label>
-                   <textarea rows="4" className="w-full border-gray-300 border dark:border-gray-700 bg-transparent p-3 focus:ring-gold focus:border-gold outline-none transition-colors"></textarea>
+                   <textarea rows="4" required value={message} onChange={e => setMessage(e.target.value)} className="w-full border-gray-300 border dark:border-gray-700 bg-transparent p-3 focus:ring-gold focus:border-gold outline-none transition-colors"></textarea>
                 </div>
-                <button type="button" className="w-full bg-luna-black dark:bg-gold dark:text-black text-white p-4 uppercase tracking-wider font-semibold hover:bg-gold hover:text-black transition-colors">
-                   Send Message
+                <button type="submit" className="w-full bg-luna-black dark:bg-gold dark:text-black text-white p-4 uppercase tracking-wider font-semibold hover:bg-gold hover:text-black transition-colors">
+                   Send via Telegram
                 </button>
              </form>
           </div>
