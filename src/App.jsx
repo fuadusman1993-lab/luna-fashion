@@ -22,6 +22,8 @@ import { useAppContext } from './context/AppContext';
 import { ShoppingBag } from 'lucide-react';
 import { logPageView, sendActiveHeartbeat } from './services/analytics';
 import { useMessaging } from './hooks/useMessaging';
+import PageTransition from './components/ui/PageTransition';
+import { AnimatePresence } from 'framer-motion';
 
 let initialLoadComplete = false;
 
@@ -94,26 +96,28 @@ function AppContent() {
   return (
     <>
       {!showOnboarding && (
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="shop" element={<Shop />} />
-            <Route path="category" element={<Shop />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="me" element={<Me />} />
-            <Route path="cart" element={<Cart />} />
-          </Route>
-          <Route path="/about" element={<About />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname === '/' || location.pathname === '/shop' || location.pathname === '/category' || location.pathname === '/contact' || location.pathname === '/me' || location.pathname === '/cart' ? 'layout' : location.pathname}>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<PageTransition><Home /></PageTransition>} />
+              <Route path="shop" element={<PageTransition><Shop /></PageTransition>} />
+              <Route path="category" element={<PageTransition><Shop /></PageTransition>} />
+              <Route path="contact" element={<PageTransition><Contact /></PageTransition>} />
+              <Route path="me" element={<PageTransition><Me /></PageTransition>} />
+              <Route path="cart" element={<PageTransition><Cart /></PageTransition>} />
+            </Route>
+            <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+            <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
+            <Route path="/settings" element={<PageTransition><Settings /></PageTransition>} />
+            <Route path="/messages" element={<PageTransition><Messages /></PageTransition>} />
+            <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+            <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
+            <Route path="/search" element={<PageTransition><SearchPage /></PageTransition>} />
+            <Route path="/wishlist" element={<PageTransition><Wishlist /></PageTransition>} />
+            <Route path="/orders" element={<PageTransition><Orders /></PageTransition>} />
+            <Route path="/product/:id" element={<PageTransition><ProductDetail /></PageTransition>} />
+          </Routes>
+        </AnimatePresence>
       )}
 
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}

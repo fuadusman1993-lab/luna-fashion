@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useOutlet } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import React from 'react';
 import TopBar from './TopBar';
 import BottomNavBar from './BottomNavBar';
 import InstallBanner from '../pwa/InstallBanner';
@@ -7,6 +9,7 @@ import InstallBanner from '../pwa/InstallBanner';
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const outlet = useOutlet();
   const isHome = location.pathname === '/';
 
   const [touchStart, setTouchStart] = useState(null);
@@ -49,7 +52,9 @@ export default function Layout() {
         onTouchEnd={onTouchEnd}
         className={`flex-grow ${isHome ? 'pt-[110px]' : 'pt-0'} pb-[80px] overflow-x-hidden bg-white dark:bg-[#0a0a0a]`}
       >
-        <Outlet />
+        <AnimatePresence mode="wait">
+          {outlet && React.cloneElement(outlet, { key: location.pathname })}
+        </AnimatePresence>
       </main>
 
       <InstallBanner />
