@@ -102,7 +102,8 @@ export function AppProvider({ children }) {
     addToCart,
     removeFromCart,
     updateQuantity,
-    toastMessage
+    toastMessage,
+    setToastMessage
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
