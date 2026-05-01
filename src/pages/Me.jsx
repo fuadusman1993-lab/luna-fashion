@@ -36,29 +36,45 @@ export default function Me() {
 
   useEffect(() => {
     async function loadActivity() {
-      const orders = await getUserOrders();
-      const baseData = [
-        { day: 'Mon', value: 0 },
-        { day: 'Tue', value: 0 },
-        { day: 'Wed', value: 0 },
-        { day: 'Thu', value: 0 },
-        { day: 'Fri', value: 0 },
-        { day: 'Sat', value: 0 },
-        { day: 'Sun', value: 0 },
-      ];
-      // Map JS getDay() (0=Sun, 1=Mon) to our array indices (0=Mon, 6=Sun)
-      const dayMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 0: 6 };
-      
-      orders.forEach(order => {
-        if (order.createdAt) {
-          const date = new Date(order.createdAt.seconds * 1000);
-          const dayIndex = dayMap[date.getDay()];
-          baseData[dayIndex].value += 15; // orders bump activity significantly
-        }
-      });
-      // minimum value for aesthetic visual
-      baseData.forEach(d => { if (d.value < 5) d.value = 5; });
-      setChartData(baseData);
+      try {
+        const orders = await getUserOrders();
+        const baseData = [
+          { day: 'Mon', value: 0 },
+          { day: 'Tue', value: 0 },
+          { day: 'Wed', value: 0 },
+          { day: 'Thu', value: 0 },
+          { day: 'Fri', value: 0 },
+          { day: 'Sat', value: 0 },
+          { day: 'Sun', value: 0 },
+        ];
+        // Map JS getDay() (0=Sun, 1=Mon) to our array indices (0=Mon, 6=Sun)
+        const dayMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 0: 6 };
+        
+        orders.forEach(order => {
+          if (order.createdAt) {
+            let date;
+            if (typeof order.createdAt.toDate === 'function') {
+              date = order.createdAt.toDate();
+            } else if (order.createdAt.seconds) {
+              date = new Date(order.createdAt.seconds * 1000);
+            } else {
+              date = new Date(order.createdAt);
+            }
+            
+            if (!isNaN(date.getTime())) {
+              const dayIndex = dayMap[date.getDay()];
+              if (dayIndex !== undefined) {
+                baseData[dayIndex].value += 15; // orders bump activity significantly
+              }
+            }
+          }
+        });
+        // minimum value for aesthetic visual
+        baseData.forEach(d => { if (d.value < 5) d.value = 5; });
+        setChartData(baseData);
+      } catch (err) {
+        console.error("Failed to load activity", err);
+      }
     }
     loadActivity();
   }, [currentUser]);
@@ -149,7 +165,7 @@ export default function Me() {
          <div className="bg-white dark:bg-[#111111] rounded-2xl p-5 mb-5 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center text-center">
             <h3 className="font-bold text-[14px] text-luna-black dark:text-white tracking-wide mb-2">Sign in to sync your profile</h3>
             <p className="text-[11px] text-gray-500 font-medium mb-4">Access your orders, wishlist, and exclusive offers.</p>
-            <Link to="/login" className="bg-[#D4AF37] text-black w-full py-3 rounded-full font-bold uppercase tracking-widest text-[12px] shadow-md hover:scale-[1.02] transition-transform">
+            <Link to="/login" className="bg-[#D4AF37] text-black w-full py-3 rounded-full font-bold uppercase tracking-widest text-[12px] shadow-md hover:scale-[1.02] transition-transform inline-flex justify-center items-center">
                Sign In / Register
             </Link>
          </div>
