@@ -16,7 +16,7 @@ export default function Messages() {
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans overflow-y-auto">
+    <div className="min-h-screen w-full bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans relative z-[50]">
       {/* Header */}
       <div className="fixed top-0 left-0 right-0 w-full z-50 bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/10 px-4 py-4 flex items-center shadow-sm md:max-w-2xl mx-auto">
         <button onClick={() => navigate(-1)} className="mr-4 text-black dark:text-white hover:text-gold transition-colors active:scale-95">

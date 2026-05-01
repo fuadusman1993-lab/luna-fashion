@@ -73,7 +73,7 @@ export default function Login() {
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans overflow-y-auto">
+    <div className="min-h-screen w-full bg-[#ffffff] dark:bg-[#000000] text-black dark:text-white flex flex-col font-sans relative z-[50]">
       {/* Header */}
       <div className="w-full bg-[#fcfcfc] dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-white/5 mx-auto px-4 py-4 flex items-center justify-between sm:max-w-[480px]">
         <button onClick={() => navigate(-1)} className="p-1 hover:text-gold transition-colors active:scale-95">

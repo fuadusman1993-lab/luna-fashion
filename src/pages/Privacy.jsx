@@ -5,7 +5,7 @@ export default function Privacy() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-[#0a0a0a] text-white flex flex-col font-sans overflow-y-auto no-scrollbar [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+    <div className="min-h-screen w-full bg-[#0a0a0a] text-white flex flex-col font-sans relative z-[50] transition-colors duration-300">
       
       {/* Header - Back Arrow on Left */}
       <div className="sticky top-0 left-0 right-0 w-full z-50 bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-4 flex items-center justify-start md:max-w-2xl mx-auto border-b border-white/5">

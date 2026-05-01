@@ -70,7 +70,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-gray-50 dark:bg-[#0a0a0a] text-black dark:text-white flex flex-col font-sans overflow-y-auto no-scrollbar [&::-webkit-scrollbar]:hidden transition-colors duration-300" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+    <div className="min-h-screen w-full bg-gray-50 dark:bg-[#0a0a0a] text-black dark:text-white flex flex-col font-sans transition-colors duration-300 relative z-[50]">
       
       {/* Header */}
       <div className="sticky top-0 left-0 right-0 w-full z-50 bg-gray-50/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-4 flex items-center justify-between md:max-w-2xl mx-auto transition-colors duration-300 border-b border-gray-200 dark:border-transparent">
