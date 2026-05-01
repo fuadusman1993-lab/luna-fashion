@@ -1,18 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, User, MapPin, Globe, Bell, ShieldAlert, ChevronRight, Lock, Moon, Sun, Shield, DollarSign, Search, ShoppingCart } from 'lucide-react';
 
 export default function Settings() {
-  const { language, toggleLanguage, theme, toggleTheme, cart } = useAppContext();
+  const { language, toggleLanguage, theme, toggleTheme, cart, setToastMessage } = useAppContext();
   const { isAdmin, adminPin } = useAuth();
   const navigate = useNavigate();
   
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    return localStorage.getItem('luna_notifications') !== 'false';
+  });
   const [showPinModal, setShowPinModal] = useState(false);
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
+
+  // Sync notifications setting
+  useEffect(() => {
+    localStorage.setItem('luna_notifications', notificationsEnabled);
+  }, [notificationsEnabled]);
 
   const handleAdminClick = () => {
     setShowPinModal(true);
@@ -84,7 +91,7 @@ export default function Settings() {
           </Link>
 
           {/* Shipping Address */}
-          <button className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+          <button onClick={() => setToastMessage && setToastMessage("Currently shipping within Ethiopia only")} className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                <MapPin className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
                <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Shipping address</span>
@@ -96,7 +103,7 @@ export default function Settings() {
           </button>
           
           {/* Currency */}
-          <button className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+          <button onClick={() => setToastMessage && setToastMessage("Pricing is fixed in ETB")} className="w-full flex items-center justify-between py-4 px-4 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition">
              <div className="flex items-center">
                <DollarSign className="w-[18px] h-[18px] mr-3 text-[#D4AF37]" strokeWidth={1.5} />
                <span className="font-semibold text-[14px] text-black dark:text-white tracking-wide">Currency</span>
