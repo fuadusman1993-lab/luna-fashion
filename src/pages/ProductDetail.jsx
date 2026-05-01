@@ -1,8 +1,9 @@
 import { useAppContext } from '../context/AppContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Share2, ShoppingBag, ShoppingCart } from 'lucide-react';
-import { useState } from 'react';
-import { useProducts } from '../hooks/useProducts';
+import { useState, useEffect } from 'react';
+import { db } from '../services/firebase';
+import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import ProductGrid from '../components/product/ProductGrid';
 
 export default function ProductDetail() {
@@ -10,7 +11,6 @@ export default function ProductDetail() {
   const navigate = useNavigate();
 
   const { toggleWishlist, isInWishlist, addToCart, cart } = useAppContext();
-  const { products } = useProducts();
   
   // Route fallback state parameter fetching
   const product = state?.product;
@@ -20,9 +20,29 @@ export default function ProductDetail() {
   if (category.toLowerCase().includes('shoe')) availableSizes = ['36', '37', '38', '39', '40', '41'];
   else if (category.toLowerCase().includes('makeup') || category.toLowerCase().includes('bag')) availableSizes = [];
 
-  const recommendations = products 
-    ? products.filter(p => p.category === category && p.id !== product.id).slice(0, 4)
-    : [];
+  const [recommendations, setRecommendations] = useState([]);
+
+  useEffect(() => {
+    if (!product || !category) return;
+    const fetchRecommendations = async () => {
+      try {
+        const q = query(
+          collection(db, "products"),
+          where("category", "==", category),
+          limit(5)
+        );
+        const querySnapshot = await getDocs(q);
+        const related = querySnapshot.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .filter(p => p.id !== product.id)
+          .slice(0, 4);
+        setRecommendations(related);
+      } catch (err) {
+        console.error("Error fetching related products:", err);
+      }
+    };
+    fetchRecommendations();
+  }, [product, category]);
 
   const colors = product?.colors && product.colors.length > 0 
     ? product.colors 
@@ -126,7 +146,7 @@ export default function ProductDetail() {
       <div className="w-full md:w-1/2 md:rounded-2xl h-[65vh] min-h-[500px] bg-gray-100 dark:bg-[#0f0f0f] relative overflow-hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
          {displayImages.map((img, idx) => (
              <div key={idx} id={`img-${idx}`} className="min-w-full h-full snap-start relative">
-                 <img src={img} alt={`${product.name} view ${idx + 1}`} className="w-full h-full object-cover object-center" />
+                 <img src={img} alt={`${product.name} view ${idx + 1}`} loading={idx === 0 ? "eager" : "lazy"} className="w-full h-full object-cover object-center" />
              </div>
          ))}
 

@@ -5,7 +5,7 @@ import { ArrowLeft, Search as SearchIcon, SlidersHorizontal } from 'lucide-react
 import { useState, useEffect } from 'react';
 
 export default function SearchPage() {
-  const { products, loading } = useProducts();
+  const { products, loading, loadMore, hasMore } = useProducts();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   
@@ -130,7 +130,20 @@ export default function SearchPage() {
              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
            </div>
         ) : filteredProducts.length > 0 ? (
-           <ProductGrid products={filteredProducts} />
+           <div className="flex flex-col items-center">
+             <div className="w-full">
+               <ProductGrid products={filteredProducts} />
+             </div>
+             {hasMore && (
+               <button 
+                 onClick={loadMore} 
+                 disabled={loading}
+                 className="mt-6 mb-8 border border-black dark:border-white text-black dark:text-white font-bold uppercase tracking-widest text-[11px] px-8 py-3 rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors disabled:opacity-50"
+               >
+                 {loading ? 'Loading...' : 'Load More'}
+               </button>
+             )}
+           </div>
         ) : (
            <div className="flex flex-col items-center justify-center py-24 text-center px-6">
               <SearchIcon className="w-12 h-12 text-white/20 mb-4 stroke-[1]" />

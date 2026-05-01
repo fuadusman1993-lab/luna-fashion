@@ -49,13 +49,16 @@ const CustomIcons = {
     </svg>
   )
 };export default function Home() {
-  const { products, loading, error, retryFetch } = useProducts();
-  const { categories, loading: categoriesLoading } = useCategories();
   const [activeFilter, setActiveFilter] = useState('For You');
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  
   const activeCategory = searchParams.get('category');
+
+  const { products, loading, error, retryFetch, loadMore, hasMore } = useProducts({
+    category: activeCategory,
+    filter: activeFilter === 'For You' ? undefined : activeFilter
+  });
+  const { categories, loading: categoriesLoading } = useCategories();
+  const navigate = useNavigate();
 
   const filterTabs = [
     { name: 'For You', icon: null },
@@ -149,16 +152,25 @@ const CustomIcons = {
            <div className="flex justify-center items-center py-20">
              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
            </div>
+        ) : products && products.length > 0 ? (
+           <div className="flex flex-col items-center">
+             <div className="w-full">
+               <ProductGrid products={products} />
+             </div>
+             {hasMore && (
+               <button 
+                 onClick={loadMore} 
+                 disabled={loading}
+                 className="mt-6 mb-8 border border-black dark:border-white text-black dark:text-white font-bold uppercase tracking-widest text-[11px] px-8 py-3 rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors disabled:opacity-50"
+               >
+                 {loading ? 'Loading...' : 'Load More'}
+               </button>
+             )}
+           </div>
         ) : (
-           <ProductGrid products={
-             (products || []).filter(p => {
-               if (activeCategory && p.category !== activeCategory) return false;
-               if (activeFilter === 'New In' && !p.isNewIn) return false;
-               if (activeFilter === 'Deals' && !p.isDeal) return false;
-               if (activeFilter === 'Best' && !p.isBestseller) return false;
-               return true;
-             })
-           } />
+           <div className="flex flex-col items-center justify-center py-20 text-center px-4">
+              <p className="text-gray-400 text-[11px]">No items found.</p>
+           </div>
         )}
       </div>
 

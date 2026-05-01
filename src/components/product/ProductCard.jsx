@@ -36,6 +36,7 @@ const ProductCard = memo(function ProductCard({ product, index = 0 }) {
         <img
           src={product.imageUrl}
           alt={product.name}
+          loading="lazy"
           className="absolute inset-0 w-full h-full object-cover rounded-t-xl transition-transform duration-700 ease-out group-hover:scale-105"
         />
 

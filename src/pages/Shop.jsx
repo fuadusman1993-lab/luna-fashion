@@ -8,12 +8,12 @@ import { Search, ShoppingCart, ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
 
 export default function Shop() {
-  const { products, loading, error, retryFetch } = useProducts();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || 'All');
+  const { products, loading, error, retryFetch, loadMore, hasMore } = useProducts({ category: activeCategory });
   const { categories, loading: categoriesLoading } = useCategories();
   const { cart } = useAppContext();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || 'All');
 
   useEffect(() => {
      setActiveCategory(searchParams.get('category') || 'All');
@@ -28,18 +28,6 @@ export default function Shop() {
      }
   };
 
-  const filteredProducts = useMemo(() => {
-    const safeProducts = products || [];
-    if (!activeCategory || activeCategory === 'All') return safeProducts;
-    
-    const target = activeCategory.split('(')[0].toLowerCase().trim();
-
-    return safeProducts.filter(p => {
-      if (!p.category) return false;
-      const pCat = p.category.split('(')[0].toLowerCase().trim();
-      return pCat === target || pCat.includes(target) || target.includes(pCat);
-    });
-  }, [products, activeCategory]);
 
   return (
     <div className="bg-[#f5f5f5] dark:bg-[#050505] min-h-[calc(100vh-80px)] font-sans flex flex-col w-full mx-auto relative z-0">
@@ -120,7 +108,7 @@ export default function Shop() {
              <h2 className="text-[13px] font-bold text-black dark:text-white uppercase tracking-wide">
                 {activeCategory === 'All' ? 'The Collection' : activeCategory.split('(')[0].trim()}
              </h2>
-             <span className="text-[10px] text-green-600 dark:text-green-500 font-bold">{filteredProducts.length} items</span>
+             <span className="text-[10px] text-green-600 dark:text-green-500 font-bold">{products?.length || 0} items</span>
          </div>
          
          {error ? (
@@ -136,9 +124,20 @@ export default function Shop() {
            <div className="flex justify-center items-center py-20">
              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gold"></div>
            </div>
-         ) : filteredProducts.length > 0 ? (
-           <div className="-mx-1">
-             <ProductGrid products={filteredProducts} />
+         ) : products && products.length > 0 ? (
+           <div className="-mx-1 flex flex-col items-center">
+             <div className="w-full">
+               <ProductGrid products={products} />
+             </div>
+             {hasMore && (
+               <button 
+                 onClick={loadMore} 
+                 disabled={loading}
+                 className="mt-6 mb-8 border border-black dark:border-white text-black dark:text-white font-bold uppercase tracking-widest text-[11px] px-8 py-3 rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors disabled:opacity-50"
+               >
+                 {loading ? 'Loading...' : 'Load More'}
+               </button>
+             )}
            </div>
          ) : (
            <div className="flex flex-col items-center justify-center py-20 text-center px-4">

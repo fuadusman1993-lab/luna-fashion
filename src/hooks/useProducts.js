@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { db, isFirebaseConfigured } from '../services/firebase';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, query, orderBy, limit, startAfter, where, getDocs } from 'firebase/firestore';
 import { mockProducts } from '../data/products';
 
 let localProductsState = [...mockProducts];
@@ -26,52 +26,94 @@ export const deleteLocalProduct = (id) => {
   notifySubscribers();
 };
 
-export function useProducts() {
+export function useProducts({ category, filter } = {}) {
   const [products, setProducts] = useState(isFirebaseConfigured ? [] : localProductsState);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [lastDoc, setLastDoc] = useState(null);
 
-  const fetchProducts = useCallback(() => {
-    setLoading(true);
+  const fetchProducts = useCallback(async (isLoadMore = false) => {
+    if (!isLoadMore) setLoading(true);
     setError(null);
+
     if (!isFirebaseConfigured) {
-      // Fallback to mock data if Firebase isn't set up yet
-      setProducts(localProductsState);
-      const handler = (newProds) => setProducts(newProds);
-      subscribers.push(handler);
+      let filtered = [...localProductsState];
+      if (category && category !== 'All') {
+        const target = category.split('(')[0].toLowerCase().trim();
+        filtered = filtered.filter(p => {
+          if (!p.category) return false;
+          const pCat = p.category.split('(')[0].toLowerCase().trim();
+          return pCat === target || pCat.includes(target) || target.includes(pCat);
+        });
+      }
+      if (filter === 'New In') filtered = filtered.filter(p => p.isNewIn);
+      if (filter === 'Deals') filtered = filtered.filter(p => p.isDeal);
+      if (filter === 'Best') filtered = filtered.filter(p => p.isBestseller);
+
+      setProducts(filtered);
+      setHasMore(false);
       setLoading(false);
-      return () => {
-        subscribers = subscribers.filter(fn => fn !== handler);
-      };
+      return;
     }
 
-    // Set up real-time listener for Firestore collection "products"
-    const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedProducts = snapshot.docs.map(doc => ({
+    try {
+      let queryConstraints = [orderBy("createdAt", "desc")];
+      
+      if (category && category !== 'All') {
+        queryConstraints.push(where("category", "==", category));
+      }
+      if (filter === 'New In') queryConstraints.push(where("isNewIn", "==", true));
+      if (filter === 'Deals') queryConstraints.push(where("isDeal", "==", true));
+      if (filter === 'Best') queryConstraints.push(where("isBestseller", "==", true));
+
+      queryConstraints.push(limit(20));
+
+      if (isLoadMore && lastDoc) {
+        queryConstraints.push(startAfter(lastDoc));
+      }
+
+      const q = query(collection(db, "products"), ...queryConstraints);
+      const querySnapshot = await getDocs(q);
+      
+      const fetchedProducts = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
-      setProducts(fetchedProducts);
+
+      if (isLoadMore) {
+        setProducts(prev => [...prev, ...fetchedProducts]);
+      } else {
+        setProducts(fetchedProducts);
+      }
+
+      setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1] || null);
+      setHasMore(querySnapshot.docs.length === 20);
       setLoading(false);
-      setError(null);
-    }, (err) => {
+    } catch (err) {
       console.error("Error fetching products from Firebase:", err);
       setError("No Connection");
       setLoading(false);
-    });
+    }
+  }, [category, filter, lastDoc]);
 
-    return unsubscribe;
-  }, []);
-
+  // Initial fetch and refetch on filter change
   useEffect(() => {
-    const unsubscribe = fetchProducts();
-    return () => {
-      if (typeof unsubscribe === 'function') {
-        unsubscribe();
-      }
-    };
-  }, []);
+    setLastDoc(null); // Reset pagination on filter change
+  }, [category, filter]);
 
-  return { products, loading, error, retryFetch: fetchProducts, isUsingMockData: !isFirebaseConfigured };
+  // This effect runs fetchProducts when lastDoc is reset (null) or on mount
+  useEffect(() => {
+    if (lastDoc === null) {
+       fetchProducts(false);
+    }
+  }, [lastDoc, fetchProducts]);
+
+  const loadMore = () => {
+    if (!loading && hasMore) {
+      fetchProducts(true);
+    }
+  };
+
+  return { products, loading, error, retryFetch: () => fetchProducts(false), loadMore, hasMore, isUsingMockData: !isFirebaseConfigured };
 }
