@@ -3,6 +3,7 @@ import { ShoppingBag, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { memo, useState, useRef, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
+import VideoFeed from './VideoFeed';
 
 const ProductCard = memo(function ProductCard({ product, index = 0 }) {
   const { t, isInWishlist, toggleWishlist, addToCart } = useAppContext();
@@ -126,26 +127,7 @@ const ProductCard = memo(function ProductCard({ product, index = 0 }) {
       </div>
 
       {isVideoExpanded && product.videoUrl && (
-         <div 
-           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm"
-           onClick={(e) => { e.stopPropagation(); setIsVideoExpanded(false); }}
-         >
-            <video 
-               src={product.videoUrl}
-               autoPlay
-               loop
-               controls
-               playsInline
-               className="max-w-full max-h-full rounded shadow-2xl"
-               onClick={(e) => e.stopPropagation()}
-            />
-            <button 
-              onClick={(e) => { e.stopPropagation(); setIsVideoExpanded(false); }}
-              className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/80 px-4 py-2 rounded-full font-bold tracking-wider text-sm transition-colors"
-            >
-              CLOSE
-            </button>
-         </div>
+         <VideoFeed initialProductId={product.id} onClose={() => setIsVideoExpanded(false)} />
       )}
     </div>
   );

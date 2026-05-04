@@ -1,10 +1,11 @@
 import { useAppContext } from '../context/AppContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart, Share2, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, Heart, Share2, ShoppingBag, ShoppingCart, PlayCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { db } from '../services/firebase';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import ProductGrid from '../components/product/ProductGrid';
+import VideoFeed from '../components/product/VideoFeed';
 
 export default function ProductDetail() {
   const { state } = useLocation();
@@ -14,6 +15,7 @@ export default function ProductDetail() {
   
   // Route fallback state parameter fetching
   const product = state?.product;
+  const [isVideoFeedOpen, setIsVideoFeedOpen] = useState(false);
 
   const category = product?.category || '';
   let availableSizes = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -150,6 +152,17 @@ export default function ProductDetail() {
              </div>
          ))}
 
+         {/* Video Thumbnail Overlay */}
+         {product?.videoUrl && (
+            <button 
+              onClick={() => setIsVideoFeedOpen(true)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-16 h-24 border-2 border-[#D4AF37]/80 rounded-lg overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-black/60 group hover:scale-105 active:scale-95 transition-all flex items-center justify-center backdrop-blur-sm"
+            >
+               <video src={product.videoUrl} className="absolute inset-0 w-full h-full object-cover opacity-60" loop muted autoPlay playsInline />
+               <PlayCircle className="text-white w-8 h-8 z-10 drop-shadow-md group-hover:scale-110 transition-transform fill-white/20" />
+            </button>
+         )}
+
          {/* Overlay Carousel Indicators */}
          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1.5 z-20">
              {displayImages.map((_, idx) => (
@@ -285,6 +298,9 @@ export default function ProductDetail() {
          </div>
       </div>
 
+      {isVideoFeedOpen && product?.videoUrl && (
+         <VideoFeed initialProductId={product.id} onClose={() => setIsVideoFeedOpen(false)} />
+      )}
     </div>
   );
 }
