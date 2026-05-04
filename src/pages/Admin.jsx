@@ -128,6 +128,8 @@ export default function Admin() {
   const [description, setDescription] = useState('');
   const [shippingTime, setShippingTime] = useState('Arrives in 1-2 days');
   const [imageFiles, setImageFiles] = useState([]);
+  const [videoFile, setVideoFile] = useState(null);
+  const [existingVideoUrl, setExistingVideoUrl] = useState(null);
   const [productColors, setProductColors] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [inStock, setInStock] = useState(true);
@@ -433,6 +435,7 @@ export default function Admin() {
     try {
       let downloadURLs = [];
       let defaultImageUrl = null;
+      let videoDownloadURL = null;
       
       if (imageFiles.length > 0) {
          await Promise.all(imageFiles.map(async (originalFile) => {
@@ -492,6 +495,17 @@ export default function Admin() {
         }));
       }
 
+      if (videoFile) {
+        const storageRef = ref(storage, `products/videos/${Date.now()}_${videoFile.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, videoFile);
+        await new Promise((resolve, reject) => {
+           uploadTask.on('state_changed', null, reject, async () => {
+             videoDownloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+             resolve();
+           });
+        });
+      }
+
       const payload = {
         name: sanitizeInput(name),
         category: sanitizeInput(category),
@@ -512,6 +526,14 @@ export default function Admin() {
       
       if (processedColors.length > 0) {
         payload.colors = processedColors;
+      }
+
+      if (videoDownloadURL) {
+        payload.videoUrl = videoDownloadURL;
+      } else if (existingVideoUrl) {
+        payload.videoUrl = existingVideoUrl;
+      } else {
+        payload.videoUrl = null;
       }
 
       if (editId) {
@@ -563,6 +585,8 @@ export default function Admin() {
      setIsNewIn(product.isNewIn || false);
      setIsDeal(product.isDeal || false);
      setProductColors(product.colors || []);
+     setExistingVideoUrl(product.videoUrl || null);
+     setVideoFile(null);
      setActiveTab('products');
   };
 
@@ -578,6 +602,7 @@ export default function Admin() {
 
   const resetForm = () => {
      setEditId(null); setName(''); setPrice(''); setDescription(''); setCategory('Makhawar (ቶብ)'); setShippingTime('Arrives in 1-2 days'); setImageFiles([]); setProductColors([]);
+     setVideoFile(null); setExistingVideoUrl(null);
      setIsBestseller(false); setIsNewIn(false); setIsDeal(false); setUploadProgress(0);
   };
 
@@ -758,6 +783,25 @@ export default function Admin() {
                       <div className="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
                         <span className="relative font-bold text-gold">
                           {imageFiles.length > 0 ? `${imageFiles.length} file(s) selected` : (editId ? 'Click to browse new image(s)' : t('uploadImage'))}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Product Video (Max 10s)</label>
+                  <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed hover:border-gold transition-colors cursor-pointer bg-gray-50 dark:bg-black/20 relative">
+                    <input 
+                      type="file" 
+                      accept="video/*" 
+                      onChange={e => setVideoFile(e.target.files[0])}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                    />
+                    <div className="space-y-1 text-center relative z-0">
+                      <div className="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
+                        <span className="relative font-bold text-gold">
+                          {videoFile ? videoFile.name : (existingVideoUrl ? 'Video Uploaded ✓ (Click to replace)' : 'Upload 10s Video')}
                         </span>
                       </div>
                     </div>
