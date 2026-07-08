@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 import ProductGrid from '../components/product/ProductGrid';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Flame, Star } from 'lucide-react';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { Flame, Star, ChevronRight } from 'lucide-react';
+import HeroSlider from '../components/ui/HeroSlider';
+import FeaturesSection from '../components/ui/FeaturesSection';
 
 const CustomIcons = {
   Abaya: (props) => (
@@ -68,50 +70,21 @@ const CustomIcons = {
   ];
 
   return (
-    <div className="flex flex-col bg-white dark:bg-[#0a0a0a] min-h-[90vh]">
+    <div className="flex flex-col bg-white dark:bg-[#0a0a0a] min-h-[90vh] w-full">
       
-      {/* Circle Categories Horizontal Scroller (Line Icons Edition) */}
-      <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
-         <div className="flex space-x-4 px-2 items-center">
-            {categories.map((cat, idx) => {
-               // We map dynamic database categories
-               const cleanName = cat.name.split('(')[0].trim();
-               const isActive = activeCategory === cat.name;
-               return (
-               <div 
-                 key={cat.id || idx} 
-                 onClick={() => navigate(`/shop?category=${encodeURIComponent(cat.name)}`)}
-                 className="flex flex-col items-center cursor-pointer group flex-shrink-0"
-               >
-                  <div className={`w-[54px] h-[54px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-1.5 shadow-sm overflow-hidden ${isActive ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md'}`}>
-                     {cat.imageUrl ? (
-                        <img src={cat.imageUrl} alt={cleanName} className="w-full h-full object-cover" />
-                     ) : (
-                        <span className="font-bold text-gray-400 dark:text-gray-500 text-lg uppercase">{cleanName.charAt(0)}</span>
-                     )}
-                  </div>
-                  <span className={`text-[11px] font-sans tracking-wide transition-colors ${isActive ? 'text-gold font-bold drop-shadow-sm' : 'text-green-600 dark:text-green-500 font-medium'}`}>{cleanName}</span>
-               </div>
-            )})}
-            {categoriesLoading && categories.length === 0 && (
-               [1, 2, 3, 4, 5].map((skeleton) => (
-                  <div key={`sk-${skeleton}`} className="flex flex-col items-center flex-shrink-0 space-y-1.5">
-                     <div className="w-[54px] h-[54px] rounded-full bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
-                     <div className="w-12 h-3 rounded bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
-                  </div>
-               ))
-            )}
-         </div>
+      {/* Desktop Hero Slider */}
+      <div className="hidden md:block w-full mb-4">
+        <HeroSlider />
       </div>
 
-      {/* Premium Full-Width Showcase Banner with Rounded Corners */}
-      <div className="w-[calc(100%-16px)] mx-auto h-[160px] relative flex flex-col items-center justify-center rounded-xl overflow-hidden mb-3 shadow-2xl mt-1 border border-[#D4AF37]/20">
+      {/* Mobile Premium Banner */}
+      <div className="block md:hidden w-[calc(100%-16px)] mx-auto h-[160px] relative flex flex-col items-center justify-center rounded-xl overflow-hidden mb-3 shadow-2xl mt-1 border border-[#D4AF37]/20">
          {/* Background Image - Luxury Women's Boutique */}
          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center"></div>
          {/* Simple Dark Tint Overlay for text readability */}
          <div className="absolute inset-0 bg-black/60"></div>
          
-         <h2 className="relative z-10 font-display text-[2.1rem] md:text-[2.5rem] leading-none uppercase tracking-widest font-black text-center mb-3 drop-shadow-[0_4px_15px_rgba(0,0,0,1)] bg-clip-text text-transparent bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728]">
+         <h2 className="relative z-10 font-display text-[2.1rem] leading-none uppercase tracking-widest font-black text-center mb-3 drop-shadow-[0_4px_15px_rgba(0,0,0,1)] bg-clip-text text-transparent bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728]">
             LUNA MARKET
          </h2>
          
@@ -120,8 +93,47 @@ const CustomIcons = {
          </span>
       </div>
 
-      {/* Dynamic Filter Tabs - Clean AliExpress Style */}
-      <div className="sticky top-[90px] z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md flex justify-start items-center px-4 py-2 border-b-0 overflow-x-auto scrollbar-hide space-x-2 [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+      {/* Circle Categories Horizontal Scroller */}
+      <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide md:max-w-7xl md:mx-auto md:w-full [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+         <div className="flex space-x-4 px-2 items-center md:justify-center">
+            {categories.map((cat, idx) => {
+               // We map dynamic database categories
+               const cleanName = cat.name.split('(')[0].trim();
+               const isActive = activeCategory === cat.name;
+               return (
+               <div 
+                 key={cat.id || idx} 
+                 onClick={() => navigate(`/shop?category=${encodeURIComponent(cat.name)}`)}
+                 className="flex flex-col items-center cursor-pointer group flex-shrink-0 md:px-2"
+               >
+                  <div className={`w-[64px] h-[64px] md:w-[80px] md:h-[80px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-2 shadow-sm overflow-hidden ${isActive ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md hover:scale-105'}`}>
+                     {cat.imageUrl ? (
+                        <img src={cat.imageUrl} alt={cleanName} className="w-full h-full object-cover" />
+                     ) : (
+                        <span className="font-bold text-gray-400 dark:text-gray-500 text-lg uppercase">{cleanName.charAt(0)}</span>
+                     )}
+                  </div>
+                  <span className={`text-[12px] md:text-[13px] font-sans tracking-wide transition-colors ${isActive ? 'text-gold font-bold drop-shadow-sm' : 'text-gray-800 dark:text-gray-300 font-medium group-hover:text-gold'}`}>{cleanName}</span>
+               </div>
+            )})}
+            {categoriesLoading && categories.length === 0 && (
+               [1, 2, 3, 4, 5, 6, 7].map((skeleton) => (
+                  <div key={`sk-${skeleton}`} className="flex flex-col items-center flex-shrink-0 space-y-1.5 md:px-2">
+                     <div className="w-[64px] h-[64px] md:w-[80px] md:h-[80px] rounded-full bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
+                     <div className="w-16 h-3 rounded bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
+                  </div>
+               ))
+            )}
+         </div>
+      </div>
+
+      {/* Features Section (Desktop Only or Responsive) */}
+      <div className="hidden md:block">
+        <FeaturesSection />
+      </div>
+
+      {/* Dynamic Filter Tabs - Clean AliExpress Style (Mobile Only) */}
+      <div className="md:hidden sticky top-[90px] z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md flex justify-start items-center px-4 py-2 border-b-0 overflow-x-auto scrollbar-hide space-x-2 [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
          {filterTabs.map((tab, idx) => {
             const Icon = tab.icon;
             const isSelected = activeFilter === tab.name;
@@ -137,8 +149,8 @@ const CustomIcons = {
          )})}
       </div>
 
-      {/* Masonry Product Grid */}
-      <div className="pb-6 pt-3 h-full flex-1 bg-white dark:bg-[#0a0a0a]">
+      {/* Product Grids */}
+      <div className="pb-6 pt-3 h-full flex-1 bg-white dark:bg-[#0a0a0a] md:max-w-7xl md:mx-auto md:w-full">
         {error ? (
            <div className="flex flex-col items-center justify-center py-20 text-center px-4">
              <div className="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
@@ -152,26 +164,58 @@ const CustomIcons = {
            <div className="flex justify-center items-center py-20">
              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
            </div>
-        ) : products && products.length > 0 ? (
-           <div className="flex flex-col items-center">
-             <div className="w-full">
-               <ProductGrid products={products} />
-             </div>
-             {hasMore && (
-               <button 
-                 onClick={loadMore} 
-                 disabled={loading}
-                 className="mt-6 mb-8 border border-black dark:border-white text-black dark:text-white font-bold uppercase tracking-widest text-[11px] px-8 py-3 rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors disabled:opacity-50"
-               >
-                 {loading ? 'Loading...' : 'Load More'}
-               </button>
-             )}
-           </div>
-        ) : (
-           <div className="flex flex-col items-center justify-center py-20 text-center px-4">
-              <p className="text-gray-400 text-[11px]">No items found.</p>
-           </div>
-        )}
+         ) : products && products.length > 0 ? (
+           <>
+            {/* Mobile View - Single Grid based on active filter */}
+            <div className="md:hidden flex flex-col items-center">
+              <div className="w-full">
+                <ProductGrid products={products} />
+              </div>
+              {hasMore && (
+                <button 
+                  onClick={loadMore} 
+                  disabled={loading}
+                  className="mt-6 mb-8 border border-black dark:border-white text-black dark:text-white font-bold uppercase tracking-widest text-[11px] px-8 py-3 rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors disabled:opacity-50"
+                >
+                  {loading ? 'Loading...' : 'Load More'}
+                </button>
+              )}
+            </div>
+
+            {/* Desktop View - Structured Sections */}
+            <div className="hidden md:block w-full px-6">
+              {/* New Arrivals Section */}
+              <div className="mb-12">
+                <div className="flex justify-between items-end mb-6">
+                  <h2 className="text-2xl font-bold font-serif italic text-black dark:text-white tracking-wide">
+                    New Arrivals
+                  </h2>
+                  <Link to="/shop?filter=New In" className="text-sm font-medium text-gray-500 hover:text-gold transition-colors flex items-center group">
+                    View All <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
+                <ProductGrid products={products.slice(0, 5)} />
+              </div>
+
+              {/* Trending Styles Section */}
+              <div className="mb-12">
+                <div className="flex justify-between items-end mb-6">
+                  <h2 className="text-2xl font-bold font-serif italic text-black dark:text-white tracking-wide">
+                    Trending Styles
+                  </h2>
+                  <Link to="/shop?filter=Best" className="text-sm font-medium text-gray-500 hover:text-gold transition-colors flex items-center group">
+                    View All <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
+                <ProductGrid products={products.length > 5 ? products.slice(5, 10) : products} />
+              </div>
+            </div>
+           </>
+         ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-center px-4">
+               <p className="text-gray-400 text-[11px]">No items found.</p>
+            </div>
+         )}
       </div>
 
     </div>

@@ -165,7 +165,8 @@ export default function Cart() {
         </div>
       </div>
 
-      <div className="flex-1 md:max-w-4xl md:mx-auto w-full mt-2">
+      <div className="flex-1 md:max-w-6xl md:mx-auto w-full mt-2 md:grid md:grid-cols-3 md:gap-8 px-0 md:px-4 items-start">
+        <div className="md:col-span-2">
         {(cart?.length || 0) === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center px-4">
              <h2 className="text-lg font-bold text-black dark:text-white mb-2">Your cart is empty</h2>
@@ -288,11 +289,46 @@ export default function Cart() {
              <ProductGrid products={recommendations} />
           </div>
         </div>
+        </div> {/* End of Left Column */}
+
+        {/* Right Column: Order Summary (Desktop Only) */}
+        {(cart?.length || 0) > 0 && (
+          <div className="hidden md:block md:col-span-1 sticky top-[120px] bg-white dark:bg-[#111111] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
+            <h2 className="text-xl font-serif font-bold italic mb-6">Order Summary</h2>
+            
+            <div className="space-y-4 text-sm mb-6">
+              <div className="flex justify-between text-gray-500">
+                <span>Subtotal ({totalItemsCount} items)</span>
+                <span>{total.toLocaleString()} ETB</span>
+              </div>
+              <div className="flex justify-between text-gray-500">
+                <span>Shipping</span>
+                <span>Calculated at checkout</span>
+              </div>
+              <div className="border-t border-gray-100 dark:border-white/10 pt-4 flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span className="text-gold">{total.toLocaleString()} ETB</span>
+              </div>
+            </div>
+
+            <button 
+              onClick={handleCheckout}
+              disabled={selectedItems.length === 0}
+              className="w-full bg-[#D4AF37] hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black text-black h-12 rounded-full font-bold uppercase tracking-widest text-[13px] flex items-center justify-center disabled:opacity-50 transition-colors shadow-md"
+            >
+              Checkout Now
+            </button>
+            <p className="text-xs text-center text-gray-500 mt-4">
+              Secure checkout provided by Telegram
+            </p>
+          </div>
+        )}
+
       </div>
 
-      {/* Fixed Checkout Bar - Syncs with Selected Items */}
+      {/* Fixed Checkout Bar - Mobile Only */}
       {(cart?.length || 0) > 0 && (
-        <div className="fixed bottom-[85px] md:bottom-8 left-0 right-0 w-full z-40 px-4 flex justify-center pointer-events-none">
+        <div className="md:hidden fixed bottom-[85px] left-0 right-0 w-full z-40 px-4 flex justify-center pointer-events-none">
           <div className="bg-black dark:bg-[#1a1a1a] dark:border dark:border-white/10 p-4 shadow-[0_10px_30px_rgba(0,0,0,0.3)] w-full max-w-md rounded-xl flex items-center justify-between pointer-events-auto">
             
             <div className="flex flex-col justify-center text-white">

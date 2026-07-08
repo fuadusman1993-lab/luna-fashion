@@ -5,6 +5,7 @@ import React from 'react';
 import TopBar from './TopBar';
 import BottomNavBar from './BottomNavBar';
 import InstallBanner from '../pwa/InstallBanner';
+import Footer from './Footer';
 
 export default function Layout() {
   const location = useLocation();
@@ -44,18 +45,23 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f9f9f9] dark:bg-[#0a0a0a] transition-colors duration-300 max-w-7xl w-full mx-auto relative shadow-2xl">
-      {isHome && <TopBar />}
+      <div className={isHome ? 'block' : 'hidden md:block'}>
+        <TopBar />
+      </div>
 
       <main 
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-        className={`flex-grow ${isHome ? 'pt-[110px]' : 'pt-0'} pb-[80px] overflow-x-hidden bg-white dark:bg-[#0a0a0a]`}
+        className={`flex-grow ${isHome ? 'pt-[110px]' : 'pt-0 md:pt-[70px]'} pb-[80px] md:pb-0 overflow-x-hidden bg-white dark:bg-[#0a0a0a]`}
       >
         <AnimatePresence mode="wait">
           {outlet && React.cloneElement(outlet, { key: location.pathname })}
         </AnimatePresence>
       </main>
+
+      <Footer />
+
 
       <InstallBanner />
       <BottomNavBar />

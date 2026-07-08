@@ -9,12 +9,12 @@ export default function TopBar() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'All';
-  const hideScroller = location.pathname === '/me' || location.pathname === '/shop';
+  const hideScroller = location.pathname !== '/';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const topCategories = [t('allNav'), 'Makhawar (ቶብ)', 'Abaya', 'Dria', 'Dresses (ቀሚስ)', 'Makeup', 'Shoes'];
+  const topCategories = ['All', 'Makhawar', 'Abaya', 'Dria', 'Dresses', 'Makeup', 'Shoes', 'Bags', 'Accessories'];
 
   const placeholders = ['Search Occasion Bags...', 'Search Luna Market...', 'Search Signature Coats...', 'Search Trending Styles...'];
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
@@ -41,7 +41,7 @@ export default function TopBar() {
   };
 
   const handleCategoryClick = (cat) => {
-    if (cat === t('allNav')) {
+    if (cat === 'All') {
       navigate('/');
     } else {
       navigate(`/?category=${encodeURIComponent(cat)}`);
@@ -88,10 +88,10 @@ export default function TopBar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex shrink-0 items-center gap-8 text-[13px] font-bold tracking-widest text-gray-300">
-          <Link to="/" className="hover:text-white transition-colors uppercase">Home</Link>
-          <Link to="/shop" className="hover:text-white transition-colors uppercase">Shop</Link>
-          <Link to="/cart" className="hover:text-white transition-colors uppercase">Cart</Link>
-          <Link to="/me" className="hover:text-white transition-colors uppercase">Profile</Link>
+          <Link to="/" className={`hover:text-white transition-colors uppercase ${location.pathname === '/' ? 'text-gold border-b-2 border-gold pb-1' : ''}`}>Home</Link>
+          <Link to="/shop" className={`hover:text-white transition-colors uppercase ${location.pathname.startsWith('/shop') ? 'text-gold border-b-2 border-gold pb-1' : ''}`}>Shop</Link>
+          <Link to="/cart" className={`hover:text-white transition-colors uppercase ${location.pathname === '/cart' ? 'text-gold border-b-2 border-gold pb-1' : ''}`}>Cart</Link>
+          <Link to="/me" className={`hover:text-white transition-colors uppercase ${location.pathname === '/me' ? 'text-gold border-b-2 border-gold pb-1' : ''}`}>Profile</Link>
         </div>
 
         {/* Fully rounded, highly focused search bar */}
