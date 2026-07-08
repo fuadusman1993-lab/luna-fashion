@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const slides = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?q=80&w=2000&auto=format&fit=crop",
+    image: "/images/hero_hijab.png",
     subtitle: "NEW COLLECTION",
     title: "ELEGANCE IN EVERY THREAD",
     description: "Discover our latest styles made for you with love and perfection.",
@@ -48,7 +48,7 @@ export default function HeroSlider() {
               className="w-full h-full object-cover object-top scale-105 transform origin-center"
               style={{ animation: index === currentSlide ? 'kenburns 20s infinite alternate' : 'none' }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent"></div>
           </div>
 
           {/* Content */}

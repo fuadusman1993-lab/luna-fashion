@@ -72,9 +72,13 @@ const CustomIcons = {
   return (
     <div className="flex flex-col bg-white dark:bg-[#0a0a0a] min-h-[90vh] w-full">
       
-      {/* Desktop Hero Slider */}
-      <div className="hidden md:block w-full mb-4">
-        <HeroSlider />
+      {/* Desktop Hero Slider seamlessly connecting to TopBar */}
+      <div className="hidden md:block w-full bg-black pt-[95px] pb-12">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+           <div className="w-full rounded-[32px] overflow-hidden shadow-2xl relative">
+             <HeroSlider />
+           </div>
+        </div>
       </div>
 
       {/* Mobile Premium Banner */}
@@ -93,29 +97,29 @@ const CustomIcons = {
          </span>
       </div>
 
-      {/* Circle Categories Horizontal Scroller */}
-      <div className="overflow-x-auto whitespace-nowrap px-1 py-4 border-b border-gray-100 dark:border-gray-900 scrollbar-hide md:max-w-7xl md:mx-auto md:w-full [&::-webkit-scrollbar]:hidden" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
-         <div className="flex space-x-4 px-2 items-center md:justify-center">
-            {categories.map((cat, idx) => {
-               // We map dynamic database categories
-               const cleanName = cat.name.split('(')[0].trim();
-               const isActive = activeCategory === cat.name;
-               return (
-               <div 
-                 key={cat.id || idx} 
-                 onClick={() => navigate(`/shop?category=${encodeURIComponent(cat.name)}`)}
-                 className="flex flex-col items-center cursor-pointer group flex-shrink-0 md:px-2"
-               >
-                  <div className={`w-[64px] h-[64px] md:w-[80px] md:h-[80px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-2 shadow-sm overflow-hidden ${isActive ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-200 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md hover:scale-105'}`}>
-                     {cat.imageUrl ? (
-                        <img src={cat.imageUrl} alt={cleanName} className="w-full h-full object-cover" />
-                     ) : (
-                        <span className="font-bold text-gray-400 dark:text-gray-500 text-lg uppercase">{cleanName.charAt(0)}</span>
-                     )}
-                  </div>
-                  <span className={`text-[12px] md:text-[13px] font-sans tracking-wide transition-colors ${isActive ? 'text-gold font-bold drop-shadow-sm' : 'text-gray-800 dark:text-gray-300 font-medium group-hover:text-gold'}`}>{cleanName}</span>
-               </div>
-            )})}
+      {/* Circle Categories - Mobile Horizontal Scroller / Desktop Centered Grid */}
+      <div className="w-full bg-white dark:bg-[#0a0a0a] pt-10 pb-6 md:pb-12">
+        <div className="overflow-x-auto whitespace-nowrap px-1 scrollbar-hide md:max-w-6xl md:mx-auto md:w-full [&::-webkit-scrollbar]:hidden md:overflow-visible md:whitespace-normal" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+           <div className="flex space-x-4 px-2 items-center md:justify-between md:space-x-0 md:px-8">
+              {categories.map((cat, idx) => {
+                 const cleanName = cat.name.split('(')[0].trim();
+                 const isActive = activeCategory === cat.name;
+                 return (
+                 <div 
+                   key={cat.id || idx} 
+                   onClick={() => navigate(`/shop?category=${encodeURIComponent(cat.name)}`)}
+                   className="flex flex-col items-center cursor-pointer group flex-shrink-0"
+                 >
+                    <div className={`w-[64px] h-[64px] md:w-[100px] md:h-[100px] rounded-full flex flex-col items-center justify-center border transition-all duration-300 mb-3 md:mb-4 shadow-sm overflow-hidden ${isActive ? 'border-gold scale-105 shadow-[0_0_15px_rgba(212,175,55,0.6)] ring-2 ring-gold/50' : 'border-gray-100 dark:border-gray-800 bg-[#f8f8f8] dark:bg-[#111111] hover:shadow-md hover:-translate-y-1'}`}>
+                       {cat.imageUrl ? (
+                          <img src={cat.imageUrl} alt={cleanName} className="w-full h-full object-cover" />
+                       ) : (
+                          <span className="font-bold text-gray-400 dark:text-gray-500 text-lg uppercase">{cleanName.charAt(0)}</span>
+                       )}
+                    </div>
+                    <span className={`text-[12px] md:text-[14px] font-bold font-sans tracking-wide transition-colors ${isActive ? 'text-gold drop-shadow-sm' : 'text-gray-900 dark:text-gray-100 group-hover:text-gold'}`}>{cleanName}</span>
+                 </div>
+              )})}
             {categoriesLoading && categories.length === 0 && (
                [1, 2, 3, 4, 5, 6, 7].map((skeleton) => (
                   <div key={`sk-${skeleton}`} className="flex flex-col items-center flex-shrink-0 space-y-1.5 md:px-2">
@@ -128,8 +132,10 @@ const CustomIcons = {
       </div>
 
       {/* Features Section (Desktop Only or Responsive) */}
-      <div className="hidden md:block">
-        <FeaturesSection />
+      <div className="hidden md:block max-w-[1400px] mx-auto w-full px-4 md:px-8">
+        <div className="bg-[#fcfcfc] dark:bg-[#111111] rounded-2xl">
+          <FeaturesSection />
+        </div>
       </div>
 
       {/* Dynamic Filter Tabs - Clean AliExpress Style (Mobile Only) */}

@@ -53,7 +53,7 @@ export default function Layout() {
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-        className={`flex-grow ${isHome ? 'pt-[110px]' : 'pt-0 md:pt-[70px]'} pb-[80px] md:pb-0 overflow-x-hidden bg-white dark:bg-[#0a0a0a]`}
+        className={`flex-grow ${isHome ? 'pt-[110px] md:pt-0' : 'pt-0 md:pt-[82px]'} pb-[80px] md:pb-0 overflow-x-hidden bg-white dark:bg-[#0a0a0a]`}
       >
         <AnimatePresence mode="wait">
           {outlet && React.cloneElement(outlet, { key: location.pathname })}
